@@ -1,0 +1,136 @@
+/*清除部分标签默认样式*/
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overflow-x: hidden;
+}
+a {
+  text-decoration: none;
+}
+ul,
+li {
+  list-style: none;
+}
+h3,
+h4,
+h5,
+strong {
+  font-style: normal;
+}
+/* 页面公用样式 */
+body {
+  color: #fff;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.page_title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  padding: 35px 40px 0;
+}
+.page_title .title {
+  line-height: 1em;
+  font-size: 48px;
+}
+.page_title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #888;
+}
+.page_main {
+  position: relative;
+  height: 100%;
+  padding-top: 110px;
+}
+/* 组织结构页 */
+.organization_main .title {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 36px;
+  line-height: 60px;
+}
+.organization_main .chartContainer {
+  height: 100%;
+}
+/* 站点布局页 */
+.site_main {
+  position: relative;
+}
+.site_main .mapContainer {
+  height: 100%;
+  margin-right: 280px;
+}
+.site_main #MapInfo {
+  width: 280px;
+  height: 100%;
+  margin-top: 110px;
+  color: #333;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #fff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+  padding: 10px 7px 10px 8px;
+  box-shadow: -1px 0px 3px #333333;
+}
+.site_main #MapInfo #txtPanel .markerList {
+  padding-top: 10px;
+}
+.site_main #MapInfo #txtPanel .markerList .markerItem {
+  min-height: 30px;
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 10px;
+}
+.site_main #MapInfo #txtPanel .markerList .markerItem .icon {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  display: block;
+  width: 19px;
+  height: 25px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+}
+.site_main #MapInfo #txtPanel .markerList .markerItem .txt {
+  font-size: 16px;
+  padding: 2px 10px 2px 3px;
+}
+.site_main #MapInfo #txtPanel .markerList .markerItem .txt:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+.site_main #MapInfo #txtPanel .markerList .markerItem .txt .aLink {
+  font-size: 18px;
+  line-height: 24px;
+  color: blue;
+  background-color: transparent;
+}
+.site_main #MapInfo #txtPanel .markerList .markerItem .txt .info {
+  font-size: 14px;
+  line-height: 1.5em;
+}
+/* 突发事件统计页 */
+.event_main .mapContainer {
+  height: 100%;
+}

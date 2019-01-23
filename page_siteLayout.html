@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>朝阳站点布局</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/pages.css">
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/echarts.min.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
+    <script src="js/pages.js"></script>
+</head>
+
+<body>
+    <div class="page_title" style="background-color: #0075c7;">
+        <h3 class="title">朝阳120站点布局</h3>
+    </div>
+    <div class="page_main site_main">
+        <div class="mapContainer" id="mapContainer">
+
+        </div>
+        <div id="MapInfo">
+            <div id="txtPanel">
+                <ul class="markerList" id="markerList">
+                    <!-- <li class="markerItem" id="no0">
+                        <span class="icon" id="mk_0" style="background-image:url(images/marker.png)"></span>
+                        <div id="no_0" class="txt">
+                            <a href="javascript:void(0)" title="北京市朝阳区人民法院" class="aLink title">北京市朝阳区人民法院</a>
+                            <p class="info">地址：朝阳公园南路甲2号 <br>电话：(010)12368 <br>坐标：116.481685,39.938963 </p>
+                        </div>
+                    </li> -->
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script>
+        // 本地模拟数据
+        var data_info = [{
+            "X坐标": 116.456937,
+            "Y坐标": 39.93331,
+            "title": "朝阳1分站",
+            "content": "这是朝阳120第一分站",
+            "phone": 87789999,
+        }, {
+            "X坐标": 116.4457321,
+            "Y坐标": 39.92469024,
+            "title": "朝阳2分站",
+            "content": "这是朝阳120第二分站",
+            "phone": 87789999,
+        }, {
+            "X坐标": 116.451992,
+            "Y坐标": 39.932234,
+            "title": "朝阳3分站",
+            "content": "这是朝阳120第三分站",
+            "phone": 87789999
+        }, {
+            "X坐标": 116.481685,
+            "Y坐标": 39.938963,
+            "title": "朝阳4分站",
+            "content": "这是朝阳120第四分站",
+            "phone": 87789999
+        }];
+        //信息窗口通用配置项
+        var opts = {
+            width: 0, // 信息窗口宽度
+            height: 0, // 信息窗口高度
+            offset: new BMap.Size(0, -10), //信息窗位置偏移值
+            // title: data_info[i].title, // 信息窗口标题
+            enableMessage: true //设置允许信息窗发送短息
+        };
+        //创建地图实例
+        var map = new BMap.Map("mapContainer");
+        mapInit();
+        // getBoundary();
+
+        //创建多个标注点并添加信息窗口
+        for (var i = 0; i < data_info.length; i++) {
+            var point = new BMap.Point(data_info[i].X坐标, data_info[i].Y坐标); //创建标注点
+            // 自定义信息窗口标题
+            // opts.title = data_info[i].title;
+            var marker = new BMap.Marker(point); // 创建标注
+            // var content = data_info[i].content;
+            var content = '<h4 style= "font-size:18px;line-height:24px;margin-bottom:5px;color:blue">' +
+                data_info[i].title + '</h4><p style="line-height:22px">' +
+                '联系电话：' + data_info[i].phone + '<br/>' +
+                '坐标：' + data_info[i].X坐标 + ',' + data_info[i].Y坐标;
+            map.addOverlay(marker);
+            addClickHandler(content, marker);
+        }
+        //渲染右侧地图标注列表
+        renderMarkerList(data_info);
+        //注册点击事件
+        $("#markerList").on("click", "li", liElementClickHandler);
+
+
+        //function：初始化地图配置
+        function mapInit() {
+            map.centerAndZoom('北京市朝阳区', 15); //初始化地图中心点及缩放级别
+            // 百度地图API功能
+            map.enableScrollWheelZoom(); //启用滚轮放大缩小
+            // map.disableDragging();//禁用地图拖拽
+
+            // 添加导航控件
+            var navigationControl = new BMap.NavigationControl({ //此类表示地图的平移缩放控件
+                // 靠左上角位置
+                anchor: BMAP_ANCHOR_TOP_LEFT,
+                // LARGE类型
+                type: BMAP_NAVIGATION_CONTROL_LARGE,
+                // 启用显示定位
+                // enableGeolocation: true
+            });
+            map.addControl(navigationControl);
+
+        }
+
+        //function:地图标注点点击处理函数
+        function addClickHandler(content, marker) {
+            marker.addEventListener("click", function (e) {
+                openInfo(content, e)
+            });
+        }
+        //function:打开信息窗口        
+        function openInfo(content, e) {
+            var p = e.target;
+            var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+            var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+            map.openInfoWindow(infoWindow, point); //开启信息窗口
+        }
+        // function:右侧地图信息列表渲染
+        function renderMarkerList(data) {
+            for (var i = 0; i < data.length; i++) {
+                str = '<li class="markerItem" id="no0"> ' +
+                    '<span class="icon" id="mk_0" style="background-image:url(images/marker.png)"></span>' +
+                    '<div id="no_0" class="txt">' +
+                    '<a href="javascript:void(0)" title="' + data[i].title + '" class="aLink title">' + data[i].title +
+                    '</a><p class="info" data-x="' + data[i].X坐标 + '" data-y="' + data[i].Y坐标 + '"data-content="' +
+                    data[i].content +
+                    '">地址：' +
+                    data[i].content + '<br>电话：' + data[i].phone + '<br>坐标：' + data[i].X坐标 + ',' + data[i].Y坐标 +
+                    '</p></div></li>';
+                $("#markerList").append(str); //动态插入li标签
+            }
+        }
+
+        function liElementClickHandler() {
+            var x = $(this).find("p").attr("data-x");
+            var y = $(this).find("p").attr("data-y");
+            var point = new BMap.Point(x, y);
+            // 将地图的中心点更改为给定的点。
+            map.panTo(point);
+            // var content = $(this).find("p").attr("data-content");
+            var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+            //打开信息窗
+            map.openInfoWindow(infoWindow, point);
+        }
+        //function:在地图上显示行政区域划分
+        function getBoundary() {
+            var bdary = new BMap.Boundary(); //此类表示一个行政区域的边界。
+            //返回行政区域的边界。 name: 查询省、直辖市、地级市、或县的名称。 callback:执行查询后，数据返回到客户端的回调函数
+            bdary.get("北京市朝阳区", function (rs) { //获取行政区域 
+                map.clearOverlays(); //清除地图覆盖物       
+                var count = rs.boundaries.length; //行政区域的点有多少个
+                if (count === 0) {
+                    alert('未能获取当前输入行政区域');
+                    return;
+                }
+                var pointArray = [];
+                for (var i = 0; i < count; i++) {
+                    var ply = new BMap.Polygon(rs.boundaries[i], {
+                        strokeWeight: 2,
+                        strokeColor: "#ff0000",
+                        fillColor: "#fff",
+                        fillOpacity: 0
+                    }); //建立多边形覆盖物
+                    map.addOverlay(ply); //添加覆盖物
+                    pointArray = pointArray.concat(ply.getPath()); //返回多边型的点数组
+                }
+                //根据提供的地理区域或坐标设置地图视野，调整后的视野会保证包含提供的地理区域或坐标
+                map.setViewport(pointArray); //调整视野  
+                // map.centerAndZoom('北京市朝阳区', 14);
+                map.setZoom(15); //将视图切换到指定的缩放等级，中心点坐标不变。
+            });
+        }
+    </script> -->
+</body>
+
+</html>

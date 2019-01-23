@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>朝阳站点布局</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/pages.css">
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/echarts.min.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
+    <script src="js/pages.js"></script>
+</head>
+
+<body style="background-image:url(images/beijingtu.png)">
+    <div class="page_title">
+        <h3 class="title">朝阳120站点布局</h3>
+    </div>
+    <div class="page_main site_main">
+        <div class="mapContainer" id="mapContainer">
+
+        </div>
+    </div>
+
+    <script>
+        // var map = new BMap.Map("mapContainer");
+        // var point = new BMap.Point(116.424823, 40.035241);
+        // map.centerAndZoom(point, 17);
+        // var marker = new BMap.Marker(point); // 创建标注    
+        // map.addOverlay(marker); // 将标注添加到地图中 
+        // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+        // //创建小狐狸自定义图标
+        // var pt = new BMap.Point(116.424823, 40.035242);
+        // var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/fox.gif", new BMap.Size(300, 157));
+        // var marker2 = new BMap.Marker(pt, {
+        //     icon: myIcon
+        // }); // 创建标注
+        // map.addOverlay(marker2);
+
+
+        // 地图上添加多个点
+        // 百度地图API功能
+        var map = new BMap.Map("mapContainer");
+        var point = new BMap.Point(116.424823, 40.035241);
+        map.centerAndZoom(point, 15);
+        // 编写自定义函数,创建标注
+        function addMarker(point) {
+            var marker = new BMap.Marker(point);//创建标注
+            map.addOverlay(marker);//添加到地图中区
+        }
+        // 随机向地图添加25个标注
+        var bounds = map.getBounds();
+        var sw = bounds.getSouthWest();
+        var ne = bounds.getNorthEast();
+        var lngSpan = Math.abs(sw.lng - ne.lng);
+        var latSpan = Math.abs(ne.lat - sw.lat);
+        for (var i = 0; i < 25; i++) {
+            var point = new BMap.Point(sw.lng + lngSpan * (Math.random() * 0.7), ne.lat - latSpan * (Math.random() *
+                0.7));
+            addMarker(point);
+        }
+    </script>
+</body>
+
+</html>
