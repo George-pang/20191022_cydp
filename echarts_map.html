@@ -12,11 +12,11 @@
     <script src="lib/echarts.min.js"></script>
     <!-- 引入百度地图api文件 -->
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
-    <script src="js/pages.js"></script>
+    <!-- <script src="js/pages.js"></script> -->
 </head>
 
-<body style="background-image:url(images/beijingtu.png)">
-    <div class="page_title">
+<body>
+    <div class="page_title"style="background-color: #0075c7;">
         <h3 class="title">朝阳120站点布局</h3>
     </div>
     <div class="page_main site_main">
@@ -24,44 +24,154 @@
 
         </div>
     </div>
-
+    <!-- 如何在对应区域添加自定义覆盖物？？？ -->
     <script>
-        // var map = new BMap.Map("mapContainer");
-        // var point = new BMap.Point(116.424823, 40.035241);
-        // map.centerAndZoom(point, 17);
-        // var marker = new BMap.Marker(point); // 创建标注    
-        // map.addOverlay(marker); // 将标注添加到地图中 
-        // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        var dom = document.getElementById("mapContainer");
+        var myChart = echarts.init(dom);
+        var app = {};
+        option = null;
+        myChart.showLoading();
 
-        // //创建小狐狸自定义图标
-        // var pt = new BMap.Point(116.424823, 40.035242);
-        // var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/fox.gif", new BMap.Size(300, 157));
-        // var marker2 = new BMap.Marker(pt, {
-        //     icon: myIcon
-        // }); // 创建标注
-        // map.addOverlay(marker2);
+        $.get('data/bj.json', function (geoJson) {
 
+            myChart.hideLoading();
 
-        // 地图上添加多个点
-        // 百度地图API功能
-        var map = new BMap.Map("mapContainer");
-        var point = new BMap.Point(116.424823, 40.035241);
-        map.centerAndZoom(point, 15);
-        // 编写自定义函数,创建标注
-        function addMarker(point) {
-            var marker = new BMap.Marker(point);//创建标注
-            map.addOverlay(marker);//添加到地图中区
-        }
-        // 随机向地图添加25个标注
-        var bounds = map.getBounds();
-        var sw = bounds.getSouthWest();
-        var ne = bounds.getNorthEast();
-        var lngSpan = Math.abs(sw.lng - ne.lng);
-        var latSpan = Math.abs(ne.lat - sw.lat);
-        for (var i = 0; i < 25; i++) {
-            var point = new BMap.Point(sw.lng + lngSpan * (Math.random() * 0.7), ne.lat - latSpan * (Math.random() *
-                0.7));
-            addMarker(point);
+            echarts.registerMap('CY', geoJson);
+
+            myChart.setOption(option = {
+                title: {
+                    text: '北京市地图',
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}<br/>{c} (p / km2)'
+                }, 
+                visualMap: { //视觉映射组件
+                    min: 800,
+                    max: 50000,
+                    text: ['High', 'Low'],
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: ['lightskyblue', 'yellow', 'orangered']
+                    }
+                },
+                series: [{
+                    name: '香港18区人口密度',
+                    type: 'map',
+                    mapType: 'CY', // 自定义扩展图表类型
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true
+                            }
+                        }
+                    },
+                    data: [{
+                            name: '房山区', //地图显示分区名
+                            value: 20057.34 //区域填充颜色值
+                        },
+                        {
+                            name: '门头沟区',
+                            value: 15477.48
+                        },
+                        {
+                            name: '大兴区',
+                            value: 31686.1
+                        },
+                        {
+                            name: '丰台区',
+                            value: 6992.6
+                        },
+                        {
+                            name: '石景山区',
+                            value: 44045.49
+                        },
+                        {
+                            name: '西城区',
+                            value: 40689.64
+                        },
+                        {
+                            name: '东城区',
+                            value: 37659.78
+                        },
+                        {
+                            name: '海淀区',
+                            value: 45180.97
+                        },
+                        {
+                            name: '朝阳区',
+                            value: 55204.26
+                        },
+                        {
+                            name: '昌平区',
+                            value: 21900.9
+                        },
+                        {
+                            name: '通州区',
+                            value: 4918.26
+                        },
+                        {
+                            name: '顺义区',
+                            value: 5881.84
+                        },
+                        {
+                            name: '平谷区',
+                            value: 4178.01
+                        },
+                        {
+                            name: '密云区',
+                            value: 2227.92
+                        },
+                        {
+                            name: '怀柔区',
+                            value: 2180.98
+                        },
+                        {
+                            name: '密云区',
+                            value: 9172.94
+                        },
+                        {
+                            name: '延庆区',
+                            value: 3368
+                        },
+
+                    ],
+                    // 自定义名称映射--英转中
+                    // nameMap: {
+                    //     'Central and Western': '中西区',
+                    //     'Eastern': '东区',
+                    //     'Islands': '离岛',
+                    //     'Kowloon City': '九龙城',
+                    //     'Kwai Tsing': '葵青',
+                    //     'Kwun Tong': '观塘',
+                    //     'North': '北区',
+                    //     'Sai Kung': '西贡',
+                    //     'Sha Tin': '沙田',
+                    //     'Sham Shui Po': '深水埗',
+                    //     'Southern': '南区',
+                    //     'Tai Po': '大埔',
+                    //     'Tsuen Wan': '荃湾',
+                    //     'Tuen Mun': '屯门',
+                    //     'Wan Chai': '湾仔',
+                    //     'Wong Tai Sin': '黄大仙',
+                    //     'Yau Tsim Mong': '油尖旺',
+                    //     'Yuen Long': '元朗'
+                    // }
+                    markPoint:{ //怎么添加标记
+                        symbol:'pin',
+                        symbolsymbolSize:100,
+                    }
+                }]
+            });
+        });;
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
         }
     </script>
 </body>

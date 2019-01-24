@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <style>
+        html,body{
+            background:#060d14; background-color:transparent;
+        }
+    </style>
+</head>
+<body>
+
+
+<script src="lib/jquery.min.js"></script>
+<script src="lib/echarts.min.js"></script>
+<div id="main" style="width: 100%;height:840px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // 地图数据
+        var uploadedDataURL = "data/广西壮族自治区.json";
+        // 标注数据
+    var mapData = [
+        {'latitude':24.5080777697, 'longitude':109.4743093819 , 'name':'1', 'value':32358260, 'color':'#0394d9'},
+        {'latitude':24.4683698180, 'longitude':109.3094042452 , 'name':'2', 'value':32358260, 'color':'#d94d02'},
+        {'latitude':25.3051048188, 'longitude':109.3974095441 , 'name':'3', 'value':32358260, 'color':'#b42fd5'},
+        {'latitude':22.9996102015, 'longitude':108.4031798089 , 'name':'4', 'value':32358260, 'color':'#0394d9'},
+    ]
+
+
+
+    $.get(uploadedDataURL, function(geoJson) {
+
+        echarts.registerMap(name, geoJson);
+
+        myChart.setOption(option = {
+        //地图配置
+             geo: {
+                type: 'map',
+                roam: true,
+                label: {
+                    normal: {
+                        show: true,
+                        color:'#fff'
+                    },
+                    emphasis: {
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        borderColor: '#0394d9',
+                        areaColor: '#161331',
+                    },
+                    emphasis: {
+                        areaColor: '#389BB7',
+                        borderWidth: 0
+                    }
+                },
+
+            },
+            series: [{
+                type: 'effectScatter',      
+                coordinateSystem: 'geo',
+                // animation: true,
+                rippleEffect: {
+                   brushType: 'stroke'
+               },
+                symbolSize: function (val,params) {
+                  return 20;
+                },
+                data: mapData.map(function (itemOpt) {
+                        return {
+                            name: itemOpt.name,
+                            value: [
+                                itemOpt.longitude,
+                                itemOpt.latitude,
+                                itemOpt.value
+                            ],
+
+                            label: {
+                                emphasis: {
+                                    position: 'right',
+                                    show: false
+                                }
+                            },
+                            itemStyle: {
+                                normal: {
+                                    color: itemOpt.color
+                                }
+                            }
+                        };
+                })
+
+            }]
+        });
+    });
+    // 地图点击
+    myChart.on('click',function(e){
+        console.log(e)
+        if(e.name == 4){
+            parent.markClick()
+        }
+    })
+
+
+</script>
+</body>
+</html>
