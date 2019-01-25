@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div class="page_title"style="background-color: #0075c7;">
+    <div class="page_title" style="background-color: #0075c7;">
         <h3 class="title">朝阳120站点布局</h3>
     </div>
     <div class="page_main site_main">
@@ -32,7 +32,7 @@
         option = null;
         myChart.showLoading();
 
-        $.get('data/bj.json', function (geoJson) {
+        $.get('data/cyq.json', function (geoJson) {
 
             myChart.hideLoading();
 
@@ -45,7 +45,7 @@
                 tooltip: {
                     trigger: 'item',
                     formatter: '{b}<br/>{c} (p / km2)'
-                }, 
+                },
                 visualMap: { //视觉映射组件
                     min: 800,
                     max: 50000,
@@ -72,17 +72,21 @@
                             }
                         }
                     },
-                    data: [{
+                    data: [{ //地图系列中的数据项内容数组
                             name: '房山区', //地图显示分区名
                             value: 20057.34 //区域填充颜色值
                         },
                         {
                             name: '门头沟区',
-                            value: 15477.48
+                            value: 15477.48 //项数组中的第二个值指定给 visualMap 组件
                         },
                         {
                             name: '大兴区',
-                            value: 31686.1
+                            // value: 31686.1,
+                            //自定义特殊itemStyle，仅对该item有效
+                            itemStyle: {
+                                areaColor:'#00ff33'
+                            }
                         },
                         {
                             name: '丰台区',
@@ -133,10 +137,6 @@
                             value: 2180.98
                         },
                         {
-                            name: '密云区',
-                            value: 9172.94
-                        },
-                        {
                             name: '延庆区',
                             value: 3368
                         },
@@ -163,10 +163,38 @@
                     //     'Yau Tsim Mong': '油尖旺',
                     //     'Yuen Long': '元朗'
                     // }
-                    markPoint:{ //怎么添加标记
-                        symbol:'pin',
-                        symbolsymbolSize:100,
-                    }
+                    markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
+                        symbol: 'pin', //钉子形
+                        symbolSize: 100,
+                        itemStyle: {
+                            normal: {
+                                color: '#4b96ff'
+                            }
+                        },
+                        label: { //标注的文本。
+                            normal: {
+                                show: true,
+                                formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
+                                    return d.name //d:传入的数据值
+                                },
+                                textStyle: {
+                                    fontSize: 18,
+                                    fontFamily: '微软雅黑',
+                                    color: '#fff'
+                                },
+                                position: 'inside',
+                            }
+                        },
+                        data: [{
+                                name: "朝阳区",
+                                coord: [116.456937,39.93331] //标注的坐标点
+                            },
+                            // {
+                            //     name: "通州区",
+                            //     coord: [116.552471, 39.761261],
+                            // }
+                        ],
+                    },
                 }]
             });
         });;

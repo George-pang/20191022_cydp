@@ -14,14 +14,14 @@
 <body>
 
 
-<script src="lib/jquery.min.js"></script>
-<script src="lib/echarts.min.js"></script>
+<script src="/lib/jquery.min.js"></script>
+<script src="/lib/echarts.min.js"></script>
 <div id="main" style="width: 100%;height:840px;"></div>
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
         // 地图数据
-        var uploadedDataURL = "data/广西壮族自治区.json";
+        var uploadedDataURL = "/data/广西壮族自治区.json";
         // 标注数据
     var mapData = [
         {'latitude':24.5080777697, 'longitude':109.4743093819 , 'name':'1', 'value':32358260, 'color':'#0394d9'},

@@ -10,21 +10,360 @@
     <link rel="stylesheet" href="css/pages.css">
     <script src="lib/jquery.min.js"></script>
     <script src="lib/echarts.min.js"></script>
+    <script src="lib/vintage.js"></script>
     <!-- 引入百度地图api文件 -->
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
     <script src="js/pages.js"></script>
 </head>
 
-<body>
+<body style="background-color:#8ba4d8b8;">
     <div class="page_title" style="background-color: #0075c7;">
-        <h3 class="title">朝阳120突发事件统计</h3>
+        <h3 class="title">朝阳120突发事件统计
+            <p class="time_range">
+                <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
+                <span class="start_time"></span>---<span class="end_time"></span>
+            </p>
+        </h3>
     </div>
     <div class="page_main event_main">
         <div class="mapContainer" id="map_event">
 
         </div>
-    </div>
+        <div class="data_statistics">
+            <!-- <h3 class="chart_title">各分区突发事件数据统计</h3> -->
+            <div class="data_list_container">
+                <ul class="data_list">
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">火灾事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">CO中毒事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">溺水事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">公共安全事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">特殊事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="barChartContainer">
+                <div class="barChart" id="eventBarChart">
 
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <script>
+        // 模拟数据
+        var totalData = [{
+            "name": "火灾",
+            "totalNum": 10,
+        }, {
+            "name": "CO中毒",
+            "totalNum": 10,
+        }, {
+            "name": "溺水",
+            "totalNum": 10,
+        }, {
+            "name": "公共安全事件",
+            "totalNum": 10,
+        }, {
+            "name": "特殊事件",
+            "totalNum": 10,
+        }];
+        var eventData = [{
+                "name": "A区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "B区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "C区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "D区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "E区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            }
+        ];
+        // 系列颜色
+        var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53'];
+        var dom = document.getElementById("eventBarChart");
+        var eventBarChart = echarts.init(dom, 'vintage');
+
+        option = {
+            color: colors,
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                left: '3%',
+                itemWidth: 15,
+                itemHeight: 15,
+                data: ['火灾', 'CO中毒', '溺水', '公共安全', '特殊事件'],
+                textStyle: {
+                    fontSize: 20,
+                    color: 'rgba(0,0,0,.6)',
+                    fontWeight: 'lighter',
+                },
+            },
+            grid: {
+                top: 100,
+                left: '0',
+                right: '4%',
+                bottom: '5%',
+                containLabel: true
+            },
+            xAxis: [{
+                type: 'category',
+                data: ['A区', 'B区', 'C区', 'D区', 'E区'],
+                axisLine: { //轴线
+                    lineStyle: {
+                        color: '#fff',
+                    }
+                },
+                axisTick: { //刻度线
+                    show: false,
+                    alignWithLabel: true
+                },
+                axisLabel: { //刻度标签
+                    margin: 10, //标签与轴线的距离
+                    fontSize: 24,
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                name: '事件/起',
+                nameTextStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                    fontSize: 24,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#fff',
+                    }
+                },
+                axisTick: { //刻度线
+                    length: 10,
+                    alignWithLabel: true
+                },
+                axisLabel: { //刻度标签
+                    margin: 15, //标签与轴线的距离
+                    fontSize: 24,
+                }
+            }],
+            backgroundColor: 'transparent',
+            series: [{
+                    name: '火灾',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [3, 5, 2, 6, 7],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    }
+                },
+                {
+                    name: 'CO中毒',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [4, 1, 0, 0, 6],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    }
+                },
+                {
+                    name: '溺水',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [7, 9, 4, 6, 2],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    },
+                    barGap: 0, //柱间距离,为柱子快递的百分比
+                },
+                {
+                    name: '公共安全',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [7, 9, 4, 6, 2],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    },
+                    barGap: 0, //柱间距离,为柱子快递的百分比
+                },
+                {
+                    name: '特殊事件',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [7, 9, 4, 6, 2],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    },
+                    barGap: 0, //柱间距离,为柱子快递的百分比
+                },
+            ]
+        };
+        eventBarChart.setOption(option);
+
+        renderLevelColor(colors);
+        // function：右侧事件总数统计列表前icon背景色对应显示
+        function renderLevelColor(colors) {
+            for (var i = 0; i < $(".data_item").length; i++) {
+                $($(".data_item")[i]).find(".event_level").css("backgroundColor", colors[i]);
+            }
+        }
+    </script>
 </body>
 
 </html>

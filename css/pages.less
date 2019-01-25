@@ -19,6 +19,9 @@ ul,li{
 h3,h4,h5,strong{
     font-style: normal;
 }
+i{
+    font-style: normal;
+}
 /* 页面公用样式 */
 body{
     color: #fff;
@@ -35,10 +38,21 @@ body{
     height: 110px;
     padding: 35px 40px 0;
     .title{
+        position: relative;
         // margin-top: 40px;
         line-height: 1em;
         font-size: 48px;
+        .time_range{
+            position: absolute;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            font-size: 22px;
+            // color: #c8c8c8;
+            color: rgba(255,255,255,.8);
+        }
     }
+
     &::after{
         content: "";
         position: absolute;
@@ -90,7 +104,7 @@ body{
         padding: 10px 7px 10px 8px;
         box-shadow: -1px 0px 3px #333333;
         #txtPanel{
-            .markerList{
+            .markerList{ //站点布局第2版该样式类已启用
                 padding-top: 10px;
                 .markerItem{
                     min-height: 30px;
@@ -226,6 +240,74 @@ body{
 /* 突发事件统计页 */
 .event_main{
     .mapContainer{
+        float: left;
         height: 100%;
+        width: 60%;
+    }
+    .data_statistics{
+        float: left;
+        width: 40%;
+        height: 100%;
+        .data_list_container{
+            height: 40%;
+            padding: 40px 20px 0;
+            .data_list{
+                height: 100%;
+                padding: 0 30px;
+                border: 1px solid #d0d4da;
+                border-radius: 20px;
+                .data_item{
+                    position: relative;
+                    height: 100%/5;
+                    padding: 0 40px;
+                    font-size: 30px;
+                    // line-height: 100%/5;
+                    &::after{
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        height: 1px;
+                        width: 100%;
+                        background-color: #d9d9d9d9;
+                    }
+                    .event_info{
+                        position: absolute;
+                        left: 40px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        .event_level{
+                            display: inline-block;
+                            margin-bottom: 5px;
+                            width: 10px;
+                            height: 10px;
+                            border-radius: 3px;
+                            background-color: #cd3213;
+                        }
+                        .event_name{
+                            margin-left: 5px;
+                            color: #fff;
+                            .unit{
+                                font-size: 24px;
+                                color: #d9d9d9d9;
+                            }
+                        }
+                    }
+                    .event_num{
+                        position: absolute;
+                        right: 40px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
+                }
+            }
+        }
+        .barChartContainer{
+            height: 60%;
+            padding: 40px 20px 0;
+            .barChart{
+                height: 100%;
+            }
+        }
     }
 }

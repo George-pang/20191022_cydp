@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>朝阳站点布局</title>
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/pages.css">
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/echarts.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
     <!-- 引入百度地图api文件 -->
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
     <!-- <script src="js/pages.js"></script> -->
@@ -139,7 +139,7 @@
         function renderMarkerList(data) {
             for (var i = 0; i < data.length; i++) {
                 str = '<li class="markerItem" id="no0"> ' +
-                    '<span class="icon" id="mk_0" style="background-image:url(images/marker.png)"></span>' +
+                    '<span class="icon" id="mk_0" style="background-image:url(/images/marker.png)"></span>' +
                     '<div id="no_0" class="txt">' +
                     '<a href="javascript:void(0)" title="' + data[i].title + '" class="aLink title">' + data[i].title +
                     '</a><p class="info" data-x="' + data[i].X坐标 + '" data-y="' + data[i].Y坐标 + '"data-content="' +

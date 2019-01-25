@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>朝阳120突发事件统计</title>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
+    <script src="/lib/vintage.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
+    <script src="/js/pages.js"></script>
+</head>
+
+<body style="background-color:#ebedf0">
+    <div class="page_title" style="background-color: #0075c7;">
+        <h3 class="title">朝阳120突发事件统计</h3>
+    </div>
+    <div class="page_main event_main">
+        <div class="mapContainer" id="map_event">
+
+        </div>
+        <div class="data_statistics">
+            <div class="radarChartConatiner">
+                <!-- <h3 class="chart_title">各分区突发事件数据统计</h3> -->
+
+                <div class="radarChart" id="radarChart">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- 渲染雷达图 -->
+    <script>
+        var dom = document.getElementById("radarChart");
+        var radarChart = echarts.init(dom, 'vintage');
+        // myChart.showLoading(); //显示加载样式
+        option = {
+            // title: {
+            //     text: '各分区突发事件统计'
+            // },
+            tooltip: {},
+            legend: {
+                data: ['火灾事件', 'CO中毒'],
+                orient: 'vertical',
+                right: "20px",
+                top: "20px",
+                // itemHeight:20,//图例图形的高度
+                textStyle: {
+                    fontSize: 18,
+                }
+            },
+            backgroundColor: "transparent",
+            // color:[], //系列色数组
+            radar: { //雷达图坐标系组件，只适用于雷达图。
+                // shape: 'circle',
+                name: { //雷达图每个指示器名称的配置项。
+                    textStyle: {
+                        fontSize: 22,
+                        // lineHeight:22,
+                        color: '#3d7dd7',
+                        // backgroundColor: '#999',
+                        borderRadius: 3,
+                        // padding: 5
+                    }
+                },
+                indicator: [{ //雷达图的指示器，用来指定雷达图中的多个变量（维度）
+                        name: 'A区', //指示器名称
+                        max: 30 //指示器的最大值，可选
+                    },
+                    {
+                        name: 'B区',
+                        max: 30
+                    },
+                    {
+                        name: 'C区',
+                        max: 30
+                    },
+                    {
+                        name: 'D区',
+                        max: 30
+                    },
+
+                ],
+                splitLine: { //分割线样式
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.4)'
+                    }
+                },
+                splitArea: { //坐标轴在 grid 区域中的分隔区域(默认分5段)
+                    areaStyle: {
+                        // color: ['#B8D3E4', '#96C5E3', '#7DB5DA', '#72ACD1','#4197ce'], //分隔区域颜色。
+                    }
+                },
+
+            },
+            series: [{
+                name: '突发事件统计', //系列名称，用于tooltip的显示
+                type: 'radar',
+                // areaStyle: {normal: {}},
+                data: [{
+                        value: [20, 15, 24, 19],
+                        name: '火灾事件'
+                    },
+                    {
+                        value: [23, 24, 15, 22],
+                        name: 'CO中毒'
+                    }
+                ],
+                symbolSize: 8, //拐点标记的大小
+                label: { //图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等
+                    show: true,
+                    fontSize: 16,
+                    align: 'center',
+                    formatter: "{b|{b}}\n{c|{c}}起",
+                    rich: {
+                        b: {
+                            fontSize: 18,
+                            lineHeight: 24,
+                        },
+                        c: {
+                            fontSize: 16,
+                            // marginTop:5,
+                        }
+                    }
+
+                },
+                // areaStyle:{
+                //     // color:'red',
+                // },
+            }]
+        };
+        // 为echarts对象加载数据 
+        radarChart.setOption(option);
+    </script>
+</body>
+
+</html>

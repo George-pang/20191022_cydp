@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <title>朝阳120突发事件统计</title>
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/pages.css">
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/echarts.min.js"></script>
+    <title>百度地图damo_获取区县级行政区域边界</title>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
     <!-- 引入百度地图api文件 -->
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
     <!-- <script src="js/pages.js"></script> -->
@@ -17,7 +17,7 @@
 
 <body>
     <div class="page_title" style="background-color: #0075c7;">
-        <h3 class="title">朝阳120突发事件统计</h3>
+        <h3 class="title">百度地图damo_获取区县级行政区域边界</h3>
     </div>
     <div class="page_main event_main">
         <div class="mapContainer" id="map_event">
@@ -27,9 +27,9 @@
     <script>
         var map = new BMap.Map("map_event");
         mapInit();
-        var plys = [];
+        // var plys = [];
         var bdary = new BMap.Boundary();
-        bdary.get("通县", function (rs) { //最小只能获取区县的行政区域边界、区下自定义的分区边界无法获取,自己画多边形（Polygon类）？
+        bdary.get("通州区", function (rs) { //最小只能获取区县的行政区域边界、区下自定义的分区边界无法获取,自己画多边形（Polygon类）？
             var count = rs.boundaries.length;
             //建立多边形覆盖物
             for (var i = 0; i < count; i++) {
@@ -41,7 +41,7 @@
                     fillColor: "#16a085",
                     fillOpacity: 0.2    
                 });
-                plys.push(ply);
+                // plys.push(ply);
                 map.addOverlay(ply); //添加覆盖物
             }
         });
@@ -49,7 +49,7 @@
 
         //function：初始化地图配置
         function mapInit() {
-            map.centerAndZoom('北京市朝阳区来广营', 15); //初始化地图中心点及缩放级别
+            map.centerAndZoom('北京市通州区',12); //初始化地图中心点及缩放级别
             // 百度地图API功能
             map.enableScrollWheelZoom(); //启用滚轮放大缩小
             // map.disableDragging();//禁用地图拖拽

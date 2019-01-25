@@ -1,5 +1,11 @@
 /* 本地页面调试js文件 */
 $(function () {
+    var timeData={"startTime":"2019年02月01日 08:00","endTime":"2019年03月01日 08:00"};
+    setTimeRange(timeData);
+    function setTimeRange(data){
+        $(".start_time").html(data.startTime);
+        $(".end_time").html(data.endTime);
+    }
 
     /* ****************************************************************************** */
     /* 1、组织结构 展示页 */
@@ -197,7 +203,8 @@ $(function () {
             //创建地图实例
             var map = new BMap.Map("mapContainer");
             mapInit(); //初始化地图
-            getBoundary(); //显示朝阳区行政版块覆盖物
+            // getBoundary(map,"北京市","北京市朝阳区","#fff",1); //显示朝阳区行政版块覆盖物
+            getBoundary(map,"北京市朝阳区","北京市朝阳区","#16a085",0.1); //显示朝阳区行政版块覆盖物
             //创建多个标注点并添加信息窗口
             renderPoint(data_info, "stationList");
             //渲染地图右侧信息块 内容
@@ -332,10 +339,11 @@ $(function () {
                 });
             }
             //function:在地图上显示行政区域划分
-            function getBoundary() {
+            //参数：map:Map类实例对象; name: 查询省、直辖市、地级市、或县的名称;center:地图中心点
+            function getBoundary(map,name,center,fillColor,fillOpacity) {
                 var bdary = new BMap.Boundary(); //此类表示一个行政区域的边界。
                 //返回行政区域的边界。 name: 查询省、直辖市、地级市、或县的名称。 callback:执行查询后，数据返回到客户端的回调函数
-                bdary.get("北京市朝阳区", function (rs) { //获取行政区域 
+                bdary.get(name, function (rs) { //获取行政区域 
                     // map.clearOverlays(); //清除地图覆盖物       
                     var count = rs.boundaries.length; //行政区域的点有多少个
                     if (count === 0) {
@@ -349,15 +357,15 @@ $(function () {
                             strokeOpacity: 0.8,
                             StrokeStyle: "solid",
                             strokeColor: "#1abc9c",
-                            fillColor: "#16a085",
-                            fillOpacity: 0.1
+                            fillColor: fillColor,
+                            fillOpacity: fillOpacity
                         }); //建立多边形覆盖物
                         map.addOverlay(ply); //添加覆盖物
                         pointArray = pointArray.concat(ply.getPath()); //返回多边型的点数组
                     }
                     //根据提供的地理区域或坐标设置地图视野，调整后的视野会保证包含提供的地理区域或坐标
                     map.setViewport(pointArray); //调整视野  
-                    map.centerAndZoom('北京市朝阳区'); //设置地图中心点及缩放级别
+                    map.centerAndZoom(center); //设置地图中心点
                     // map.setZoom(13); //将视图切换到指定的缩放等级，中心点坐标不变。
                 });
             }
@@ -401,6 +409,7 @@ $(function () {
             // 百度地图API功能
             var mp = new BMap.Map("map_event");
             eventMapInit();
+            getBoundary(mp,"北京市朝阳区","北京市朝阳区");
             setConstructorPrototype();
             addCompOverlay(data);
 
@@ -443,7 +452,7 @@ $(function () {
                     span.style.height = "40px";
                     span.style.lineHeight = "40px";
                     div.appendChild(span);
-                    span.appendChild(document.createTextNode(this._text + "\t" + this._num + "个"));
+                    span.appendChild(document.createTextNode(this._text + "\t" + this._num + "起"));
                     var that = this; //防止与事件处理函数内部的this冲突
 
                     //倒三角箭头
@@ -519,7 +528,37 @@ $(function () {
                     myCompOverlay = new ComplexCustomOverlay(new BMap.Point(data[i].x坐标, data[i].y坐标), data[i].area, data[i].num, getEventColor(data[i].event));
                     mp.addOverlay(myCompOverlay); //向地图中添加覆盖物
                 }
-
+            }
+            //function:在地图上显示行政区域划分
+            //参数：map:Map类实例对象; name: 查询省、直辖市、地级市、或县的名称;center:地图中心点
+            function getBoundary(map,name,center) {
+                var bdary = new BMap.Boundary(); //此类表示一个行政区域的边界。
+                //返回行政区域的边界。 name: 查询省、直辖市、地级市、或县的名称。 callback:执行查询后，数据返回到客户端的回调函数
+                bdary.get(name, function (rs) { //获取行政区域 
+                    // map.clearOverlays(); //清除地图覆盖物       
+                    var count = rs.boundaries.length; //行政区域的点有多少个
+                    if (count === 0) {
+                        alert('未能获取当前输入行政区域');
+                        return;
+                    }
+                    var pointArray = [];
+                    for (var i = 0; i < count; i++) {
+                        var ply = new BMap.Polygon(rs.boundaries[i], {
+                            strokeWeight: 2,
+                            strokeOpacity: 0.8,
+                            StrokeStyle: "solid",
+                            strokeColor: "#1abc9c",
+                            fillColor: "#16a085",
+                            fillOpacity: 0.1
+                        }); //建立多边形覆盖物
+                        map.addOverlay(ply); //添加覆盖物
+                        pointArray = pointArray.concat(ply.getPath()); //返回多边型的点数组
+                    }
+                    //根据提供的地理区域或坐标设置地图视野，调整后的视野会保证包含提供的地理区域或坐标
+                    map.setViewport(pointArray); //调整视野  
+                    map.centerAndZoom(center); //设置地图中心点
+                    // map.setZoom(13); //将视图切换到指定的缩放等级，中心点坐标不变。
+                });
             }
 
 

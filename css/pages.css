@@ -23,6 +23,9 @@ h5,
 strong {
   font-style: normal;
 }
+i {
+  font-style: normal;
+}
 /* 页面公用样式 */
 body {
   color: #fff;
@@ -39,8 +42,17 @@ body {
   padding: 35px 40px 0;
 }
 .page_title .title {
+  position: relative;
   line-height: 1em;
   font-size: 48px;
+}
+.page_title .title .time_range {
+  position: absolute;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
 }
 .page_title::after {
   content: "";
@@ -215,5 +227,72 @@ body {
 }
 /* 突发事件统计页 */
 .event_main .mapContainer {
+  float: left;
+  height: 100%;
+  width: 60%;
+}
+.event_main .data_statistics {
+  float: left;
+  width: 40%;
+  height: 100%;
+}
+.event_main .data_statistics .data_list_container {
+  height: 40%;
+  padding: 40px 20px 0;
+}
+.event_main .data_statistics .data_list_container .data_list {
+  height: 100%;
+  padding: 0 30px;
+  border: 1px solid #d0d4da;
+  border-radius: 20px;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item {
+  position: relative;
+  height: 20%;
+  padding: 0 40px;
+  font-size: 30px;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background-color: #d9d9d9d9;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item .event_info {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.event_main .data_statistics .data_list_container .data_list .data_item .event_info .event_level {
+  display: inline-block;
+  margin-bottom: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background-color: #cd3213;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item .event_info .event_name {
+  margin-left: 5px;
+  color: #fff;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item .event_info .event_name .unit {
+  font-size: 24px;
+  color: #d9d9d9d9;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item .event_num {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.event_main .data_statistics .barChartContainer {
+  height: 60%;
+  padding: 40px 20px 0;
+}
+.event_main .data_statistics .barChartContainer .barChart {
   height: 100%;
 }
