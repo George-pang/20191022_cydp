@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>朝阳120突发事件统计</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/pages.css">
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/echarts.min.js"></script>
+    <script src="lib/vintage.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
+    <!-- <script src="js/pages.js"></script> -->
+</head>
+
+<body style="background-color:#8ba4d8b8;">
+    <div class="page_title">
+        <h3 class="title">朝阳120突发事件统计
+            <p class="time_range">
+                <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
+                <span class="start_time"></span>---<span class="end_time"></span>
+            </p>
+        </h3>
+    </div>
+    <div class="page_main event_main">
+        <div class="mapContainer" id="map_event">
+            <div class="mapChart" id="mapChart">
+
+            </div>
+        </div>
+        <div class="data_statistics">
+            <!-- <h3 class="chart_title">各分区突发事件数据统计</h3> -->
+            <div class="data_list_container">
+                <ul class="data_list">
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">火灾事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">CO中毒事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">溺水事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">公共安全事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                    <li class="data_item">
+                        <div class="event_info">
+                            <i class="event_level"></i>
+                            <span class="event_name">特殊事件<i class="unit">（起）</i></span>
+                        </div>
+                        <div class="event_num">10</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="barChartContainer">
+                <div class="barChart" id="eventBarChart">
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- 显示时间范围 -->
+    <script>
+        var timeData = {
+            "startTime": "2019年02月01日 08:00",
+            "endTime": "2019年03月01日 08:00"
+        };
+        setTimeRange(timeData);
+
+        function setTimeRange(data) {
+            $(".start_time").html(data.startTime);
+            $(".end_time").html(data.endTime);
+        }
+    </script>
+    <!-- 渲染左侧echarts地图 -->
+    <script>
+        var dom = document.getElementById("mapChart");
+        var myChart = echarts.init(dom);
+        $.get('/data/map.json', function (geoJson) {
+            echarts.registerMap('chaoyang', geoJson, {});
+            var option = {
+                title: {
+                    text: '朝阳120各片区突发事件统计',
+                    left: 'center',
+                    bottom: 30,
+                    textStyle: {
+                        fontSize: 24,
+                        color: '#fff',
+                        fontWeight: 400,
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}<br/>'
+                },
+                visualMap: { //自定义视觉映射
+                    show: false,
+                    min: 0,
+                    max: 300,
+                    text: ['High', 'Low'],
+                    left: 'left',
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: ['#d94e5d', '#eac736', '#50a3ba']
+                    }
+                },
+                series: [{
+                    name: '朝阳120各分区突发事件统计',
+                    type: 'map',
+                    mapType: 'chaoyang',
+                    aspectScale: 0.75, //地图长度比
+                    label: { //图形上的文本标签---对应json数据上的多边形分区name值
+                        normal: { //正常时的样式
+                            show: true,
+                            textStyle: {
+                                color: '#fff',
+                                fontSize: 18,
+                            }
+                        },
+                        emphasis: { //高亮时的样式设置
+                            show: true,
+                            textStyle: {
+                                color: '#333'
+                            }
+                        }
+                    },
+                    data: [{
+                            name: '朝阳区',
+                            value: 0
+                        },
+                        {
+                            name: '上分区', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                            value: 80 //value值对应颜色映射的取值
+                        },
+                        {
+                            name: '下分区',
+                            value: 180
+                        },
+                        {
+                            name: '右上分区',
+                            value: 250
+                        },
+
+                    ],
+                    itemStyle: { //地图区域的多边形 图形样式。
+                        borderColor: '#fff', //图形的描边颜色
+                        borderWidth: 1,
+                        borderType: 'dashed',
+
+                    },
+                    markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
+                        symbol: 'pin', //钉子形
+                        symbolSize: 150,
+                        itemStyle: {
+                            normal: {
+                                color: '#4b96ff'
+                            }
+                        },
+                        label: { //标注的文本。
+                            normal: {
+                                show: true,
+                                formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
+                                    return d.name + "\t" + d.value + "起"
+                                },
+                                textStyle: {
+                                    fontSize: 18,
+                                    fontFamily: '微软雅黑',
+                                    color: '#fff'
+                                },
+                                position: 'inside',
+                            }
+                        },
+                        data: [{
+                                name: "火灾",
+                                coord: [116.456937, 39.93331], //标注的坐标点
+                                value: 20
+                            },
+                            // {
+                            //     name: "通州区",
+                            //     coord: [116.552471, 39.761261],
+                            // }
+                        ],
+                    },
+                }]
+            };
+            myChart.setOption(option);
+
+        });
+    </script>
+
+    <!-- 渲染右侧柱状图-->
+    <script>
+        // 模拟数据
+        var totalData = [{
+            "name": "火灾",
+            "totalNum": 10,
+        }, {
+            "name": "CO中毒",
+            "totalNum": 10,
+        }, {
+            "name": "溺水",
+            "totalNum": 10,
+        }, {
+            "name": "公共安全事件",
+            "totalNum": 10,
+        }, {
+            "name": "特殊事件",
+            "totalNum": 10,
+        }];
+        var eventData = [{
+                "name": "A区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "B区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "C区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "D区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            },
+            {
+                "name": "E区",
+                "data": [{
+                        "name": "火灾",
+                        "num": 5
+                    },
+                    {
+                        "name": "CO中毒",
+                        "num": 3
+                    },
+                    {
+                        "name": "溺水",
+                        "num": 6
+                    },
+                    {
+                        "name": "公共安全事件",
+                        "num": 7
+                    },
+                    {
+                        "name": "特殊事件",
+                        "num": 2
+                    }
+                ]
+            }
+        ];
+        // 系列颜色
+        var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53'];
+        var dom = document.getElementById("eventBarChart");
+        var eventBarChart = echarts.init(dom, 'vintage');
+
+        option = {
+            color: colors,
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                left: '3%',
+                itemWidth: 15,
+                itemHeight: 15,
+                data: ['火灾', 'CO中毒', '溺水', '公共安全', '特殊事件'],
+                textStyle: {
+                    fontSize: 20,
+                    color: 'rgba(0,0,0,.6)',
+                    fontWeight: 'lighter',
+                },
+            },
+            grid: {
+                top: 100,
+                left: '0',
+                right: '4%',
+                bottom: '5%',
+                containLabel: true
+            },
+            xAxis: [{
+                type: 'category',
+                data: ['A区', 'B区', 'C区', 'D区', 'E区'],
+                axisLine: { //轴线
+                    lineStyle: {
+                        color: '#fff',
+                    }
+                },
+                axisTick: { //刻度线
+                    show: false,
+                    alignWithLabel: true
+                },
+                axisLabel: { //刻度标签
+                    margin: 10, //标签与轴线的距离
+                    fontSize: 24,
+                }
+            }],
+            yAxis: [{
+                type: 'value',
+                name: '事件/起',
+                nameTextStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                    fontSize: 24,
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#fff',
+                    }
+                },
+                axisTick: { //刻度线
+                    length: 10,
+                    alignWithLabel: true
+                },
+                axisLabel: { //刻度标签
+                    margin: 15, //标签与轴线的距离
+                    fontSize: 24,
+                }
+            }],
+            backgroundColor: 'transparent',
+            series: [{
+                    name: '火灾',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [3, 5, 2, 6, 7],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    }
+                },
+                {
+                    name: 'CO中毒',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [4, 1, 0, 0, 6],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    }
+                },
+                {
+                    name: '溺水',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [7, 9, 4, 6, 2],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    },
+                    barGap: 0, //柱间距离,为柱子快递的百分比
+                },
+                {
+                    name: '公共安全',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [7, 9, 4, 6, 2],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    },
+                    barGap: 0, //柱间距离,为柱子快递的百分比
+                },
+                {
+                    name: '特殊事件',
+                    type: 'bar',
+                    // barWidth: '10%',
+                    data: [7, 9, 4, 6, 2],
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    },
+                    barGap: 0, //柱间距离,为柱子快递的百分比
+                },
+            ]
+        };
+        eventBarChart.setOption(option);
+
+        renderLevelColor(colors);
+        // function：右侧事件总数统计列表前icon背景色对应显示
+        function renderLevelColor(colors) {
+            for (var i = 0; i < $(".data_item").length; i++) {
+                $($(".data_item")[i]).find(".event_level").css("backgroundColor", colors[i]);
+            }
+        }
+    </script>
+</body>
+
+</html>

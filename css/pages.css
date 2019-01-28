@@ -40,6 +40,7 @@ body {
   width: 100%;
   height: 110px;
   padding: 35px 40px 0;
+  background-color: #0075c7;
 }
 .page_title .title {
   position: relative;
@@ -231,8 +232,11 @@ body {
   height: 100%;
   width: 60%;
 }
+.event_main .mapContainer .mapChart {
+  height: 100%;
+}
 .event_main .data_statistics {
-  float: left;
+  float: right;
   width: 40%;
   height: 100%;
 }
@@ -294,5 +298,19 @@ body {
   padding: 40px 20px 0;
 }
 .event_main .data_statistics .barChartContainer .barChart {
+  height: 100%;
+}
+/* 车辆平均反应半径和时间统计页 */
+.response_main .chartContainer {
+  float: left;
+  width: 60%;
+  height: 100%;
+}
+.response_main .chartContainer .barChart {
+  height: 100%;
+}
+.response_main .tableContainer {
+  float: right;
+  width: 40%;
   height: 100%;
 }

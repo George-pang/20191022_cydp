@@ -33,7 +33,7 @@ $(function () {
                     symbol: 'rect', //设置节点标记的图形
                     symbolSize: [100, 50], //标记图形的长宽
                     expandAndCollapse: false, //是否打开子树折叠和展开的交互
-                    initialTreeDepth: 3,
+                    initialTreeDepth: 3,//初始展开节点级别
                     itemStyle: { //节点样式
                         color: 'transparent', //节点填充色--区分折叠还是展开
                         borderColor: "#c23531", //图形的描边颜色
@@ -42,10 +42,10 @@ $(function () {
                     label: { //文本标签样式
                         show: true,
                         position: 'inside', //标签的位置:位于图形标记盒内部
-                        color: '#fff', //文字颜色\
+                        color: '#fff', //文字颜色
                         fontSize: 24,
                         // height:50,
-                        backgroundColor: '#258b09', //文字块背景色
+                        // backgroundColor: 'red', //文字块背景色
                         borderRadius: 3,
                         formatter: '{b|{b}}', //{b}数据名
                         rich: {
@@ -65,7 +65,8 @@ $(function () {
                         color: '#fff',
                         width: 1,
                         curveness: 1,
-                        type: 'solid' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+                        type: 'curve' // 线条样式，可选为：'solid' | 'dotted' | 'dashed' 
+                        // echarts2版本里,树图还可以选：'curve' | 'broken',3版本里去掉啦
                     },
                     emphasis: {
                         label: {
@@ -99,7 +100,7 @@ $(function () {
                                     name: '项目中心',
                                     value: 4,
                                     children: [{
-                                            name: '售前支持部',
+                                            name: '售前支持',
                                             value: 4,
                                         },
                                         {
@@ -573,7 +574,15 @@ $(function () {
     }());
 
 
+    /* ****************************************************************************** */
+    /* 4、车辆平均反应统计 展示页 */
+    (function () {
+        if ($(".response_main").length != 0) {
+           
 
+        }
+
+    }());
 
 
 

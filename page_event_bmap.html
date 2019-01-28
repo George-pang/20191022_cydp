@@ -17,7 +17,7 @@
 </head>
 
 <body style="background-color:#8ba4d8b8;">
-    <div class="page_title" style="background-color: #0075c7;">
+    <div class="page_title">
         <h3 class="title">朝阳120突发事件统计
             <p class="time_range">
                 <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
@@ -219,8 +219,7 @@
                 ]
             }
         ];
-        // 系列颜色
-        var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53'];
+        var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53']; //系列颜色
         var dom = document.getElementById("eventBarChart");
         var eventBarChart = echarts.init(dom, 'vintage');
 
@@ -324,7 +323,7 @@
                         color: '#fff',
                         fontSize: 24,
                     },
-                    barGap: 0, //柱间距离,为柱子快递的百分比
+                    barGap: 0, //不同系列的柱间距离,为柱子宽度的百分比
                 },
                 {
                     name: '公共安全',

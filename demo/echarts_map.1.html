@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>朝阳站点布局</title>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
+    <!-- <script src="js/pages.js"></script> -->
+</head>
+
+<body>
+    <div class="page_title" style="background-color: #0075c7;">
+        <h3 class="title">朝阳120站点布局</h3>
+    </div>
+    <div class="page_main site_main">
+        <div class="mapContainer" id="mapContainer">
+
+        </div>
+    </div>
+    <!-- 如何在对应区域添加自定义覆盖物？？？ -->
+    <script>
+        var dom = document.getElementById("mapContainer");
+        var myChart = echarts.init(dom);
+        $.get('/data/map.json',function(geoJson){
+		echarts.registerMap('chaoyang',geoJson,{});
+		var option = {
+		    tooltip: {
+		        trigger: 'item',
+            	formatter: '{b}<br/>{c} (p / km2)'
+		    },
+		    visualMap: {
+	            min: 500,
+	            max: 5000,
+	            text:['High','Low'],
+	            left: 'left',
+	            realtime: false,
+	            calculable: true,
+	            inRange: {
+                        color: ['lightskyblue', 'yellow', 'orangered']
+	            }
+	        },
+		    series: [
+		        {
+		        	name: '朝阳区',
+		            type: 'map',
+		            mapType: 'chaoyang',
+		            aspectScale: 0.85,  //地图长度比
+		            label: {
+		                normal: {
+		                    show: true,
+		                    textStyle: {
+		                        color: '#fff'
+		                    }
+		                },
+		                emphasis: {
+		                    show: true,
+		                    textStyle: {
+		                        color: '#333'
+		                    }
+		                }
+		            },
+		            data: [
+		            	{name: '上分区', value: 1700},
+                        {name: '下分区', value: 1000},
+                        {name: '右上分区', value: 1200},
+	  
+		            ]
+		        }                              
+		    ]
+        };
+        myChart.setOption(option);
+
+    });
+        
+    </script>
+</body>
+
+</html>

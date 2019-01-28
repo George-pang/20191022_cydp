@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>组织结构</title>
+    <link rel="stylesheet" type="text/css" href="" />
+    <script src="/lib/jquery.min.js"></script>
+    <!-- 引入d3.js，注意版本，v5会报错 -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body style="background-color:rgba(2, 14, 61,.8)">
+    <div id="dynamicTree"></div>
+
+    <script>
+        function Tree(option) {
+            var _fontSize = 10;
+            var defaultOpt = {
+                width: 900,
+                height: 900,
+                offsetTreeH: 200, //影响树形横向的区域
+                nodeHeight: 20, //节点rect高度
+                nodeWidth: { //传参为null就按字数设置宽度
+                    _0: 160,
+                    _1: 160,
+                    _2: 130,
+                    _3: 110,
+                    _4: 160
+                }, //默认节点宽度
+                selector: null, //挂载元素
+                fontNum: 1.2, //设置字体大小因子
+                fontColors: { //字体颜色
+                    normal: '#fff',
+                    warning: '#e3e3e1',
+                    errors: '#f00'
+                },
+                bgColors: {
+                    normal: '#35ad5b',
+                    warning: '#e3e3e1',
+                    errors: '#f00'
+                },
+                dataUrl: '' //必填
+            };
+
+            option = $.extend(true, defaultOpt, option);
+
+            this.width = option.width;
+            this.height = option.height;
+            this.nodeHeight = option.nodeHeight;
+            this.nodeWidth = option.nodeWidth;
+            this.offsetTreeH = option.offsetTreeH;
+            this.selector = option.selector == null ? "body" : option.selector;
+            this.fontNum = option.fontNum;
+            this.fontColors = option.fontColors;
+            this.bgColors = option.bgColors;
+            this.dataUrl = option.dataUrl;
+            this._getFontSize = function () {
+                return _fontSize;
+            }
+
+        }
+
+        Tree.prototype.init = function () {
+            var that = this;
+            var tree = d3.layout.tree()
+                .size([that.width, that.height - that.offsetTreeH])
+                .separation(function (a, b) { //间隔函数
+                    return (a.parent == b.parent ? 1 : 2) / a.depth;
+                });
+
+            var svg = d3.select(that.selector).append("svg")
+                .attr("width", that.width)
+                .attr("height", that.height)
+                .append("g")
+                .attr("transform", "translate(0,0)");
+
+
+            if (Object.prototype.toString.call(that.dataUrl).toLowerCase() == '[object string]') {
+                d3.json(that.dataUrl, function (error, root) {
+                    if (error) throw error;
+                    render(root);
+                });
+            } else {
+                render(that.dataUrl);
+            }
+
+            function render(root) {
+                var nodes = tree.nodes(root);
+                var links = tree.links(nodes);
+                var link = svg.selectAll(".link")
+                    .data(links)
+                    .enter()
+                    .append("path")
+                    .attr("class", "link")
+                    .attr("d", function (d) {
+                        var lineOffsetWidth;
+
+                        if (that.nodeWidth == null) { //nodeWidth传参为null则按照字数来自动设置宽度
+                            lineOffsetWidth = (d.source.name.length + d.source.number.length + 2) *
+                                that._getFontSize() * that.fontNum;
+                        } else {
+                            lineOffsetWidth = that.nodeWidth['_' + d.source.depth];
+                        }
+
+                        lineOffsetWidth = lineOffsetWidth + 10;
+
+                        return "M" + d.source.y + " " + d.source.x +
+                            "L" + (d.source.y + lineOffsetWidth) + " " + d.source.x +
+                            " L" + (d.source.y + lineOffsetWidth) + " " + d.target.x + " L" +
+                            d.target.y + " " + d.target.x;
+                    })
+                    .attr("style", function () {
+                        return "stroke:#F7881F;fill: none;stroke-width: 1.5px;"
+                    });
+
+                var node = svg.selectAll(".node")
+                    .data(nodes)
+                    .enter()
+                    .append("g")
+                    .attr("class", "node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.y + "," + (d.x - that.nodeHeight / 2) + ")";
+                    })
+                    .attr("style", function (d) {
+                        return "font: " + that._getFontSize() * that.fontNum + "px sans-serif;"
+                    });
+
+                node.append("rect")
+                    .attr("width", function (d) {
+                        return that.nodeWidth == null ?
+                            (d.name.length + d.number.length + 2) * that._getFontSize() * that.fontNum :
+                            that.nodeWidth['_' + d.depth];
+                    })
+                    .attr("height", that.nodeHeight)
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .attr("style", function (d) {
+                        if (d.type === "1") {
+                            return "fill:" + that.bgColors.normal;
+                        } else if (d.type === "2") {
+                            return "fill:" + that.bgColors.warning;
+                        } else {
+                            return "fill:" + that.bgColors.errors;
+                        }
+                    });
+
+                node.append("text")
+                    .attr("dx", function (d) {
+                        return that._getFontSize() * that.fontNum;
+                    })
+                    .attr("dy", (that._getFontSize() * that.fontNum + that.nodeHeight) / 2 - 2)
+                    .style("text-anchor", function (d) {
+                        return "start";
+                    })
+                    .style("fill", "#fff")
+                    .text(function (d) {
+                        return d.name;
+                    });
+
+                node.append("text")
+                    .attr("dx", function (d) {
+                        return that.nodeWidth == null ?
+                            (d.name.length + 2) * that._getFontSize() * that.fontNum :
+                            (that.nodeWidth['_' + d.depth] - 3 * that._getFontSize() * that.fontNum);
+                    })
+                    .attr("dy", (that._getFontSize() * that.fontNum + that.nodeHeight) / 2 - 2)
+                    .style("text-anchor", function (d) {
+                        return "start";
+                    })
+                    .style("fill", "#fff")
+                    .text(function (d) {
+                        return d.number;
+                    });
+
+            }
+        };
+
+        var jsonObject = {
+            "name": "董事会",
+            "number": "12",
+            "type": "1",
+            "children": [{
+                    "name": "职能部门",
+                    "number": "3",
+                    "type": "1",
+                    "children": [{
+                            "name": "o",
+                            "number": "381",
+                            "type": "1",
+                            "children": [{
+                                    "name": "n",
+                                    "number": "180",
+                                    "type": "1",
+                                    "children": [{
+                                            "name": "m",
+                                            "number": "130",
+                                            "type": "1"
+                                        },
+                                        {
+                                            "name": "l",
+                                            "number": "29",
+                                            "type": "1"
+                                        },
+                                        {
+                                            "name": "k",
+                                            "number": "21",
+                                            "type": "1"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "j",
+                                    "number": "145",
+                                    "type": "1",
+                                    "children": [{
+                                            "name": "i",
+                                            "number": "60",
+                                            "type": "1"
+                                        },
+                                        {
+                                            "name": "h",
+                                            "number": "41",
+                                            "type": "1"
+                                        },
+                                        {
+                                            "name": "g",
+                                            "number": "44",
+                                            "type": "1"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "f",
+                                    "number": "56",
+                                    "type": "1",
+                                    "children": [{
+                                            "name": "e",
+                                            "number": "9",
+                                            "type": "1"
+                                        },
+                                        {
+                                            "name": "d",
+                                            "number": "2",
+                                            "type": "1"
+                                        },
+                                        {
+                                            "name": "c",
+                                            "number": "45",
+                                            "type": "1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "b",
+                            "number": "121",
+                            "type": "1"
+                        }
+                    ]
+                },
+                {
+                    "name": "其他",
+                    "number": "1",
+                    "type": "1",
+                    "children": [{
+                            "name": "XX",
+                            "number": "183",
+                            "type": "1",
+                            "children": []
+                        },
+                        {
+                            "name": "XXX",
+                            "number": "8",
+                            "type": "1"
+                        }
+                    ]
+                }
+            ]
+        };
+        var option = {
+            dataUrl: jsonObject,
+            nodeHeight: 30,
+            selector: "#dynamicTree"
+        };
+        var tree = new Tree(option);
+        tree.init();
+    </script>
+</body>
+
+</html>

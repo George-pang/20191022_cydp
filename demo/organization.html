@@ -1,0 +1,894 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head runat="server">
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../CSS/commen.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="../../js/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+        })
+
+        function opennetworkhospital(id) {
+            switch (id) {
+                case 2:
+                    document.getElementById("myimg").src = "../../image/organization/ychospital.png";
+                    break;
+                case 3:
+                    document.getElementById("myimg").src = "../../image/organization/szshospital.png";
+                    break;
+                case 4:
+                    document.getElementById("myimg").src = "../../image/organization/wzhospital.png";
+                    break;
+                case 5:
+                    document.getElementById("myimg").src = "../../image/organization/zwhospital.png";
+                    break;
+                default:
+                    document.getElementById("myimg").src = "../../image/organization/gyhospital.png";
+                    break;
+            }
+            $("#mypopup").css("display", "block");
+        }
+
+        function open120(id) {
+            switch (id) {
+                case 2:
+                    document.getElementById("myimg").src = "../../image/organization/yc120.png";
+                    break;
+                case 3:
+                    document.getElementById("myimg").src = "../../image/organization/szs120.png";
+                    break;
+                case 4:
+                    document.getElementById("myimg").src = "../../image/organization/wz120.png";
+                    break;
+                case 5:
+                    document.getElementById("myimg").src = "../../image/organization/zw120.png";
+                    break;
+                default:
+                    document.getElementById("myimg").src = "../../image/organization/gy120.png";
+                    break;
+            }
+            $("#mypopup").css("display", "block");
+        }
+
+        function closepopup() {
+            $("#mypopup").css("display", "none");
+        }
+
+        function gohome() {
+            window.external.ShowMainEvent();
+        }
+    </script>
+
+    <style type="text/css">
+        .div_top {
+            height: 430px;
+            width: 100%;
+        }
+
+        .div_bottom {
+            height: 390px;
+            width: 100%;
+        }
+
+        .div_part {
+            border: 1px solid #5b5e71;
+            color: #fff;
+            text-align: center;
+            width: 30%;
+            float: left;
+        }
+
+        .div_ycpart {
+            margin: 2% 1% 0 0;
+            padding: 1% 0 0 0;
+            height: 75%;
+        }
+
+        .div_zwpart {
+            margin: 2% 0 0 1%;
+            padding: 1% 0 0 0;
+            height: 75%;
+        }
+
+        .div_szspart {
+            padding: 1% 0 0 0;
+            height: 81%;
+        }
+
+        .div_wzpart,
+        .div_gypart {
+            margin: 0 0 0 1%;
+            padding: 1% 0 0 0;
+            height: 81%;
+        }
+
+        .div_topmiddle {
+            width: 30%;
+            float: left;
+            height: 100%;
+        }
+
+        .div_title {
+            margin: 0 0 0 0;
+            height: 15%;
+            font-size: 1.5em;
+        }
+
+        .yccolor,
+        .btn_yc {
+            background: #0976d0;
+        }
+
+        .zwcolor,
+        .btn_zw {
+            background: #cd3214;
+        }
+
+        .szscolor,
+        .btn_szs {
+            background: #da7f1c;
+        }
+
+        .wzcolor,
+        .btn_wz {
+            background: #258b09;
+        }
+
+        .gycolor,
+        .btn_gy {
+            background: #dc5913;
+        }
+
+        .nxcolor,
+        .btn_nx {
+            background: #4b96ff;
+        }
+
+        .div_wjjyjb {
+            width: 42%;
+            margin: auto;
+            height: 10%;
+            padding: 1.2% 0 0 0;
+            border-radius: 3px;
+            font-size: 1.2em;
+        }
+
+        .div_verticalline2 {
+            height: 10%;
+            width: 1px;
+            margin: auto;
+        }
+
+        .div_yjfzr {
+            height: 10%;
+        }
+
+        .div_yjfzrpost {
+            float: left;
+            height: 100%;
+            width: 26%;
+            border-radius: 3px;
+            margin: 0 0 0 35%;
+            padding: 1.2% 0 0 0;
+            font-size: 1.2em;
+        }
+
+        .div_horizontalline1 {
+            float: left;
+            height: 1px;
+            width: 5%;
+            margin: 4% 0 0 0;
+        }
+
+        .div_yjfzrname {
+            float: left;
+            height: 100%;
+            width: 18%;
+            border-radius: 3px;
+            padding: 1.2% 0 0 0;
+            font-size: 1.2em;
+        }
+
+        .div_yjzg {
+            height: 10%;
+        }
+
+        .div_yjzgpost {
+            float: left;
+            height: 100%;
+            width: 26%;
+            border-radius: 3px;
+            margin: 0 0 0 35%;
+            padding: 1.2% 0 0 0;
+            font-size: 1.2em;
+        }
+
+        .div_yjzgname {
+            float: left;
+            height: 100%;
+            width: 18%;
+            border-radius: 3px;
+            padding: 1.2% 0 0 0;
+            font-size: 1.2em;
+        }
+
+        .div_verticalline1 {
+            height: 5%;
+            width: 1px;
+            margin: auto;
+        }
+
+        .div_horizontalline2 {
+            height: 1px;
+            width: 76%;
+            margin: auto;
+        }
+
+        .div_verticallineparts {
+            height: 3%;
+        }
+
+        .div_verticallinepart {
+            float: left;
+            height: 100%;
+            width: 1px;
+        }
+
+        .div_linepart1 {
+            margin: 0 0 0 12%;
+        }
+
+        .div_linepart2,
+        .div_linepart3 {
+            margin: 0 0 0 25%;
+        }
+
+        .div_linepart4 {
+            margin: 0 0 0 25.4%;
+        }
+
+        .div_optionparts {
+            height: 10%;
+        }
+
+        .div_option {
+            float: left;
+            height: 100%;
+            width: 22%;
+            border-radius: 3px;
+            padding: 2% 0 0 0;
+            font-size: 1.2em;
+        }
+
+        .div_optionnetworkhospital {
+            margin: 0 0 0 1%;
+            padding: 1% 0 1% 0;
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+            color: #fff;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .div_option120 {
+            padding: 1% 0 1% 0;
+        }
+
+        .div_option120,
+        .div_optioncdc {
+            margin: 0 0 0 3%;
+        }
+
+        .div_optionwsjds {
+            margin: 0 0 0 4%;
+        }
+
+        .div_nxpart {
+            width: 100%;
+            color: #fff;
+            text-align: center;
+            height: 60%;
+        }
+
+        .div_nxtitle {
+            margin: 0 0 0 0;
+            height: 15%;
+            font-size: 1.5em;
+        }
+
+        .div_nx120zkzx {
+            width: 40%;
+            margin: auto;
+            height: 10%;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 1.2em;
+        }
+
+        .div_ddzdwyhdsc {
+            width: 40%;
+            margin: auto;
+            height: 10%;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 1.2em;
+        }
+
+        .div_zr {
+            height: 10%;
+        }
+
+        .div_zrpost {
+            float: left;
+            height: 100%;
+            width: 16%;
+            border-radius: 3px;
+            margin: 0 0 0 42%;
+            font-size: 1.2em;
+            padding: 5px;
+        }
+
+        .div_zrname {
+            float: left;
+            height: 100%;
+            width: 18%;
+            border-radius: 3px;
+            padding: 5px;
+            font-size: 1.2em;
+        }
+
+        .div_centerpart {
+            width: 100%;
+            height: 10%;
+        }
+
+        .div_center {
+            float: left;
+            height: 100%;
+            width: 17%;
+            padding: 2px;
+            border-radius: 3px;
+            font-size: 1.2em;
+        }
+
+        .div_gy,
+        .div_zw,
+        .div_yc,
+        .div_wz {
+            margin: 0 2.5% 0 0;
+        }
+
+        .div_nxverticallineparts {
+            height: 5%;
+        }
+
+        .div_nxverticallinepart {
+            float: left;
+            height: 100%;
+            width: 1px;
+        }
+
+        .div_nxlinepart1 {
+            margin: 0 0 0 9%;
+        }
+
+        .div_nxlinepart2,
+        .div_nxlinepart3,
+        .div_nxlinepart4,
+        .div_nxlinepart5 {
+            margin: 0 0 0 20.2%;
+        }
+
+        .div_nameparts {
+            height: 10%;
+        }
+
+        .div_namepart {
+            float: left;
+            height: 100%;
+            width: 17%;
+            border-radius: 3px;
+            padding: 2px;
+        }
+
+        .div_namepart1,
+        .div_namepart2,
+        .div_namepart3,
+        .div_namepart4 {
+            margin: 0 2.5% 0 0;
+        }
+
+        .div_NHFPC {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .img_NHFPC {
+            width: 80%;
+        }
+
+        .div_popup {
+            position: absolute;
+            height: 70%;
+            width: 100%;
+            display: none;
+            top: 20%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1% 0 0 0;
+        }
+
+        .div_btn {
+            float: right;
+            margin: 0 1% 1% 0;
+            height: 30px;
+            width: 30px;
+        }
+
+        .btn_close {
+            background: url("../../image/organization/close.png") no-repeat;
+            background-size: 100% 100%;
+            outline: none;
+            cursor: pointer;
+            border: none;
+            height: 100%;
+            width: 100%;
+        }
+
+        .div_img {
+            clear: both;
+            height: 70%;
+            margin: auto;
+            text-align: center;
+            width: 90%;
+        }
+
+        .imgcss {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="form1" runat="server">
+        <div class="top">
+            <div class="titlecss">
+                组织结构图
+            </div>
+            <button id="btn_home" onclick="gohome()" class="btn_home1">
+            </button>
+            <div class="clr">
+            </div>
+        </div>
+        <hr />
+        <div class="content">
+            <div class="div_top">
+                <div class="div_part div_ycpart">
+                    <div class="div_title">
+                        银川市卫生计生委</div>
+                    <div class="yccolor div_wjjyjb">
+                        银川市卫计局应急办</div>
+                    <div class="yccolor div_verticalline2">
+                    </div>
+                    <div class="div_yjfzr">
+                        <div class="yccolor div_yjfzrpost">
+                            应急副主任</div>
+                        <div class="yccolor div_horizontalline1">
+                        </div>
+                        <div class="yccolor div_yjfzrname">
+                            汤齐生</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="yccolor div_verticalline2">
+                    </div>
+                    <div class="div_yjzg">
+                        <div class="yccolor div_yjzgpost">
+                            应急主管</div>
+                        <div class="yccolor div_horizontalline1">
+                        </div>
+                        <div class="yccolor div_yjzgname">
+                            李瑞琴</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="yccolor div_verticalline1">
+                    </div>
+                    <div class="yccolor div_horizontalline2">
+                    </div>
+                    <div class="div_verticallineparts">
+                        <div class="yccolor div_verticallinepart div_linepart1">
+                        </div>
+                        <div class="yccolor div_verticallinepart div_linepart2">
+                        </div>
+                        <div class="yccolor div_verticallinepart div_linepart3">
+                        </div>
+                        <div class="yccolor div_verticallinepart div_linepart4">
+                        </div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="div_optionparts">
+                        <div class="yccolor div_option div_optionnetworkhospital">
+                            <button class="btn btn_yc" onclick="opennetworkhospital(2)">
+                                网络医院</button>
+                        </div>
+                        <div class="yccolor div_option div_option120">
+                            <button class="btn btn_yc" onclick="open120(2)">
+                                银川120</button>
+                        </div>
+                        <div class="yccolor div_option div_optioncdc">
+                            CDC</div>
+                        <div class="yccolor div_option div_optionwsjds">
+                            卫生监督所</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                </div>
+                <div class="div_topmiddle">
+                    <div class="div_nxpart">
+                        <div class="div_nxtitle">
+                            宁夏120质控管理</div>
+                        <div class="nxcolor div_nx120zkzx">
+                            宁夏120质控中心</div>
+                        <div class="nxcolor div_verticalline2">
+                        </div>
+                        <div class="nxcolor div_ddzdwyhdsc">
+                            调度指导委员会DSC</div>
+                        <div class="nxcolor div_verticalline2">
+                        </div>
+                        <div class="div_zr">
+                            <div class="nxcolor div_zrpost">
+                                主任</div>
+                            <div class="nxcolor div_horizontalline1">
+                            </div>
+                            <div class="nxcolor div_zrname">
+                                田纪安</div>
+                            <div class="clr">
+                            </div>
+                        </div>
+                        <div class="nxcolor div_verticalline2">
+                        </div>
+                        <div class="div_centerpart">
+                            <div class="nxcolor div_center div_gy">
+                                <button class="btn btn_nx" onclick="openQC(6)">
+                                    固原市</button>
+                            </div>
+                            <div class="nxcolor div_center div_zw">
+                                <button class="btn btn_nx" onclick="openQC(5)">
+                                    中卫市</button>
+                            </div>
+                            <div class="nxcolor div_center div_yc">
+                                <button class="btn btn_nx" onclick="openQC(2)">
+                                    银川市</button>
+                            </div>
+                            <div class="nxcolor div_center div_wz">
+                                <button class="btn btn_nx" onclick="openQC(4)">
+                                    吴忠市</button>
+                            </div>
+                            <div class="nxcolor div_center div_szs">
+                                <button class="btn btn_nx" onclick="openQC(3)">
+                                    石嘴山市</button>
+                            </div>
+                            <div class="clr">
+                            </div>
+                        </div>
+                        <div class="div_nxverticallineparts">
+                            <div class="nxcolor div_nxverticallinepart div_nxlinepart1">
+                            </div>
+                            <div class="nxcolor div_nxverticallinepart div_nxlinepart2">
+                            </div>
+                            <div class="nxcolor div_nxverticallinepart div_nxlinepart3">
+                            </div>
+                            <div class="nxcolor div_nxverticallinepart div_nxlinepart4">
+                            </div>
+                            <div class="nxcolor div_nxverticallinepart div_nxlinepart5">
+                            </div>
+                            <div class="clr">
+                            </div>
+                        </div>
+                        <div class="div_nameparts">
+                            <div class="nxcolor div_namepart div_namepart1">
+                                朱志强
+                            </div>
+                            <div class="nxcolor div_namepart div_namepart2">
+                                吴秀珍
+                            </div>
+                            <div class="nxcolor div_namepart div_namepart3">
+                                田纪安
+                            </div>
+                            <div class="nxcolor div_namepart div_namepart4">
+                                景玉琼
+                            </div>
+                            <div class="nxcolor div_namepart div_namepart5">
+                                骆静
+                            </div>
+                            <div class="clr">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div_NHFPC">
+                        <img src="../../image/organization/nxQC.png" class="img_NHFPC" />
+                    </div>
+                </div>
+                <div class="div_part div_zwpart">
+                    <div class="div_title">
+                        中卫市卫生计生局</div>
+                    <div class="zwcolor div_wjjyjb">
+                        中卫市卫计局应急办</div>
+                    <div class="zwcolor div_verticalline2">
+                    </div>
+                    <div class="div_yjfzr">
+                        <div class="zwcolor div_yjfzrpost">
+                            应急副主任</div>
+                        <div class="zwcolor div_horizontalline1">
+                        </div>
+                        <div class="zwcolor div_yjfzrname">
+                            尹鹏睿</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="zwcolor div_verticalline2">
+                    </div>
+                    <div class="div_yjzg">
+                        <div class="zwcolor div_yjzgpost">
+                            应急主管</div>
+                        <div class="zwcolor div_horizontalline1">
+                        </div>
+                        <div class="zwcolor div_yjzgname">
+                            岳学虎</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="zwcolor div_verticalline1">
+                    </div>
+                    <div class="zwcolor div_horizontalline2">
+                    </div>
+                    <div class="div_verticallineparts">
+                        <div class="zwcolor div_verticallinepart div_linepart1">
+                        </div>
+                        <div class="zwcolor div_verticallinepart div_linepart2">
+                        </div>
+                        <div class="zwcolor div_verticallinepart div_linepart3">
+                        </div>
+                        <div class="zwcolor div_verticallinepart div_linepart4">
+                        </div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="div_optionparts">
+                        <div class="zwcolor div_option div_optionnetworkhospital">
+                            <button class="btn btn_zw" onclick="opennetworkhospital(5)">
+                                网络医院</button>
+                        </div>
+                        <div class="zwcolor div_option div_option120">
+                            <button class="btn btn_zw" onclick="open120(5)">
+                                中卫120</button>
+                        </div>
+                        <div class="zwcolor div_option div_optioncdc">
+                            CDC</div>
+                        <div class="zwcolor div_option div_optionwsjds">
+                            卫生监督所</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                </div>
+                <div class="clr">
+                </div>
+            </div>
+            <div class="div_bottom">
+                <div class="div_part div_szspart">
+                    <div class="div_title">
+                        石嘴山市卫生计生局</div>
+                    <div class="szscolor div_wjjyjb">
+                        石嘴山市卫计局应急办</div>
+                    <div class="szscolor div_verticalline2">
+                    </div>
+                    <div class="div_yjfzr">
+                        <div class="szscolor div_yjfzrpost">
+                            应急副主任</div>
+                        <div class="szscolor div_horizontalline1">
+                        </div>
+                        <div class="szscolor div_yjfzrname">
+                            王新云</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="szscolor div_verticalline2">
+                    </div>
+                    <div class="div_yjzg">
+                        <div class="szscolor div_yjzgpost">
+                            应急主管</div>
+                        <div class="szscolor div_horizontalline1">
+                        </div>
+                        <div class="szscolor div_yjzgname">
+                            向主任</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="szscolor div_verticalline1">
+                    </div>
+                    <div class="szscolor div_horizontalline2">
+                    </div>
+                    <div class="div_verticallineparts">
+                        <div class="szscolor div_verticallinepart div_linepart1">
+                        </div>
+                        <div class="szscolor div_verticallinepart div_linepart2">
+                        </div>
+                        <div class="szscolor div_verticallinepart div_linepart3">
+                        </div>
+                        <div class="szscolor div_verticallinepart div_linepart4">
+                        </div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="div_optionparts">
+                        <div class="szscolor div_option div_optionnetworkhospital">
+                            <button class="btn btn_szs" onclick="opennetworkhospital(3)">
+                                网络医院</button>
+                        </div>
+                        <div class="szscolor div_option div_option120">
+                            <button class="btn btn_szs" onclick="open120(3)">
+                                石嘴山120</button>
+                        </div>
+                        <div class="szscolor div_option div_optioncdc">
+                            CDC</div>
+                        <div class="szscolor div_option div_optionwsjds">
+                            卫生监督所</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                </div>
+                <div class="div_part div_wzpart">
+                    <div class="div_title">
+                        吴忠市卫生计生局</div>
+                    <div class="wzcolor div_wjjyjb">
+                        吴忠市卫计局应急办</div>
+                    <div class="wzcolor div_verticalline2">
+                    </div>
+                    <div class="div_yjfzr">
+                        <div class="wzcolor div_yjfzrpost">
+                            应急副主任</div>
+                        <div class="wzcolor div_horizontalline1">
+                        </div>
+                        <div class="wzcolor div_yjfzrname">
+                            郑中</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="wzcolor div_verticalline2">
+                    </div>
+                    <div class="div_yjzg">
+                        <div class="wzcolor div_yjzgpost">
+                            应急主管</div>
+                        <div class="wzcolor div_horizontalline1">
+                        </div>
+                        <div class="wzcolor div_yjzgname">
+                            田学智</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="wzcolor div_verticalline1">
+                    </div>
+                    <div class="wzcolor div_horizontalline2">
+                    </div>
+                    <div class="div_verticallineparts">
+                        <div class="wzcolor div_verticallinepart div_linepart1">
+                        </div>
+                        <div class="wzcolor div_verticallinepart div_linepart2">
+                        </div>
+                        <div class="wzcolor div_verticallinepart div_linepart3">
+                        </div>
+                        <div class="wzcolor div_verticallinepart div_linepart4">
+                        </div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="div_optionparts">
+                        <div class="wzcolor div_option div_optionnetworkhospital">
+                            <button class="btn btn_wz" onclick="opennetworkhospital(4)">
+                                网络医院</button>
+                        </div>
+                        <div class="wzcolor div_option div_option120">
+                            <button class="btn btn_wz" onclick="open120(4)">
+                                吴忠120</button>
+                        </div>
+                        <div class="wzcolor div_option div_optioncdc">
+                            CDC</div>
+                        <div class="wzcolor div_option div_optionwsjds">
+                            卫生监督所</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                </div>
+                <div class="div_part div_gypart">
+                    <div class="div_title">
+                        固原市卫生计生局</div>
+                    <div class="gycolor div_wjjyjb">
+                        固原市卫计局应急办</div>
+                    <div class="gycolor div_verticalline2">
+                    </div>
+                    <div class="div_yjfzr">
+                        <div class="gycolor div_yjfzrpost">
+                            应急副主任</div>
+                        <div class="gycolor div_horizontalline1">
+                        </div>
+                        <div class="gycolor div_yjfzrname">
+                            胡秉平</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="gycolor div_verticalline2">
+                    </div>
+                    <div class="div_yjzg">
+                        <div class="gycolor div_yjzgpost">
+                            应急主管</div>
+                        <div class="gycolor div_horizontalline1">
+                        </div>
+                        <div class="gycolor div_yjzgname">
+                            马桂玲</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="gycolor div_verticalline1">
+                    </div>
+                    <div class="gycolor div_horizontalline2">
+                    </div>
+                    <div class="div_verticallineparts">
+                        <div class="gycolor div_verticallinepart div_linepart1">
+                        </div>
+                        <div class="gycolor div_verticallinepart div_linepart2">
+                        </div>
+                        <div class="gycolor div_verticallinepart div_linepart3">
+                        </div>
+                        <div class="gycolor div_verticallinepart div_linepart4">
+                        </div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                    <div class="div_optionparts">
+                        <div class="gycolor div_option div_optionnetworkhospital">
+                            <button class="btn btn_gy" onclick="opennetworkhospital(6)">
+                                网络医院</button>
+                        </div>
+                        <div class="gycolor div_option div_option120">
+                            <button class="btn btn_gy" onclick="open120(6)">
+                                固原120</button>
+                        </div>
+                        <div class="gycolor div_option div_optioncdc">
+                            CDC</div>
+                        <div class="gycolor div_option div_optionwsjds">
+                            卫生监督所</div>
+                        <div class="clr">
+                        </div>
+                    </div>
+                </div>
+                <div class="clr">
+                </div>
+            </div>
+        </div>
+        <div class="div_popup" id="mypopup">
+            <div class="div_btn">
+                <button class="btn_close" onclick="closepopup()">
+                </button>
+            </div>
+            <div class="div_img">
+                <img src="" class="imgcss" id="myimg" />
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

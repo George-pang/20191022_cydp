@@ -6,12 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>朝阳站点布局</title>
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/pages.css">
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/echarts.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
     <!-- 引入百度地图api文件 -->
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
     <!-- <script src="js/pages.js"></script> -->
 </head>
 
@@ -32,7 +31,7 @@
         option = null;
         myChart.showLoading();
 
-        $.get('data/cyq.json', function (geoJson) {
+        $.get('/data/cyq.json', function (geoJson) {
 
             myChart.hideLoading();
 
@@ -57,7 +56,7 @@
                     }
                 },
                 series: [{
-                    name: '香港18区人口密度',
+                    name: '北京市地图',
                     type: 'map',
                     mapType: 'CY', // 自定义扩展图表类型
                     itemStyle: {
@@ -85,7 +84,7 @@
                             // value: 31686.1,
                             //自定义特殊itemStyle，仅对该item有效
                             itemStyle: {
-                                areaColor:'#00ff33'
+                                areaColor: '#00ff33'
                             }
                         },
                         {
@@ -162,7 +161,8 @@
                     //     'Wong Tai Sin': '黄大仙',
                     //     'Yau Tsim Mong': '油尖旺',
                     //     'Yuen Long': '元朗'
-                    // }
+                    // },
+
                     markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
                         symbol: 'pin', //钉子形
                         symbolSize: 100,
@@ -187,13 +187,34 @@
                         },
                         data: [{
                                 name: "朝阳区",
-                                coord: [116.456937,39.93331] //标注的坐标点
+                                coord: [116.456937, 39.93331] //标注的坐标点
                             },
                             // {
                             //     name: "通州区",
                             //     coord: [116.552471, 39.761261],
                             // }
                         ],
+                    },
+                    // markLine:{ //画线
+                    // },
+                    markArea: {  //貌似只能画正方形？而且使用百度坐标怎么一直在左下角
+                        label: {
+                            show: true,
+                        },
+                        data: [
+                            [{
+                                    name: '朝阳区朝外大街',
+                                    coord: [116.445051,39.924537]
+                                },
+                                {
+                                    coord: [113.461205, 34.925747]
+                                }
+                            ],
+                        ],
+                        itemStyle: {
+                            color: 'blue',
+                        }
+
                     },
                 }]
             });
