@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>当日无车原因及区域展示</title>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
+    <script src="/lib/vintage.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
+    <script src="/js/pages.js"></script>
+</head>
+
+<body style="background-color:#8ba4d8b8;">
+    <div class="page_title">
+        <h3 class="title">当日无车原因及区域展示
+            <p class="time_range">
+                <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
+                <span class="start_time"></span>---<span class="end_time"></span>
+            </p>
+        </h3>
+    </div>
+    <div class="page_main noCar_main">
+        <!-- 左侧echarts地图 -->
+        <div class="mapContainer" id="map_event">
+            <div class="mapChart" id="carMapChart">
+
+            </div>
+        </div>
+        <!-- 右侧数据统计 -->
+        <div class="data_statistics">
+            <!-- <h3 class="chart_title">各分区突发事件数据统计</h3> -->
+            <div class="chartContainer">
+                <!-- 右侧数据统计饼图 -->
+                <div class="noCarPieChart" id="noCarPieChart">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- 显示时间范围 -->
+    <script>
+        // var timeData = {
+        //     "startTime": "2019年03月01日 08:00",
+        //     "endTime": "2019年03月01日 18:00"
+        // };
+        // setTimeRange(timeData);
+
+        // function setTimeRange(data) {
+        //     $(".start_time").html(data.startTime);
+        //     $(".end_time").html(data.endTime);
+        // }
+    </script>
+
+</body>
+
+</html>

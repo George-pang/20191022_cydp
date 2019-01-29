@@ -6,14 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> -->
     <title>组织结构</title>
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
-    <link rel="stylesheet" href="css/pages.css">
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/echarts.min.js"></script>
-    <script src="js/pages.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
+    <!-- <script src="/js/pages.js"></script> -->
 </head>
 
-<body style="background-image:url(images/beijingtu.png)">
+<body style="background-image:url(/images/beijingtu.png)">
     <div class="page_title">
         <h3 class="title">组织结构
             <p class="time_range">
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <!-- <script>
+    <script>
         var dom = document.getElementById("treeContainer");
         var myChart = echarts.init(dom);
         // myChart.showLoading(); //显示加载样式
@@ -43,16 +43,16 @@
             series: [{
                 name: '树图',
                 type: 'tree',
-                layout:'orthogonal',
+                layout: 'orthogonal',
                 orient: 'LR', //从左到右，从右到左；从上到下，从下到上,取值分别为 'LR' , 'RL', 'TB', 'BT'
-                top:'5%',//tree组件离容器上侧的距离。
-                bottom:'5%',
+                top: '5%', //tree组件离容器上侧的距离。
+                bottom: '5%',
                 // left:'5%',
                 // right:'5%',
                 symbol: 'rect', //设置节点标记的图形
                 symbolSize: [100, 50], //标记图形的长宽
-                expandAndCollapse:false,//是否打开子树折叠和展开的交互
-                initialTreeDepth:3,
+                expandAndCollapse: false, //是否打开子树折叠和展开的交互
+                initialTreeDepth: 3, //初始展开节点级别
                 itemStyle: { //节点样式
                     color: 'transparent', //节点填充色--区分折叠还是展开
                     borderColor: "#c23531", //图形的描边颜色
@@ -60,18 +60,18 @@
                 },
                 label: { //文本标签样式
                     show: true,
-                    position: 'inside',//标签的位置:位于图形标记盒内部
-                    color: '#fff', //文字颜色\
+                    position: 'inside', //标签的位置:位于图形标记盒内部
+                    color: '#fff', //文字颜色
                     fontSize: 24,
                     // height:50,
-                    backgroundColor: '#258b09', //文字块背景色
+                    // backgroundColor: 'red', //文字块背景色
                     borderRadius: 3,
                     formatter: '{b|{b}}', //{b}数据名
                     rich: {
                         b: {
                             color: '#fff',
-                            padding:10,
-                            borderRadius:5,
+                            padding: 10,
+                            borderRadius: 5,
                             backgroundColor: '#258b09',
                             fontSize: 24,
                             // height:50,
@@ -84,7 +84,8 @@
                     color: '#fff',
                     width: 1,
                     curveness: 1,
-                    type: 'solid' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+                    type: 'curve' // 线条样式，可选为：'solid' | 'dotted' | 'dashed' 
+                    // echarts2版本里,树图还可以选：'curve' | 'broken',3版本里去掉啦
                 },
                 emphasis: {
                     label: {
@@ -93,7 +94,7 @@
                 },
                 data: [{
                     name: '董事会',
-                    value: 6,     // value 值，只在 tooltip 中显示
+                    value: 6, // value 值，只在 tooltip 中显示
                     children: [{
                         name: '总经理',
                         value: 6,
@@ -118,7 +119,7 @@
                                 name: '项目中心',
                                 value: 4,
                                 children: [{
-                                        name: '售前支持部',
+                                        name: '售前支持',
                                         value: 4,
                                     },
                                     {
@@ -167,8 +168,8 @@
         };
         // 为echarts对象加载数据 
         myChart.setOption(option);
-    </script> -->
-    <!-- <script src="js/function.js"></script> -->
+    </script>
+
 </body>
 
 </html>

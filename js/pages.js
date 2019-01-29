@@ -1,8 +1,12 @@
 /* 本地页面调试js文件 */
 $(function () {
-    var timeData={"startTime":"2019年02月01日 08:00","endTime":"2019年03月01日 08:00"};
+    var timeData = {
+        "startTime": "2019年02月01日 08:00",
+        "endTime": "2019年03月01日 08:00"
+    };
     setTimeRange(timeData);
-    function setTimeRange(data){
+
+    function setTimeRange(data) {
         $(".start_time").html(data.startTime);
         $(".end_time").html(data.endTime);
     }
@@ -11,144 +15,75 @@ $(function () {
     /* 1、组织结构 展示页 */
     (function () {
         if ($("#treeContainer").length != 0) {
-
             var dom = document.getElementById("treeContainer");
             var myChart = echarts.init(dom);
             // myChart.showLoading(); //显示加载样式
-            var option = {
-                tooltip: {
-                    show: true,
-                    trigger: 'item',
-                    formatter: "{b}: {c}"
-                },
-                series: [{
-                    name: '树图',
-                    type: 'tree',
-                    layout: 'orthogonal',
-                    orient: 'LR', //从左到右，从右到左；从上到下，从下到上,取值分别为 'LR' , 'RL', 'TB', 'BT'
-                    top: '5%', //tree组件离容器上侧的距离。
-                    bottom: '5%',
-                    // left:'5%',
-                    // right:'5%',
-                    symbol: 'rect', //设置节点标记的图形
-                    symbolSize: [100, 50], //标记图形的长宽
-                    expandAndCollapse: false, //是否打开子树折叠和展开的交互
-                    initialTreeDepth: 3,//初始展开节点级别
-                    itemStyle: { //节点样式
-                        color: 'transparent', //节点填充色--区分折叠还是展开
-                        borderColor: "#c23531", //图形的描边颜色
-                        borderWidth: 0, //描边线宽。为 0 时无描边。
+            $.get("/data/tree.json", function (data) {
+                option = {
+                    // title: {
+                    //     text: '朝阳120组织结构图',
+                    // },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{b}"
                     },
-                    label: { //文本标签样式
-                        show: true,
-                        position: 'inside', //标签的位置:位于图形标记盒内部
-                        color: '#fff', //文字颜色
-                        fontSize: 24,
-                        // height:50,
-                        // backgroundColor: 'red', //文字块背景色
-                        borderRadius: 3,
-                        formatter: '{b|{b}}', //{b}数据名
-                        rich: {
-                            b: {
-                                color: '#fff',
-                                padding: 10,
-                                borderRadius: 5,
-                                backgroundColor: '#258b09',
-                                fontSize: 24,
-                                // height:50,
-                                // lineHeight: 50,
+                    calculable: false,
+                    series: [{
+                        name: '树图',
+                        type: 'tree',
+                        orient: 'vertical', // vertical horizontal
+                        rootLocation: {
+                            x: 'center',
+                            y: 100
+                        }, // 根节点位置  {x: 'center',y: 10}
+                        layerPadding: 200, //父子节点间连接线的长度
+                        nodePadding: 20, //同级节点间的间隔
+                        symbol: 'emptyRectangle',
+                        symbolSize: [100, 50],
+                        itemStyle: { //图形样式
+                            normal: {
+                                color: '#258b09', //颜色，主色
+                                label: {
+                                    show: true,
+                                    position: 'inside',
+                                    textStyle: {
+                                        color: '#fff',
+                                        fontSize: 20,
+                                        fontWeight: 'bolder',
+                                        //e2版本里貌似给文字设置下列属性无效？？？
+                                        // padding: 10,
+                                        // borderRadius: 5,
+                                        // backgroundColor: '#258b09',
+                                    }
+                                },
+                                lineStyle: {
+                                    color: '#258b09',
+                                    width: 1,
+                                    type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+                                }
                             },
 
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    position: 'inside',
+                                    textStyle: {
+                                        color: '#fff',
+                                        fontSize: 20,
+                                        fontWeight: 'bolder',
+
+                                    }
+                                }
+                            }
                         },
-                    },
-                    lineStyle: {
-                        color: '#fff',
-                        width: 1,
-                        curveness: 1,
-                        type: 'curve' // 线条样式，可选为：'solid' | 'dotted' | 'dashed' 
-                        // echarts2版本里,树图还可以选：'curve' | 'broken',3版本里去掉啦
-                    },
-                    emphasis: {
-                        label: {
-                            show: false
-                        }
-                    },
-                    data: [{
-                        name: '董事会',
-                        value: 6, // value 值，只在 tooltip 中显示
-                        children: [{
-                            name: '总经理',
-                            value: 6,
-                            children: [{
-                                    name: '营销中心',
-                                    value: 4,
-                                    children: [{
-                                            name: '市场部',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '销售部',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '客服部',
-                                            value: 4,
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: '项目中心',
-                                    value: 4,
-                                    children: [{
-                                            name: '售前支持',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '项目一部',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '项目二部',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '项目三部',
-                                            value: 4,
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: '技术中心',
-                                    value: 4,
-                                    children: [{
-                                            name: '开发部',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '设计部',
-                                            value: 4,
-                                        },
-                                        {
-                                            name: '系统部',
-                                            value: 4,
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: '行政部',
-                                    value: 4,
-                                },
-                                {
-                                    name: '财务部',
-                                    value: 4,
-                                },
-                            ]
-                        }]
+                        data: [data],
                     }]
-                }]
-            };
-            // 为echarts对象加载数据 
-            myChart.setOption(option);
+                };
+                myChart.setOption(option);
+            });
+
+
+
 
         }
 
@@ -205,7 +140,7 @@ $(function () {
             var map = new BMap.Map("mapContainer");
             mapInit(); //初始化地图
             // getBoundary(map,"北京市","北京市朝阳区","#fff",1); //显示朝阳区行政版块覆盖物
-            getBoundary(map,"北京市朝阳区","北京市朝阳区","#16a085",0.1); //显示朝阳区行政版块覆盖物
+            getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#16a085", 0.1); //显示朝阳区行政版块覆盖物
             //创建多个标注点并添加信息窗口
             renderPoint(data_info, "stationList");
             //渲染地图右侧信息块 内容
@@ -233,6 +168,9 @@ $(function () {
                     // enableGeolocation: true
                 });
                 map.addControl(navigationControl);
+                // var traffic = new BMap.TrafficLayer();
+                // map.addTileLayer(traffic);
+                // map.removeTileLayer(traffic);
 
             }
             //function:根据传入配置项对象来设置信息窗口的内容
@@ -341,7 +279,7 @@ $(function () {
             }
             //function:在地图上显示行政区域划分
             //参数：map:Map类实例对象; name: 查询省、直辖市、地级市、或县的名称;center:地图中心点
-            function getBoundary(map,name,center,fillColor,fillOpacity) {
+            function getBoundary(map, name, center, fillColor, fillOpacity) {
                 var bdary = new BMap.Boundary(); //此类表示一个行政区域的边界。
                 //返回行政区域的边界。 name: 查询省、直辖市、地级市、或县的名称。 callback:执行查询后，数据返回到客户端的回调函数
                 bdary.get(name, function (rs) { //获取行政区域 
@@ -373,193 +311,408 @@ $(function () {
         }
     }());
 
+
     /* ****************************************************************************** */
     /* 3、突发事件统计 展示页 */
     (function () {
         if ($(".event_main").length != 0) {
-            // 本地测试数据
-            var data = [{
-                    "area": "来广营乡",
-                    "num": 10,
-                    "x坐标": 116.440564,
-                    "y坐标": 40.038123,
-                    "event": "CO中毒"
+            //渲染左侧echarts地图
+            var dom = document.getElementById("mapChart");
+            var myChart = echarts.init(dom);
+            $.get('/data/map.json', function (geoJson) {
+                echarts.registerMap('chaoyang', geoJson, {});
+                var option = {
+                    title: {
+                        text: '朝阳120各片区突发事件统计',
+                        left: 'center',
+                        bottom: 30,
+                        textStyle: {
+                            fontSize: 24,
+                            color: '#fff',
+                            fontWeight: 400,
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}<br/>'
+                    },
+                    visualMap: { //自定义视觉映射
+                        show: false,
+                        min: 0,
+                        max: 300,
+                        text: ['High', 'Low'],
+                        left: 'left',
+                        realtime: false,
+                        calculable: true,
+                        inRange: {
+                            color: ['#d94e5d', '#eac736', '#50a3ba']
+                        }
+                    },
+                    series: [{
+                        name: '朝阳120各分区突发事件统计',
+                        type: 'map',
+                        mapType: 'chaoyang',
+                        aspectScale: 0.75, //地图长度比
+                        label: { //图形上的文本标签---对应json数据上的多边形分区name值
+                            normal: { //正常时的样式
+                                show: true,
+                                textStyle: {
+                                    color: '#fff',
+                                    fontSize: 18,
+                                }
+                            },
+                            emphasis: { //高亮时的样式设置
+                                show: true,
+                                textStyle: {
+                                    color: '#333'
+                                }
+                            }
+                        },
+                        data: [{
+                                name: '朝阳区',
+                                value: 0
+                            },
+                            {
+                                name: '上分区', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                value: 80 //value值对应颜色映射的取值
+                            },
+                            {
+                                name: '下分区',
+                                value: 180
+                            },
+                            {
+                                name: '右上分区',
+                                value: 250
+                            },
+
+                        ],
+                        itemStyle: { //地图区域的多边形 图形样式。
+                            borderColor: '#fff', //图形的描边颜色
+                            borderWidth: 1,
+                            borderType: 'dashed',
+
+                        },
+                        markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
+                            symbol: 'pin', //钉子形
+                            symbolSize: 150,
+                            itemStyle: {
+                                normal: {
+                                    color: '#4b96ff'
+                                }
+                            },
+                            label: { //标注的文本。
+                                normal: {
+                                    show: true,
+                                    formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
+                                        return d.name + "\t" + d.value + "起"
+                                    },
+                                    textStyle: {
+                                        fontSize: 18,
+                                        fontFamily: '微软雅黑',
+                                        color: '#fff'
+                                    },
+                                    position: 'inside',
+                                }
+                            },
+                            data: [{
+                                    name: "火灾",
+                                    coord: [116.456937, 39.93331], //标注的坐标点
+                                    value: 20
+                                },
+                                // {
+                                //     name: "通州区",
+                                //     coord: [116.552471, 39.761261],
+                                // }
+                            ],
+                        },
+                    }]
+                };
+                myChart.setOption(option);
+
+            });
+
+            // 渲染右侧柱状图
+            // 模拟数据
+            var totalData = [{
+                "name": "火灾",
+                "totalNum": 10,
+            }, {
+                "name": "CO中毒",
+                "totalNum": 10,
+            }, {
+                "name": "溺水",
+                "totalNum": 10,
+            }, {
+                "name": "公共安全事件",
+                "totalNum": 10,
+            }, {
+                "name": "特殊事件",
+                "totalNum": 10,
+            }];
+            var eventData = [{
+                    "name": "A区",
+                    "data": [{
+                            "name": "火灾",
+                            "num": 5
+                        },
+                        {
+                            "name": "CO中毒",
+                            "num": 3
+                        },
+                        {
+                            "name": "溺水",
+                            "num": 6
+                        },
+                        {
+                            "name": "公共事件",
+                            "num": 7
+                        },
+                        {
+                            "name": "特殊事件",
+                            "num": 2
+                        }
+                    ]
                 },
                 {
-                    "area": "建外街道",
-                    "num": 12,
-                    "x坐标": 116.451992,
-                    "y坐标": 39.931144,
-                    "event": "CO中毒"
+                    "name": "B区",
+                    "data": [{
+                            "name": "火灾",
+                            "num": 5
+                        },
+                        {
+                            "name": "CO中毒",
+                            "num": 3
+                        },
+                        {
+                            "name": "溺水",
+                            "num": 6
+                        },
+                        {
+                            "name": "公共安全事件",
+                            "num": 7
+                        },
+                        {
+                            "name": "特殊事件",
+                            "num": 2
+                        }
+                    ]
                 },
                 {
-                    "area": "三里屯街道",
-                    "num": 13,
-                    "x坐标": 116.489279,
-                    "y坐标": 39.926078,
-                    "event": "火灾"
+                    "name": "C区",
+                    "data": [{
+                            "name": "火灾",
+                            "num": 5
+                        },
+                        {
+                            "name": "CO中毒",
+                            "num": 3
+                        },
+                        {
+                            "name": "溺水",
+                            "num": 6
+                        },
+                        {
+                            "name": "公共安全事件",
+                            "num": 7
+                        },
+                        {
+                            "name": "特殊事件",
+                            "num": 2
+                        }
+                    ]
                 },
                 {
-                    "area": "潘家园街道",
-                    "num": 14,
-                    "x坐标": 116.460197,
-                    "y坐标": 39.931144,
-                    "event": "火灾"
+                    "name": "D区",
+                    "data": [{
+                            "name": "火灾",
+                            "num": 5
+                        },
+                        {
+                            "name": "CO中毒",
+                            "num": 3
+                        },
+                        {
+                            "name": "溺水",
+                            "num": 6
+                        },
+                        {
+                            "name": "公共安全事件",
+                            "num": 7
+                        },
+                        {
+                            "name": "特殊事件",
+                            "num": 2
+                        }
+                    ]
                 },
+                {
+                    "name": "E区",
+                    "data": [{
+                            "name": "火灾",
+                            "num": 5
+                        },
+                        {
+                            "name": "CO中毒",
+                            "num": 3
+                        },
+                        {
+                            "name": "溺水",
+                            "num": 6
+                        },
+                        {
+                            "name": "公共安全事件",
+                            "num": 7
+                        },
+                        {
+                            "name": "特殊事件",
+                            "num": 2
+                        }
+                    ]
+                }
             ];
-            // 百度地图API功能
-            var mp = new BMap.Map("map_event");
-            eventMapInit();
-            getBoundary(mp,"北京市朝阳区","北京市朝阳区");
-            setConstructorPrototype();
-            addCompOverlay(data);
+            // 系列颜色
+            var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53'];
+            var dom = document.getElementById("eventBarChart");
+            var eventBarChart = echarts.init(dom, 'vintage');
 
-            //function:初始化地图配置
-            function eventMapInit() {
-                mp.centerAndZoom("北京市朝阳区");
-                mp.enableScrollWheelZoom();
-            }
-            //自定义构造函数: 复杂的自定义覆盖物
-            function ComplexCustomOverlay(point, text, num, bgColor) {
-                this._point = point;
-                this._text = text;
-                this._num = num;
-                this._bgColor = bgColor;
-                // this._overText = mouseoverText;
-            }
-            //指定自定义构造函数的原型对象并添加方法
-            function setConstructorPrototype() {
-                ComplexCustomOverlay.prototype = new BMap.Overlay();
-                //初始化覆盖物，当调用map.addOverlay时，API将调用此方法。
-                ComplexCustomOverlay.prototype.initialize = function (map) {
-                    this._map = map;
-                    var div = this._div = document.createElement("div");
-                    div.style.position = "absolute";
-                    div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
-                    div.style.backgroundColor = this._bgColor;
-                    // div.style.border = "1px solid #BC3B3A";
-                    div.style.color = "white";
-                    div.style.height = "40px";
-                    div.style.padding = "0 12px";
-                    div.style.lineHeight = "40px";
-                    div.style.whiteSpace = "nowrap";
-                    div.style.MozUserSelect = "none";
-                    div.style.fontSize = "18px"
-                    div.style.borderRadius = "4px";
-                    div.style.boxShadow = "1px 2px 3px rgba(0,0,0,0.3)";
-                    div.style.cursor = "pointer";
-                    var span = this._span = document.createElement("span");
-                    span.style.display = "inline-block";
-                    span.style.height = "40px";
-                    span.style.lineHeight = "40px";
-                    div.appendChild(span);
-                    span.appendChild(document.createTextNode(this._text + "\t" + this._num + "起"));
-                    var that = this; //防止与事件处理函数内部的this冲突
-
-                    //倒三角箭头
-                    var arrow = this._arrow = document.createElement("i");
-                    arrow.style.zIndex = 2;
-                    arrow.style.display = "block";
-                    arrow.style.borderColor = "transparent transparent transparent transparent";
-                    arrow.style.borderTopColor = that._bgColor;
-                    arrow.style.width = 0;
-                    arrow.style.height = 0;
-                    arrow.style.lineHeight = 0;
-                    arrow.style.fontSize = 0;
-                    arrow.style.borderWidth = "15px 8px";
-                    arrow.style.borderStyle = "solid dashed dashed dashed";
-                    arrow.style.position = "absolute";
-                    arrow.style.top = "40px";
-                    arrow.style.left = "30%";
-                    arrow.style.transform = "translateX(-50%)";
-                    arrow.style.opacity = .85;
-                    div.appendChild(arrow);
-
-                    //鼠标移入移出背景色改变
-                    div.onmouseover = function () {
-                        this.style.backgroundColor = "rgba(255,102,0,.85)";
-                        this.getElementsByTagName("i")[0].style.borderColor = "#f60 transparent transparent transparent";
-                        // arrow.style.backgroundPosition = "0px -20px";
+            option = {
+                color: colors,
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                     }
-
-                    div.onmouseout = function () {
-                        // console.log(that._bgColor);
-                        this.style.backgroundColor = that._bgColor;
-
-                        // arrow.style.backgroundPosition = "0px 0px";
-                        this.getElementsByTagName("i")[0].style.borderTopColor = that._bgColor;
+                },
+                legend: {
+                    left: '3%',
+                    itemWidth: 15,
+                    itemHeight: 15,
+                    data: ['火灾', 'CO中毒', '溺水', '公共安全', '特殊事件'],
+                    textStyle: {
+                        fontSize: 20,
+                        color: 'rgba(0,0,0,.6)',
+                        fontWeight: 'lighter',
+                    },
+                },
+                grid: {
+                    top: 100,
+                    left: '0',
+                    right: '4%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: ['A区', 'B区', 'C区', 'D区', 'E区'],
+                    axisLine: { //轴线
+                        lineStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    axisTick: { //刻度线
+                        show: false,
+                        alignWithLabel: true
+                    },
+                    axisLabel: { //刻度标签
+                        margin: 10, //标签与轴线的距离
+                        fontSize: 24,
                     }
-                    //getPanes()返回地图覆盖物容器列表,即MapPanes对象，其labelPane属性表示文本标注所在的容器
-                    //   console.log(mp.getPanes());
-                    mp.getPanes().labelPane.appendChild(div);
-
-                    return div;
-                }
-                //抽象方法，当地图状态发生变化时，由系统调用对覆盖物进行绘制。自定义覆盖物需要实现此方法
-                ComplexCustomOverlay.prototype.draw = function () {
-                    var map = this._map;
-                    //根据地理坐标获取对应的覆盖物容器的坐标，此方法用于自定义覆盖物
-                    var pixel = map.pointToOverlayPixel(this._point);
-                    // console.log(pixel); //{x: 450, y: 163}
-                    //div容器的左侧边框坐标=箭头坐标（即点坐标）-箭头相对div左侧的偏移
-                    this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
-                    this._div.style.top = pixel.y - 40 + "px"; //40为箭头图标相对覆盖物div容器的顶部偏移
-                }
-            }
-
-            // function:根据对应事件类型选择对应的覆盖物主题色
-            function getEventColor(event) {
-                var color;
-                switch (event) {
-                    case "CO中毒":
-                        color = "rgba(97,171,0,0.85)";
-                        break;
-                    case "火灾":
-                        color = "red";
-                        break;
-                    default:
-                        color = "#000"
-                        break;
-                }
-                return color;
-            }
-            // function：遍历渲染添加自定义覆盖物
-            function addCompOverlay(data) {
-                for (var i = 0; i < data.length; i++) {
-                    myCompOverlay = new ComplexCustomOverlay(new BMap.Point(data[i].x坐标, data[i].y坐标), data[i].area, data[i].num, getEventColor(data[i].event));
-                    mp.addOverlay(myCompOverlay); //向地图中添加覆盖物
-                }
-            }
-            //function:在地图上显示行政区域划分
-            //参数：map:Map类实例对象; name: 查询省、直辖市、地级市、或县的名称;center:地图中心点
-            function getBoundary(map,name,center) {
-                var bdary = new BMap.Boundary(); //此类表示一个行政区域的边界。
-                //返回行政区域的边界。 name: 查询省、直辖市、地级市、或县的名称。 callback:执行查询后，数据返回到客户端的回调函数
-                bdary.get(name, function (rs) { //获取行政区域 
-                    // map.clearOverlays(); //清除地图覆盖物       
-                    var count = rs.boundaries.length; //行政区域的点有多少个
-                    if (count === 0) {
-                        alert('未能获取当前输入行政区域');
-                        return;
+                }],
+                yAxis: [{
+                    type: 'value',
+                    name: '事件/起',
+                    nameTextStyle: {
+                        color: 'rgba(255,255,255,.6)',
+                        fontSize: 24,
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    axisTick: { //刻度线
+                        length: 10,
+                        alignWithLabel: true
+                    },
+                    axisLabel: { //刻度标签
+                        margin: 15, //标签与轴线的距离
+                        fontSize: 24,
                     }
-                    var pointArray = [];
-                    for (var i = 0; i < count; i++) {
-                        var ply = new BMap.Polygon(rs.boundaries[i], {
-                            strokeWeight: 2,
-                            strokeOpacity: 0.8,
-                            StrokeStyle: "solid",
-                            strokeColor: "#1abc9c",
-                            fillColor: "#16a085",
-                            fillOpacity: 0.1
-                        }); //建立多边形覆盖物
-                        map.addOverlay(ply); //添加覆盖物
-                        pointArray = pointArray.concat(ply.getPath()); //返回多边型的点数组
-                    }
-                    //根据提供的地理区域或坐标设置地图视野，调整后的视野会保证包含提供的地理区域或坐标
-                    map.setViewport(pointArray); //调整视野  
-                    map.centerAndZoom(center); //设置地图中心点
-                    // map.setZoom(13); //将视图切换到指定的缩放等级，中心点坐标不变。
-                });
+                }],
+                backgroundColor: 'transparent',
+                series: [{
+                        name: '火灾',
+                        type: 'bar',
+                        // barWidth: '10%',
+                        data: [3, 5, 2, 6, 7],
+                        label: {
+                            show: true,
+                            position: 'top',
+                            color: '#fff',
+                            fontSize: 24,
+                        }
+                    },
+                    {
+                        name: 'CO中毒',
+                        type: 'bar',
+                        // barWidth: '10%',
+                        data: [4, 1, 0, 0, 6],
+                        label: {
+                            show: true,
+                            position: 'top',
+                            color: '#fff',
+                            fontSize: 24,
+                        }
+                    },
+                    {
+                        name: '溺水',
+                        type: 'bar',
+                        // barWidth: '10%',
+                        data: [7, 9, 4, 6, 2],
+                        label: {
+                            show: true,
+                            position: 'top',
+                            color: '#fff',
+                            fontSize: 24,
+                        },
+                        barGap: 0, //柱间距离,为柱子快递的百分比
+                    },
+                    {
+                        name: '公共安全',
+                        type: 'bar',
+                        // barWidth: '10%',
+                        data: [7, 9, 4, 6, 2],
+                        label: {
+                            show: true,
+                            position: 'top',
+                            color: '#fff',
+                            fontSize: 24,
+                        },
+                        barGap: 0, //柱间距离,为柱子快递的百分比
+                    },
+                    {
+                        name: '特殊事件',
+                        type: 'bar',
+                        // barWidth: '10%',
+                        data: [7, 9, 4, 6, 2],
+                        label: {
+                            show: true,
+                            position: 'top',
+                            color: '#fff',
+                            fontSize: 24,
+                        },
+                        barGap: 0, //柱间距离,为柱子快递的百分比
+                    },
+                ]
+            };
+            eventBarChart.setOption(option);
+
+            renderLevelColor(colors);
+            // function：右侧事件总数统计列表前icon背景色对应显示
+            function renderLevelColor(colors) {
+                for (var i = 0; i < $(".data_item").length; i++) {
+                    $($(".data_item")[i]).find(".event_level").css("backgroundColor", colors[i]);
+                }
             }
 
 
@@ -575,10 +728,730 @@ $(function () {
 
 
     /* ****************************************************************************** */
-    /* 4、车辆平均反应统计 展示页 */
+    /* 4、当日无车原因及区域 展示页 */
+    (function () {
+        if ($(".noCar_main").length != 0) {
+            /*  渲染右侧echarts地图 */
+            var dom = document.getElementById("carMapChart");
+            var myChart = echarts.init(dom);
+            $.get('/data/map.json', function (geoJson) {
+                echarts.registerMap('chaoyang', geoJson, {});
+                var option = {
+                    title: {
+                        text: '当日无车次数区域展示',
+                        left: 'center',
+                        top: 40,
+                        textStyle: {
+                            fontSize: 24,
+                            color: '#fff',
+                            fontWeight: 400,
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}<br/>'
+                    },
+                    backgroundColor: '#8ba4d8b8',
+                    visualMap: { //自定义视觉映射
+                        show: false,
+                        min: 0,
+                        max: 300,
+                        text: ['High', 'Low'],
+                        left: 'left',
+                        realtime: false,
+                        calculable: true,
+                        inRange: {
+                            color: ['#d94e5d', '#eac736', '#50a3ba']
+                        }
+                    },
+                    series: [{
+                        name: '朝阳120各分区突发事件统计',
+                        type: 'map',
+                        mapType: 'chaoyang',
+                        aspectScale: 0.75, //地图长度比
+                        label: { //图形上的文本标签---对应json数据上的多边形分区name值
+                            normal: { //正常时的样式
+                                show: true,
+                                textStyle: {
+                                    color: '#fff',
+                                    fontSize: 18,
+                                }
+                            },
+                            emphasis: { //高亮时的样式设置
+                                show: true,
+                                textStyle: {
+                                    color: '#333'
+                                }
+                            }
+                        },
+                        data: [{
+                                name: '朝阳区',
+                                value: 0
+                            },
+                            {
+                                name: '上分区', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                value: 80 //value值对应颜色映射的取值
+                            },
+                            {
+                                name: '下分区',
+                                value: 180
+                            },
+                            {
+                                name: '右上分区',
+                                value: 250
+                            },
+
+                        ],
+                        itemStyle: { //地图区域的多边形 图形样式。
+                            borderColor: '#fff', //图形的描边颜色
+                            borderWidth: 1,
+                            borderType: 'dashed',
+
+                        },
+                        markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
+                            symbol: 'pin', //钉子形
+                            symbolSize: 150,
+                            itemStyle: {
+                                normal: {
+                                    color: '#4b96ff'
+                                }
+                            },
+                            label: { //标注的文本。
+                                normal: {
+                                    show: true,
+                                    formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
+                                        return d.name + "\t" + d.value + "次"
+                                    },
+                                    textStyle: {
+                                        fontSize: 18,
+                                        fontFamily: '微软雅黑',
+                                        color: '#fff'
+                                    },
+                                    position: 'inside',
+                                }
+                            },
+                            data: [{
+                                    name: "无车",
+                                    coord: [116.456937, 39.93331], //标注的坐标点
+                                    value: 20
+                                },
+                                // {
+                                //     name: "通州区",
+                                //     coord: [116.552471, 39.761261],
+                                // }
+                            ],
+                        },
+                    }]
+                };
+                myChart.setOption(option);
+
+            });
+
+            /* 渲染右侧echarts饼图 */
+            // 模拟数据
+            var data = [{
+                    value: 10,
+                    name: '全网无车'
+                },
+                {
+                    value: 20,
+                    name: '附近无车'
+                },
+                {
+                    value: 30,
+                    name: '无合适车'
+                },
+                {
+                    value: 40,
+                    name: '控制出车'
+                },
+                {
+                    value: 50,
+                    name: '用户要求'
+                },
+                {
+                    value: 60,
+                    name: '电话中断'
+                },
+                {
+                    value: 70,
+                    name: '其他原因'
+                },
+                {
+                    value: 80,
+                    name: '预约派车'
+                },
+                {
+                    value: 90,
+                    name: '医学指导'
+                },
+                {
+                    value: 100,
+                    name: '转999处理'
+                },
+            ];
+            // 系列颜色
+            var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53',
+                '#eedd78', '#73a373', '#73b9bc', '#91ca8c', '#f49f42'
+            ];
+            var titleFontSize = 24;
+            var labelFontSize = 18;
+            var dom = document.getElementById("noCarPieChart");
+            var noCarPieChart = echarts.init(dom, 'vintage');
+
+            option = {
+                title: {
+                    text: '当日无车原因分布',
+                    textStyle: {
+                        fontSize: titleFontSize,
+                        color: '#fff',
+                        fontWeight: 400,
+                    },
+                    left: 'center',
+                    top: 40,
+                },
+                color: colors,
+                legend: {
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: 200,
+                    // width:'90%',
+                    // padding:200,
+                    data: getLegendData(data),
+                    itemGap: 20,
+                    formatter: function (name) {
+                        var total = 0;
+                        var target;
+                        for (var i = 0, l = data.length; i < l; i++) {
+                            total += data[i].value;
+                            if (data[i].name == name) {
+                                target = data[i].value;
+                            }
+                        }
+                        var arr = [
+                            '{a|' + ((target / total) * 100).toFixed(2) + '%}',
+                            '{b|' + name + '}',
+                        ]
+                        // return name + ' ' + ((target/total)*100).toFixed(2) + '%';
+                        return arr.join('\n')
+                    },
+                    textStyle: {
+                        fontSize: labelFontSize,
+                        color: '#fff',
+                        rich: {
+                            a: {
+                                fontSize: 20,
+                                verticalAlign: 'top',
+                                align: 'center',
+                                padding: [0, 0, 28, 0]
+                            },
+                            b: {
+                                fontSize: 16,
+                                align: 'center',
+                                padding: [0, 10, 0, 0],
+                                lineHeight: 25
+                            }
+                        }
+                    },
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                backgroundColor: '#8ba4d8b8',
+                series: [{
+                    name: '当日无车原因',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '40%'],
+                    data: data,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    label: {
+                        color: '#fff',
+                        fontSize: labelFontSize,
+                    },
+                    labelLine: {
+                        // show:false,
+                        lineStyle: {
+                            // color:'#fff',
+                        }
+                    }
+                }]
+            };
+
+            noCarPieChart.setOption(option);
+
+            /* function: 解析data,获取其中的图例数组 */
+            function getLegendData(data) {
+                var arr = [];
+                for (var i = 0; i < data.length; i++) {
+                    arr.push(data[i].name);
+                }
+                return arr;
+            }
+
+        }
+
+    }());
+
+
+    /* ****************************************************************************** */
+    /* 5、车辆平均反应数据统计 展示页 */
     (function () {
         if ($(".response_main").length != 0) {
-           
+
+            /* 渲染左侧柱状图 */
+            var dom = document.getElementById("responseBarChart");
+            var carChart = echarts.init(dom);
+            var seriesColors = ['#5793f3', '#d14a61']; //系列色
+            var barColors = ["#c23531", "#61a0a8", "#FFDE76", "#E43C59", "#37A2DA"]; //柱状图图柱色
+            var axisLabelFontSize = 22;
+            var option = {
+                title: {
+                    text: "朝阳120各中心救护车平均反应时间、半径统计",
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 28,
+                    },
+                    left: 'center',
+                    bottom: 100,
+                },
+                color: seriesColors,
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { //坐标轴指示器配置项
+                        type: 'cross', //十字准星指示器
+                        label: { //坐标轴指示器的文本标签。
+                            fontSize: 18,
+                            padding: [5, 10],
+                            backgroundColor: '#d14a61'
+                        }
+                    }
+                },
+                grid: { //直角坐标系 grid
+                    top: 200,
+                    bottom: 250,
+                    left: '20%',
+                    right: '30%'
+                },
+                // legend: {
+                //     data: ['平均反应时间', '平均反应半径']
+                // },
+                xAxis: [{
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    data: ['朝阳', '垂杨柳', '东坝', '双桥', '亚运村'],
+                    axisLine: { //轴线
+                        lineStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    axisTick: { //刻度线
+                        show: false,
+                        alignWithLabel: true
+                    },
+                    axisLabel: { //刻度标签
+                        interval: 0, //标签的显示间隔(类目轴中有效),设置成 0 强制显示所有标签
+                        margin: 20, //标签与轴线的距离
+                        fontSize: axisLabelFontSize,
+                        rotate: 30,
+                    }
+                }],
+                yAxis: [{
+                        type: 'value',
+                        name: '平均反应时间',
+                        nameTextStyle: {
+                            color: 'rgba(255,255,255,.6)',
+                            fontSize: axisLabelFontSize,
+                        },
+                        nameGap: 30, //坐标轴名称与轴线之间的距离
+                        min: 0,
+                        max: 400,
+                        position: 'left',
+                        axisLine: {
+                            lineStyle: {
+                                color: seriesColors[0]
+                                // color: '#fff'
+
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} 秒',
+                            margin: 15, //标签与轴线的距离
+                            fontSize: axisLabelFontSize,
+                        },
+                        axisTick: { //刻度线
+                            length: 10,
+                            alignWithLabel: true
+                        },
+
+                    },
+                    {
+                        type: 'value',
+                        name: '平均反应半径',
+                        nameTextStyle: {
+                            color: 'rgba(255,255,255,.6)',
+                            fontSize: axisLabelFontSize,
+                        },
+                        nameGap: 30,
+                        min: 0,
+                        max: 20,
+                        position: 'right',
+                        offset: 80,
+                        axisLine: {
+                            lineStyle: {
+                                color: seriesColors[1]
+                                // color: '#fff'
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} km',
+                            margin: 15, //标签与轴线的距离
+                            fontSize: axisLabelFontSize,
+                        },
+                        axisTick: { //刻度线
+                            length: 10,
+                            alignWithLabel: true
+                        },
+                    },
+                ],
+                series: [{
+                        name: '平均反应时间',
+                        type: 'bar',
+                        data: [150, 220, 330, 80, 360],
+                        barWidth: '50%', //柱条的宽度，不设时自适应。支持设置成相对于类目宽度的百分比。
+                        /* 每根柱子不同颜色设置 */
+                        itemStyle: {
+                            normal: {
+                                //params:Object;传入的是数据项 seriesIndex, dataIndex, data, value 等各个参数。
+                                color: function (params) {
+                                    let colorList = barColors;
+                                    return colorList[params.dataIndex];
+                                }
+                            }
+                        },
+                    },
+                    {
+                        name: '平均反应半径',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: [12, 14, 18, 10, 8],
+                        itemStyle: {
+                            normal: {
+                                color: seriesColors[1]
+                            }
+                        }
+                    }
+                ]
+            };
+            carChart.setOption(option);
+
+        }
+
+    }());
+
+
+    /* ****************************************************************************** */
+    /* 6、朝阳120车组运行质控 展示页 */
+    (function () {
+        if ($(".car_main").length != 0) {
+            // 模拟数据
+            var data = [{
+                    name: 'a车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    },
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'A车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+                {
+                    name: 'd车',
+                    value: {
+                        overTime_2: 15,
+                        overTime_90: 13,
+                        taskNum: 20,
+                        peopleNum: 25,
+                    }
+                },
+            ];
+            var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"];
+
+            // 系列颜色
+            // var colors = ['#09508b', '#da7f1c', '#258b09', '#cd3213'];
+            var colors = ['#759aa0', '#e69d87', '#8dc1a9', '#ea7e53',
+                '#eedd78', '#73a373', '#73b9bc', '#91ca8c', '#f49f42'
+            ];
+            var titleFontSize = 24;
+            var labelFontSize = 18;
+            var dom = document.getElementById("carBarChart");
+            var noCarPieChart = echarts.init(dom, 'vintage');
+            var showValue=5; //dataZoom数据窗口显示个数
+
+            option = {
+                title: {
+                    text: '车组运行质控统计',
+                    textStyle: {
+                        fontSize: titleFontSize,
+                        color: '#fff',
+                        fontWeight: 400,
+                    },
+                    left: 'center',
+                    bottom: 40,
+                },
+                color: colors,
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    left: '10%',
+                    top: '10%',
+                    itemHeight: 15,
+                    data: getLegendData(seriesNames_en),
+                    textStyle: {
+                        fontSize: 20,
+                        color: 'rgba(0,0,0,.6)',
+                        fontWeight: 'lighter',
+                    },
+                },
+                grid: {
+                    top: '20%',
+                    left: '10%',
+                    right: '10%',
+                    bottom: '10%',
+                    containLabel: true
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    startValue: 0,
+                    endValue: showValue-1, //如果轴的类型为 category，则 endValue 即可以设置为 axis.data 数组的 index
+                    // handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    // handleSize: '80%',
+                    // handleStyle: {
+                    //     color: '#fff',
+                    //     shadowBlur: 3,
+                    //     shadowColor: 'rgba(0, 0, 0, 0.6)',
+                    //     shadowOffsetX: 2,
+                    //     shadowOffsetY: 2
+                    // }
+                }],
+                xAxis: [{
+                    type: 'category',
+                    data: getxAxisData(data),
+                    axisLine: { //轴线
+                        lineStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    axisTick: { //刻度线
+                        show: false,
+                        alignWithLabel: true
+                    },
+                    axisLabel: { //刻度标签
+                        margin: 10, //标签与轴线的距离
+                        fontSize: 24,
+                    }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    // name: '(次/人)',
+                    // nameTextStyle: {
+                    //     color: 'rgba(255,255,255,.6)',
+                    //     fontSize: 24,
+                    // },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    axisTick: { //刻度线
+                        length: 10,
+                        alignWithLabel: true
+                    },
+                    axisLabel: { //刻度标签
+                        margin: 15, //标签与轴线的距离
+                        fontSize: 24,
+                    }
+                }],
+                backgroundColor: 'transparent',
+                series: getSeries(data, seriesNames_en),
+            };
+            noCarPieChart.setOption(option);
+            //自动切换平移数据窗口
+            setInterval(function(){
+                var totalValue=getxAxisData(data).length-1;
+                // console.log(totalValue);
+                option.dataZoom[0].startValue+=1;
+                option.dataZoom[0].endValue+=1;
+                // console.log(option.dataZoom[0].endValue);
+                noCarPieChart.setOption(option);
+                if(option.dataZoom[0].endValue==totalValue)
+                {
+                    option.dataZoom[0].startValue=0-1;
+                    option.dataZoom[0].endValue=showValue-1-1;
+                }
+            },1000);
+
+            /* function:获取x坐标轴数据项数据;参数：传入的data数据 */
+            function getxAxisData(data) {
+                var arr = [];
+                for (var i = 0; i < data.length; i++) {
+                    arr.push(data[i].name);
+                }
+                return arr;
+            }
+            
+            /* function:系列名转换 */
+            function getSeriesName(name) {
+                var str;
+                switch (name) {
+                    case "overTime_2":
+                        str = "2分钟超时数"
+                        break;
+                    case "overTime_90":
+                        str = "90分钟超时数"
+                        break;
+                    case "taskNum":
+                        str = "任务数"
+                        break;
+                    case "peopleNum":
+                        str = "救治人数"
+                        break;
+                    default:
+                        break;
+                }
+                return str;
+            }
+
+            /* function:获取图例数据 */
+            function getLegendData(seriesNamesArr) {
+                var arr = [];
+                for (var i = 0; i < seriesNamesArr.length; i++) {
+                    arr.push(getSeriesName(seriesNamesArr[i]));
+                }
+                return arr;
+            }
+
+            /* function：获取对应的系列数据;参数1:预声明的变量data,参数2:系列名  */
+            function getSeriesData(data, seriesName) {
+                var arr = [];
+                for (var i = 0; i < data.length; i++) {
+                    // console.log(seriesName);
+                    // console.log(data[i].value)
+                    // console.log(data[i].value[seriesName]);
+                    arr.push(data[i].value[seriesName]);
+                }
+                return arr;
+                console.log(arr);
+            }
+
+            /* function：获取所有系列数据;参数1:预声明的变量data,参数2:系列名数组  */
+            function getSeries(data, seriesNamesArr) {
+                var series = [];
+                for (var i = 0; i < seriesNamesArr.length; i++) {
+                    var obj = {};
+                    obj.name = getSeriesName(seriesNamesArr[i]);
+                    obj.type = 'bar',
+                        obj.data = getSeriesData(data, seriesNamesArr[i]);
+                    obj.label = {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        fontSize: 24,
+                    };
+                    if (i == seriesNamesArr.length - 1) {
+                        obj.barGap = 0;
+                    }
+                    series.push(obj);
+                }
+                // console.log(series);
+                return series;
+
+            }
 
         }
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>朝阳120车组运行质控</title>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/echarts.min.js"></script>
+    <script src="/lib/vintage.js"></script>
+    <!-- 引入百度地图api文件 -->
+    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
+    <script src="/js/pages.js"></script>
+</head>
+
+<body style="background-color:#8ba4d8b8;">
+    <div class="page_title">
+        <h3 class="title">朝阳120车组运行质控
+            <p class="time_range">
+                <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
+                <span class="start_time"></span>---<span class="end_time"></span>
+            </p>
+        </h3>
+    </div>
+    <div class="page_main car_main">
+        <div class="barChartContainer">
+            <div class="carBarChart" id="carBarChart"></div>
+        </div>
+    </div>
+    
+    <!-- 显示时间范围 -->
+    <script>
+        // var timeData = {
+        //     "startTime": "2019年03月01日 08:00",
+        //     "endTime": "2019年03月01日 18:00"
+        // };
+        // setTimeRange(timeData);
+
+        // function setTimeRange(data) {
+        //     $(".start_time").html(data.startTime);
+        //     $(".end_time").html(data.endTime);
+        // }
+    </script>
+
+</body>
+
+</html>
