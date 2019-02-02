@@ -149,6 +149,21 @@ $(function () {
             $(".centerList").on("click", ".centerLink", centerItemClickHandler);
             //给每个分站项注册点击事件
             $(".stationList").on("click", "li", stationItemClickHandler);
+            //定时器定时主动触发事件
+            
+            //2018-02-02 增加站点计时切换触发点击事件效果
+            var count=0;
+            var timeId=setInterval(function(){
+                if(count>=$(".stationList li").length){
+                    count=0;
+                }
+                //右侧当前触发站点背景色突出显示
+                $(".stationList li").find(".txt").css("backgroundColor","#fff");
+                $($(".stationList li")[count]).find(".txt").css("backgroundColor","#f0f0f0");
+                //对应站点主动触发点击事件
+                $($(".stationList li")[count]).trigger("click");
+                count++;
+            },3000);
 
 
             //function：初始化地图配置
@@ -196,6 +211,7 @@ $(function () {
                         marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
                         // 设置标注点信息窗口的内容
                         var content = setInfoWindowContent(data[i][stationDataName][j]);
+                        //添加标注点点击事件处理函数
                         addClickHandler(content, marker);
                     }
                 }
@@ -265,6 +281,14 @@ $(function () {
                 var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
                 //打开信息窗
                 map.openInfoWindow(infoWindow, point);
+
+                //2018-02-02 当用户点击信息窗口的关闭按钮时，关闭站点计时的切换触发点击事件效果---清除计时器事件
+                infoWindow.addEventListener("clickclose",function(){
+                    clearInterval(timeId);
+                    //同时清除左侧对应站点突出显示的背景色 
+                    $(".stationList li").find(".txt").css("backgroundColor","#fff");
+                });
+
             }
             //function: 右侧地图信息块 分站列表的折叠展开
             function centerItemClickHandler() {
