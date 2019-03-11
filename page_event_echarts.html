@@ -16,7 +16,7 @@
     <script src="/js/pages.js"></script>
 </head>
 
-<body style="background-color:#8ba4d8b8;">
+<body style="background-image:url(/images/e.bg.jpg);">
     <div class="page_title">
         <h3 class="title">朝阳120突发事件统计
             <p class="time_range">
@@ -27,52 +27,55 @@
     </div>
     <div class="page_main event_main">
         <!-- 左侧echarts地图 -->
-        <div class="mapContainer" id="map_event">
+        <div class="mapContainer" id="map_event" style="width:50%">
+            <h4 class="chartTitle">朝阳120各片区突发事件统计 <img src="images/e.t.bg.png" alt="" class="title_bg"/></h4>
             <div class="mapChart" id="mapChart">
 
             </div>
         </div>
         <!-- 右侧数据统计 -->
-        <div class="data_statistics">
-            <!-- <h3 class="chart_title">各分区突发事件数据统计</h3> -->
+        <div class="data_statistics" style="width:50%">
             <div class="data_list_container">
-                <ul class="data_list">
-                    <li class="data_item">
-                        <div class="event_info">
-                            <i class="event_level"></i>
-                            <span class="event_name">火灾事件<i class="unit">（起）</i></span>
-                        </div>
-                        <div class="event_num">10</div>
-                    </li>
-                    <li class="data_item">
-                        <div class="event_info">
-                            <i class="event_level"></i>
-                            <span class="event_name">CO中毒事件<i class="unit">（起）</i></span>
-                        </div>
-                        <div class="event_num">10</div>
-                    </li>
-                    <li class="data_item">
-                        <div class="event_info">
-                            <i class="event_level"></i>
-                            <span class="event_name">溺水事件<i class="unit">（起）</i></span>
-                        </div>
-                        <div class="event_num">10</div>
-                    </li>
-                    <li class="data_item">
-                        <div class="event_info">
-                            <i class="event_level"></i>
-                            <span class="event_name">公共安全事件<i class="unit">（起）</i></span>
-                        </div>
-                        <div class="event_num">10</div>
-                    </li>
-                    <li class="data_item">
-                        <div class="event_info">
-                            <i class="event_level"></i>
-                            <span class="event_name">特殊事件<i class="unit">（起）</i></span>
-                        </div>
-                        <div class="event_num">10</div>
-                    </li>
-                </ul>
+                <div class="dl_wrapper">
+                        <p class="chart_title" style="background-image:url(images/panelTitle.png)">各分区突发事件数据统计</p>
+                        <ul class="data_list">
+                            <li class="data_item">
+                                <div class="event_info">
+                                    <i class="event_level"></i>
+                                    <span class="event_name">火灾事件<i class="unit">（起）</i></span>
+                                </div>
+                                <div class="event_num">10</div>
+                            </li>
+                            <li class="data_item">
+                                <div class="event_info">
+                                    <i class="event_level"></i>
+                                    <span class="event_name">CO中毒事件<i class="unit">（起）</i></span>
+                                </div>
+                                <div class="event_num">10</div>
+                            </li>
+                            <li class="data_item">
+                                <div class="event_info">
+                                    <i class="event_level"></i>
+                                    <span class="event_name">溺水事件<i class="unit">（起）</i></span>
+                                </div>
+                                <div class="event_num">10</div>
+                            </li>
+                            <li class="data_item">
+                                <div class="event_info">
+                                    <i class="event_level"></i>
+                                    <span class="event_name">公共安全事件<i class="unit">（起）</i></span>
+                                </div>
+                                <div class="event_num">10</div>
+                            </li>
+                            <li class="data_item">
+                                <div class="event_info">
+                                    <i class="event_level"></i>
+                                    <span class="event_name">特殊事件<i class="unit">（起）</i></span>
+                                </div>
+                                <div class="event_num">10</div>
+                            </li>
+                        </ul>
+                </div>
             </div>
             <!-- 右侧数据统计柱状图 -->
             <div class="barChartContainer">

@@ -5,7 +5,8 @@ $(function () {
         "endTime": "2019年03月01日 08:00"
     };
     setTimeRange(timeData);
-
+    
+    //标题栏时间范围---自定义
     function setTimeRange(data) {
         $(".start_time").html(data.startTime);
         $(".end_time").html(data.endTime);
@@ -36,7 +37,7 @@ $(function () {
                             x: 'center',
                             y: 100
                         }, // 根节点位置  {x: 'center',y: 10}
-                        layerPadding: 200, //父子节点间连接线的长度
+                        layerPadding: 100, //父子节点间连接线的长度
                         nodePadding: 20, //同级节点间的间隔
                         symbol: 'emptyRectangle',
                         symbolSize: [100, 50],
@@ -136,33 +137,26 @@ $(function () {
                 enableMessage: true //设置允许信息窗发送短息
             };
 
-            //创建地图实例
+            //创建地图实例--在指定id的DOM容器内创建
             var map = new BMap.Map("mapContainer");
             mapInit(); //初始化地图
             // getBoundary(map,"北京市","北京市朝阳区","#fff",1); //显示朝阳区行政版块覆盖物
             getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#16a085", 0.1); //显示朝阳区行政版块覆盖物
-            //创建多个标注点并添加信息窗口
+            //创建多个标注点并点击时触发信息窗口
             renderPoint(data_info, "stationList");
-            //渲染地图右侧信息块 内容
+            //渲染地图右侧信息块 内容（tab导航）
             renderCenterList(data_info);
-            //分站列表的折叠展开
+            //右侧导航--分中心列表项下分站列表的折叠展开
             $(".centerList").on("click", ".centerLink", centerItemClickHandler);
             //给每个分站项注册点击事件
             $(".stationList").on("click", "li", stationItemClickHandler);
             //定时器定时主动触发事件
             
             //2018-02-02 增加站点计时切换触发点击事件效果
-            var count=0;
             var timeId=setInterval(function(){
-                if(count>=$(".stationList li").length){
-                    count=0;
-                }
-                //右侧当前触发站点背景色突出显示
-                $(".stationList li").find(".txt").css("backgroundColor","#fff");
-                $($(".stationList li")[count]).find(".txt").css("backgroundColor","#f0f0f0");
-                //对应站点主动触发点击事件
-                $($(".stationList li")[count]).trigger("click");
-                count++;
+                var count=getActiveClassIndex();
+                //站点定时轮换触发点击事件
+                $($(".stationItem")[count]).trigger("click");
             },3000);
 
 
@@ -188,121 +182,10 @@ $(function () {
                 // map.removeTileLayer(traffic);
 
             }
-            //function:根据传入配置项对象来设置信息窗口的内容
-            function setInfoWindowContent(obj) {
-                var content = '<h4 style= "font-size:18px;line-height:24px;margin-bottom:5px;color:blue">' +
-                    obj.name + '</h4><p style="line-height:22px">' +
-                    '联系电话：' + obj.phone + '<br/>' +
-                    '坐标：' + obj.X坐标 + ',' + obj.Y坐标;
-                return content;
 
-            }
-            //function:遍历数据，渲染标注点:参数1:数据;参数2：数据内嵌套的分站数据数组名
-            function renderPoint(data, stationDataName) {
-                for (let i = 0; i < data.length; i++) {
-                    for (let j = 0; j < data[i][stationDataName].length; j++) {
-                        var point = new BMap.Point(data[i][stationDataName][j].X坐标, data[i][stationDataName][j].Y坐标); //创建标注点
-                        // 自定义信息窗口标题
-                        // opts.title = data_info[i].title;
-                        var marker = new BMap.Marker(point); // 创建标注
-                        // marker.setTop(true);//将标注置于其他标注之上
-                        // marker.setZIndex(999);
-                        map.addOverlay(marker);
-                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-                        // 设置标注点信息窗口的内容
-                        var content = setInfoWindowContent(data[i][stationDataName][j]);
-                        //添加标注点点击事件处理函数
-                        addClickHandler(content, marker);
-                    }
-                }
-            };
-            //function:地图标注点的点击事件处理函数
-            function addClickHandler(content, marker) {
-                marker.addEventListener("click", function (e) {
-                    openInfo(content, e)
-                });
-            }
-            //function:打开信息窗口        
-            function openInfo(content, e) {
-                var p = e.target;
-                var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-                var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
-                map.openInfoWindow(infoWindow, point); //开启信息窗口
-            }
-            // function:右侧地图信息块 列表渲染中心列表
-            function renderCenterList(data) {
-                for (var i = 0; i < data.length; i++) {
-                    var centerItemStr = '<li class="centerItem">' +
-                        '<a href="javascript:;" class="centerLink">' +
-                        '<i class="centerIcon" style="background-image:url(images/center.png)"></i>' +
-                        '<span class="centerName">' + data[i].name + '</span>' +
-                        '<i class="arrow" style="background-image:url(images/arrow_up.png)"></i>' +
-                        '</a></li>';
-                    var stationListStr = '<ul class="stationList"></ul>';
-                    var centerItemObj = $(centerItemStr); //new centerItemObj（li）
-                    var stationListObj = $(stationListStr); //new stationListObj（ul）
-                    //列表渲染分站列表
-                    renderStationList(data_info[i].stationList, stationListObj)
-                    //插入到DOM中
-                    centerItemObj.append(stationListObj);
-                    $(".centerList").append(centerItemObj);
-                    // renderStationList(data_info[i].stationList);
-                }
-
-            }
-            // function:右侧地图信息块 列表渲染分站列表并给每一个分站注册点击事件
-            function renderStationList(data, obj) {
-                for (var i = 0; i < data.length; i++) {
-                    var stationItemstr = '<li class="stationItem"> ' +
-                        '<span class="icon" style="background-image:url(images/marker.png)"></span>' +
-                        '<div class="txt">' +
-                        '<a href="javascript:void(0)" title="' + data[i].name + '" class="aLink">' + data[i].name +
-                        '</a><p class="info" data-x="' + data[i].X坐标 + '" data-y="' + data[i].Y坐标 + '"data-content="' +
-                        data[i].content +
-                        '">地址：' +
-                        data[i].content + '<br>电话：' + data[i].phone + '<br>坐标：' + data[i].X坐标 + ',' + data[i].Y坐标 +
-                        '</p></div></li>';
-                    var stationItemObj = $(stationItemstr);
-                    obj.append(stationItemObj);
-                    //将右侧每个分站的信息窗内容存到li元素的自定义属性上，方便点击事件时获取对应的内容
-                    content = setInfoWindowContent(data[i]);
-                    stationItemObj.attr("data-content", content);
-                }
-
-            }
-            //function:分站列表每个li元素的点击事件处理函数
-            function stationItemClickHandler() {
-                var content = $(this).attr("data-content");
-                var x = $(this).find("p").attr("data-x");
-                var y = $(this).find("p").attr("data-y");
-                var point = new BMap.Point(x, y);
-                // 将地图的中心点更改为给定的点。
-                map.panTo(point);
-                var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
-                //打开信息窗
-                map.openInfoWindow(infoWindow, point);
-
-                //2018-02-02 当用户点击信息窗口的关闭按钮时，关闭站点计时的切换触发点击事件效果---清除计时器事件
-                infoWindow.addEventListener("clickclose",function(){
-                    clearInterval(timeId);
-                    //同时清除左侧对应站点突出显示的背景色 
-                    $(".stationList li").find(".txt").css("backgroundColor","#fff");
-                });
-
-            }
-            //function: 右侧地图信息块 分站列表的折叠展开
-            function centerItemClickHandler() {
-                $(this).siblings(".stationList").toggle("normal", function () {
-                    // 箭头icon的对应切换
-                    if ($(this).css("display") == "none") {
-                        $(this).siblings(".centerLink").find(".arrow").css("backgroundImage", "url(images/arrow.png)");
-                    } else if ($(this).css("display") == "block") {
-                        $(this).siblings(".centerLink").find(".arrow").css("backgroundImage", "url(images/arrow_up.png)");
-                    }
-                });
-            }
             //function:在地图上显示行政区域划分
-            //参数：map:Map类实例对象; name: 查询省、直辖市、地级市、或县的名称;center:地图中心点
+            //参数：map:Map类实例对象; name: 查询省、直辖市、地级市、或县的名称;center:地图中心点；
+            //fillColor：填充色, fillOpacity:填充不透明度
             function getBoundary(map, name, center, fillColor, fillOpacity) {
                 var bdary = new BMap.Boundary(); //此类表示一个行政区域的边界。
                 //返回行政区域的边界。 name: 查询省、直辖市、地级市、或县的名称。 callback:执行查询后，数据返回到客户端的回调函数
@@ -332,6 +215,149 @@ $(function () {
                     // map.setZoom(13); //将视图切换到指定的缩放等级，中心点坐标不变。
                 });
             }
+
+            //function:遍历数据，渲染标注点:参数1:数据;参数2：数据内嵌套的分站数据数组名（即二维数组名）
+            function renderPoint(data, stationDataName) {
+                for (let i = 0; i < data.length; i++) {
+                    for (let j = 0; j < data[i][stationDataName].length; j++) {
+                        var point = new BMap.Point(data[i][stationDataName][j].X坐标, data[i][stationDataName][j].Y坐标); //创建标注点
+                        // 自定义信息窗口标题
+                        // opts.title = data_info[i].title;
+                        var marker = new BMap.Marker(point); // 创建标注
+                        // marker.setTop(true);//将标注置于其他标注之上
+                        // marker.setZIndex(999);
+                        map.addOverlay(marker);//向地图中添加标注点
+                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //给标注点添加跳动的动画
+                        // 设置标注点信息窗口的内容
+                        var content = setInfoWindowContent(data[i][stationDataName][j]);
+                        //添加标注点点击事件处理函数
+                        addClickHandler(content, marker);
+                    }
+                }
+            };
+            //function:根据传入配置项对象来设置信息窗口的内容
+            function setInfoWindowContent(obj) {
+                var content = '<h4 style= "font-size:18px;line-height:24px;margin-bottom:5px;color:#0c88e8">' +
+                    obj.name + '</h4><p style="line-height:22px">' +
+                    '联系电话：' + obj.phone + '<br/>' +
+                    '坐标：' + obj.X坐标 + ',' + obj.Y坐标;
+                return content;
+
+            }
+
+            //function:地图标注点的点击事件处理函数。参数1：信息窗口内容
+            function addClickHandler(content, marker) {
+                marker.addEventListener("click", function (e) {
+                    openInfo(content, e)//点击标注点打开信息窗口
+                });
+            }
+
+            //function:打开信息窗口        
+            function openInfo(content, e) {
+                var p = e.target;
+                var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);//获取点击事件对象的经纬度坐标创建地理点坐标
+                var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+                map.openInfoWindow(infoWindow, point); //开启信息窗口
+            }
+
+            // function:右侧地图信息块 列表渲染分中心列表。参数data：远程数据---格式类似本地模拟测试数据data_info
+            function renderCenterList(data) {
+                for (var i = 0; i < data.length; i++) {
+                    var centerItemStr = '<li class="centerItem">' +
+                        '<a href="javascript:;" class="centerLink">' +
+                        '<i class="centerIcon" style="background-image:url(images/center.png)"></i>' +
+                        '<span class="centerName">' + data[i].name + '</span>' +
+                        '<i class="arrow" style="background-image:url(images/arrow_up.png)"></i>' +
+                        '</a></li>';
+                    var stationListStr = '<ul class="stationList"></ul>';
+                    var centerItemObj = $(centerItemStr); //new centerItemObj（li）---动态创建分中心列表项
+                    var stationListObj = $(stationListStr); //new stationListObj（ul）--创建分中心列表项下的分站列表
+                    //列表渲染分站列表项
+                    renderStationList(data_info[i].stationList, stationListObj)
+                    //插入到DOM中
+                    centerItemObj.append(stationListObj);
+                    $(".centerList").append(centerItemObj);
+                    // renderStationList(data_info[i].stationList);
+                }
+
+            }
+            // function:右侧地图信息块 列表渲染分站列表并给每一个分站注册点击事件。参数1：分站数据数组;参数2：分站列表项将插入的父节点
+            function renderStationList(data, obj) {
+                for (var i = 0; i < data.length; i++) {
+                    var stationItemstr = '<li class="stationItem"> ' +
+                        '<span class="icon" style="background-image:url(images/marker.png)"></span>' +
+                        '<div class="txt">' +
+                        '<a href="javascript:void(0)" title="' + data[i].name + '" class="aLink">' + data[i].name +
+                        '</a><p class="info" data-x="' + data[i].X坐标 + '" data-y="' + data[i].Y坐标 + '"data-content="' +
+                        data[i].content +
+                        '">地址：' +
+                        data[i].content + '<br>电话：' + data[i].phone + '<br>坐标：' + data[i].X坐标 + ',' + data[i].Y坐标 +
+                        '</p></div></li>';
+                    var stationItemObj = $(stationItemstr);
+                    obj.append(stationItemObj);
+                    //将右侧每个分站的信息窗内容存到li元素的自定义属性上，方便点击事件时获取对应的内容
+                    content = setInfoWindowContent(data[i]);//调用setInfoWindowContent（）函数，设置信息窗口内容，并存到分站列表项的自定义属性上。
+                    stationItemObj.attr("data-content", content);
+                }
+
+            }
+
+            //function: 右侧地图信息块 分中心列表项下分站列表的折叠展开
+            function centerItemClickHandler() {
+                $(this).siblings(".stationList").toggle("normal", function () {
+                    // 箭头icon的对应切换
+                    if ($(this).css("display") == "none") {
+                        $(this).siblings(".centerLink").find(".arrow").css("backgroundImage", "url(images/arrow.png)");
+                    } else if ($(this).css("display") == "block") {
+                        $(this).siblings(".centerLink").find(".arrow").css("backgroundImage", "url(images/arrow_up.png)");
+                    }
+                });
+            }
+
+            //function:分站列表项的点击事件处理函数---左侧上对应标注点信息窗口触发
+            function stationItemClickHandler() {
+                //2019-03-11 plq 当前点击项背景色突出显示--添加active预定义类样式
+                $(".stationItem").removeClass("active");
+                $(this).addClass("active");
+
+                //获取存在自定义属性上的信息窗口内容及经纬度坐标
+                var content = $(this).attr("data-content");
+                var x = $(this).find("p").attr("data-x");
+                var y = $(this).find("p").attr("data-y");
+                var point = new BMap.Point(x, y);//创建地理点坐标
+                // 将地图的中心点更改为给定的点。
+                map.panTo(point);
+                var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+                //打开信息窗
+                map.openInfoWindow(infoWindow, point);
+
+                //2018-02-02 当用户点击信息窗口的关闭按钮时，关闭站点计时的切换触发点击事件效果---清除计时器事件
+                infoWindow.addEventListener("clickclose",function(){
+                    clearInterval(timeId);
+                    //同时清除左侧对应站点突出显示的背景色 
+                    $(".stationItem").removeClass("active");
+                });
+            }
+
+            //2019-03-11 function：获取当前触发点击事件(.active类)的分站列表项在所有分站列表项中的索引
+            function getActiveClassIndex(){
+                var liObjs=$(".stationItem");
+                var flag=false;//active类是否存在标识符
+                var activeIndex;
+                for(var i=0;i<liObjs.length;i++){
+                    if($(liObjs[i]).hasClass("active")){
+                        flag=true;
+                        activeIndex=(i>=liObjs.length-1)?0:i+1;
+                    }
+                }
+                if(!flag){//如果当前没有active类，默认从第一个列表项开始轮换触发点击事件
+                    activeIndex=0;
+                }
+                return activeIndex;
+            }
+
+
+
         }
     }());
 
@@ -346,16 +372,16 @@ $(function () {
             $.get('/data/map.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
-                    title: {
-                        text: '朝阳120各片区突发事件统计',
-                        left: 'center',
-                        bottom: 30,
-                        textStyle: {
-                            fontSize: 24,
-                            color: '#fff',
-                            fontWeight: 400,
-                        }
-                    },
+                    // title: {
+                    //     text: '朝阳120各片区突发事件统计',
+                    //     left: 'center',
+                    //     bottom: 30,
+                    //     textStyle: {
+                    //         fontSize: 24,
+                    //         color: '#fff',
+                    //         fontWeight: 400,
+                    //     }
+                    // },
                     tooltip: {
                         trigger: 'item',
                         formatter: '{b}<br/>'
@@ -375,6 +401,7 @@ $(function () {
                     series: [{
                         name: '朝阳120各分区突发事件统计',
                         type: 'map',
+                        // top:100,
                         mapType: 'chaoyang',
                         aspectScale: 0.75, //地图长度比
                         label: { //图形上的文本标签---对应json数据上的多边形分区name值
@@ -614,7 +641,8 @@ $(function () {
                     data: ['火灾', 'CO中毒', '溺水', '公共安全', '特殊事件'],
                     textStyle: {
                         fontSize: 20,
-                        color: 'rgba(0,0,0,.6)',
+                        // color: 'rgba(0,0,0,.6)',
+                        color:'#fff',
                         fontWeight: 'lighter',
                     },
                 },
@@ -755,27 +783,28 @@ $(function () {
     /* 4、当日无车原因及区域 展示页 */
     (function () {
         if ($(".noCar_main").length != 0) {
-            /*  渲染右侧echarts地图 */
+
+            /*  渲染左侧echarts地图 */
             var dom = document.getElementById("carMapChart");
             var myChart = echarts.init(dom);
             $.get('/data/map.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
-                    title: {
-                        text: '当日无车次数区域展示',
-                        left: 'center',
-                        top: 40,
-                        textStyle: {
-                            fontSize: 24,
-                            color: '#fff',
-                            fontWeight: 400,
-                        }
-                    },
+                    // title: {
+                    //     text: '当日无车区域展示',
+                    //     left: 'center',
+                    //     top: 40,
+                    //     textStyle: {
+                    //         fontSize: 24,
+                    //         color: '#fff',
+                    //         fontWeight: 400,
+                    //     }
+                    // },
                     tooltip: {
                         trigger: 'item',
                         formatter: '{b}<br/>'
                     },
-                    backgroundColor: '#8ba4d8b8',
+                    // backgroundColor: '#8ba4d8b8',
                     visualMap: { //自定义视觉映射
                         show: false,
                         min: 0,
@@ -792,7 +821,7 @@ $(function () {
                         name: '朝阳120各分区突发事件统计',
                         type: 'map',
                         mapType: 'chaoyang',
-                        aspectScale: 0.75, //地图长度比
+                        aspectScale: 0.75, //地图长宽比
                         label: { //图形上的文本标签---对应json数据上的多边形分区name值
                             normal: { //正常时的样式
                                 show: true,
@@ -873,7 +902,8 @@ $(function () {
 
             /* 渲染右侧echarts饼图 */
             // 模拟数据
-            var data = [{
+            var data = [
+                {
                     value: 10,
                     name: '全网无车'
                 },
@@ -924,21 +954,21 @@ $(function () {
             var noCarPieChart = echarts.init(dom, 'vintage');
 
             option = {
-                title: {
-                    text: '当日无车原因分布',
-                    textStyle: {
-                        fontSize: titleFontSize,
-                        color: '#fff',
-                        fontWeight: 400,
-                    },
-                    left: 'center',
-                    top: 40,
-                },
+                // title: {
+                //     text: '当日无车原因分布',
+                //     textStyle: {
+                //         fontSize: titleFontSize,
+                //         color: '#fff',
+                //         fontWeight: 400,
+                //     },
+                //     left: 'center',
+                //     top: 40,
+                // },
                 color: colors,
                 legend: {
                     orient: 'horizontal',
                     left: 'center',
-                    bottom: 200,
+                    bottom: '10%',
                     // width:'90%',
                     // padding:200,
                     data: getLegendData(data),
@@ -978,11 +1008,14 @@ $(function () {
                         }
                     },
                 },
+                grid:{
+                    top:'25%',
+                },
                 tooltip: {
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
-                backgroundColor: '#8ba4d8b8',
+                backgroundColor: 'transparent',
                 series: [{
                     name: '当日无车原因',
                     type: 'pie',
@@ -1040,7 +1073,8 @@ $(function () {
                 title: {
                     text: "朝阳120各中心救护车平均反应时间、半径统计",
                     textStyle: {
-                        color: '#fff',
+                        // color: '#fff',
+                        color:'#00c0ff',
                         fontSize: 28,
                     },
                     left: 'center',
@@ -1059,10 +1093,11 @@ $(function () {
                     }
                 },
                 grid: { //直角坐标系 grid
-                    top: 200,
+                    // top: 100,
+                    top:'15%',
                     bottom: 250,
                     left: '20%',
-                    right: '30%'
+                    right: '25%'
                 },
                 // legend: {
                 //     data: ['平均反应时间', '平均反应半径']
@@ -1093,7 +1128,8 @@ $(function () {
                         type: 'value',
                         name: '平均反应时间',
                         nameTextStyle: {
-                            color: 'rgba(255,255,255,.6)',
+                            // color: 'rgba(255,255,255,.6)',
+                            color:seriesColors[0],
                             fontSize: axisLabelFontSize,
                         },
                         nameGap: 30, //坐标轴名称与轴线之间的距离
@@ -1122,7 +1158,8 @@ $(function () {
                         type: 'value',
                         name: '平均反应半径',
                         nameTextStyle: {
-                            color: 'rgba(255,255,255,.6)',
+                            // color: 'rgba(255,255,255,.6)',
+                            color:seriesColors[1],
                             fontSize: axisLabelFontSize,
                         },
                         nameGap: 30,
@@ -1188,7 +1225,8 @@ $(function () {
     (function () {
         if ($(".car_main").length != 0) {
             // 模拟数据
-            var data = [{
+            var data = [
+                {
                     name: 'a车',
                     value: {
                         overTime_2: 15,
@@ -1284,26 +1322,24 @@ $(function () {
 
             // 系列颜色
             // var colors = ['#09508b', '#da7f1c', '#258b09', '#cd3213'];
-            var colors = ['#759aa0', '#e69d87', '#8dc1a9', '#ea7e53',
-                '#eedd78', '#73a373', '#73b9bc', '#91ca8c', '#f49f42'
-            ];
+            var colors = ["#00cccc","#40ca62","#0099ff","#f7bd05"];
             var titleFontSize = 24;
             var labelFontSize = 18;
             var dom = document.getElementById("carBarChart");
-            var noCarPieChart = echarts.init(dom, 'vintage');
+            var carBarChart = echarts.init(dom, 'vintage');
             var showValue=5; //dataZoom数据窗口显示个数
 
             option = {
-                title: {
-                    text: '车组运行质控统计',
-                    textStyle: {
-                        fontSize: titleFontSize,
-                        color: '#fff',
-                        fontWeight: 400,
-                    },
-                    left: 'center',
-                    bottom: 40,
-                },
+                // title: {
+                //     text: '车组运行质控统计',
+                //     textStyle: {
+                //         fontSize: titleFontSize,
+                //         color: '#00c0ff',
+                //         fontWeight:'bold',
+                //     },
+                //     left: '5%',
+                //     top: 30,
+                // },
                 color: colors,
                 tooltip: {
                     trigger: 'axis',
@@ -1312,18 +1348,18 @@ $(function () {
                     }
                 },
                 legend: {
-                    left: '10%',
+                    left: 'center',
                     top: '10%',
                     itemHeight: 15,
                     data: getLegendData(seriesNames_en),
                     textStyle: {
                         fontSize: 20,
-                        color: 'rgba(0,0,0,.6)',
+                        color: '#fff',
                         fontWeight: 'lighter',
                     },
                 },
                 grid: {
-                    top: '20%',
+                    top: '25%',
                     left: '10%',
                     right: '10%',
                     bottom: '10%',
@@ -1384,7 +1420,7 @@ $(function () {
                 backgroundColor: 'transparent',
                 series: getSeries(data, seriesNames_en),
             };
-            noCarPieChart.setOption(option);
+            carBarChart.setOption(option);
             //自动切换平移数据窗口
             setInterval(function(){
                 var totalValue=getxAxisData(data).length-1;
@@ -1392,7 +1428,7 @@ $(function () {
                 option.dataZoom[0].startValue+=1;
                 option.dataZoom[0].endValue+=1;
                 // console.log(option.dataZoom[0].endValue);
-                noCarPieChart.setOption(option);
+                carBarChart.setOption(option);
                 if(option.dataZoom[0].endValue==totalValue)
                 {
                     option.dataZoom[0].startValue=0-1;
@@ -1450,7 +1486,6 @@ $(function () {
                     arr.push(data[i].value[seriesName]);
                 }
                 return arr;
-                console.log(arr);
             }
 
             /* function：获取所有系列数据;参数1:预声明的变量data,参数2:系列名数组  */

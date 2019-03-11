@@ -32,6 +32,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  min-width: 1200px;
 }
 .page_title {
   position: absolute;
@@ -40,7 +41,7 @@ body {
   width: 100%;
   height: 110px;
   padding: 35px 40px 0;
-  background-color: #0075c7;
+  background: -webkit-linear-gradient(top, rgba(11, 26, 111, 0) 20%, #0b1c74);
 }
 .page_title .title {
   position: relative;
@@ -53,16 +54,7 @@ body {
   right: 30px;
   transform: translateY(-50%);
   font-size: 22px;
-  color: rgba(255, 255, 255, 0.8);
-}
-.page_title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #888;
+  color: #09f;
 }
 .page_main {
   position: relative;
@@ -107,45 +99,6 @@ body {
   padding: 10px 7px 10px 8px;
   box-shadow: -1px 0px 3px #333333;
 }
-.site_main #MapInfo #txtPanel .markerList {
-  padding-top: 10px;
-}
-.site_main #MapInfo #txtPanel .markerList .markerItem {
-  min-height: 30px;
-  position: relative;
-  padding-left: 22px;
-  margin-bottom: 10px;
-}
-.site_main #MapInfo #txtPanel .markerList .markerItem .icon {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  display: block;
-  width: 19px;
-  height: 25px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  cursor: pointer;
-}
-.site_main #MapInfo #txtPanel .markerList .markerItem .txt {
-  font-size: 16px;
-  padding: 2px 10px 2px 3px;
-}
-.site_main #MapInfo #txtPanel .markerList .markerItem .txt:hover {
-  background-color: #f0f0f0;
-  cursor: pointer;
-}
-.site_main #MapInfo #txtPanel .markerList .markerItem .txt .aLink {
-  font-size: 18px;
-  line-height: 24px;
-  color: blue;
-  background-color: transparent;
-}
-.site_main #MapInfo #txtPanel .markerList .markerItem .txt .info {
-  font-size: 14px;
-  line-height: 1.5em;
-}
 .site_main #MapInfo #txtPanel .centerList {
   padding-top: 10px;
 }
@@ -155,7 +108,7 @@ body {
 .site_main #MapInfo #txtPanel .centerList .centerItem .centerLink {
   position: relative;
   display: block;
-  padding: 0 0 0 20px;
+  padding: 0 0 0 25px;
   height: 50px;
   font-size: 20px;
   letter-spacing: 1px;
@@ -169,8 +122,8 @@ body {
   left: 5px;
   transform: translateY(-50%);
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -222,15 +175,19 @@ body {
 .site_main #MapInfo #txtPanel .centerList .centerItem .stationList .stationItem .txt .aLink {
   font-size: 18px;
   line-height: 24px;
-  color: blue;
+  color: #0c88e8;
   background-color: transparent;
 }
 .site_main #MapInfo #txtPanel .centerList .centerItem .stationList .stationItem .txt .info {
   font-size: 14px;
   line-height: 1.5em;
 }
+.site_main #MapInfo #txtPanel .centerList .centerItem .stationList .active .txt {
+  background-color: #f0f0f0;
+}
 /* 突发事件统计页 */
 .event_main .mapContainer {
+  position: relative;
   float: left;
   height: 100%;
   width: 60%;
@@ -238,26 +195,62 @@ body {
 .event_main .mapContainer .mapChart {
   height: 100%;
 }
+.event_main .mapContainer .chartTitle {
+  position: absolute;
+  left: 10%;
+  top: 20px;
+  font-size: 28px;
+  height: 40px;
+  line-height: 40px;
+  color: #00c0ff;
+}
+.event_main .mapContainer .chartTitle .title_bg {
+  vertical-align: middle;
+  margin-top: -3px;
+}
 .event_main .data_statistics {
   float: right;
   width: 40%;
   height: 100%;
 }
 .event_main .data_statistics .data_list_container {
+  position: relative;
   height: 40%;
-  padding: 40px 20px 0;
+  padding: 20px 20px 0;
+}
+.event_main .data_statistics .data_list_container .dl_wrapper {
+  position: relative;
+  padding-top: 40px;
+  height: 100%;
+  border: 1px solid #163f88;
+}
+.event_main .data_statistics .data_list_container .chart_title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-size: 24px;
+  color: #ffffff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
 }
 .event_main .data_statistics .data_list_container .data_list {
   height: 100%;
   padding: 0 30px;
-  border: 1px solid #d0d4da;
-  border-radius: 20px;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item {
   position: relative;
   height: 20%;
   padding: 0 40px;
-  font-size: 30px;
+  font-size: 22px;
+  color: #119efa;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item::after {
   content: "";
@@ -266,17 +259,21 @@ body {
   left: 0;
   height: 1px;
   width: 100%;
-  background-color: #d9d9d9d9;
+  background-color: #163f88;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item .event_info {
   position: absolute;
   left: 40px;
   top: 50%;
   transform: translateY(-50%);
+  padding-left: 20px;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item .event_info .event_level {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
   display: inline-block;
-  margin-bottom: 5px;
   width: 10px;
   height: 10px;
   border-radius: 3px;
@@ -284,10 +281,9 @@ body {
 }
 .event_main .data_statistics .data_list_container .data_list .data_item .event_info .event_name {
   margin-left: 5px;
-  color: #fff;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item .event_info .event_name .unit {
-  font-size: 24px;
+  font-size: 20px;
   color: #d9d9d9d9;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item .event_num {
@@ -338,6 +334,7 @@ body {
 }
 /* 当日无车原因及区域展示页 */
 .noCar_main .mapContainer {
+  position: relative;
   float: left;
   height: 100%;
   width: 60%;
@@ -345,22 +342,64 @@ body {
 .noCar_main .mapContainer .mapChart {
   height: 100%;
 }
+.noCar_main .mapContainer .chartTitle {
+  position: absolute;
+  left: 10%;
+  top: 20px;
+  font-size: 28px;
+  height: 40px;
+  line-height: 40px;
+  color: #00c0ff;
+}
+.noCar_main .mapContainer .chartTitle .title_bg {
+  vertical-align: middle;
+  margin-top: -3px;
+}
 .noCar_main .data_statistics {
   float: right;
   width: 40%;
   height: 100%;
 }
 .noCar_main .data_statistics .chartContainer {
+  position: relative;
   height: 100%;
+  padding-top: 60px;
 }
 .noCar_main .data_statistics .chartContainer .noCarPieChart {
   height: 100%;
 }
+.noCar_main .data_statistics .chartContainer .chartTitle {
+  position: absolute;
+  left: 10%;
+  top: 20px;
+  font-size: 28px;
+  height: 40px;
+  line-height: 40px;
+  color: #00c0ff;
+}
+.noCar_main .data_statistics .chartContainer .chartTitle .title_bg {
+  vertical-align: middle;
+  margin-top: -3px;
+}
 /* 车组运行质控展示页 */
 .car_main .barChartContainer {
+  position: relative;
   width: 100%;
   height: 100%;
 }
 .car_main .barChartContainer .carBarChart {
   height: 100%;
+}
+.car_main .barChartContainer .chartTitle {
+  position: absolute;
+  left: 10%;
+  top: 20px;
+  font-size: 28px;
+  height: 40px;
+  line-height: 40px;
+  color: #00c0ff;
+}
+.car_main .barChartContainer .chartTitle .title_bg {
+  vertical-align: middle;
+  margin-top: -3px;
 }
