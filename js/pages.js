@@ -1,5 +1,10 @@
 /* 本地页面调试js文件 */
 $(function () {
+    //页面窗口改变刷新页面
+    $(window).on("resize",function(){
+        location.reload();
+    });
+
     var timeData = {
         "startTime": "2019年02月01日 08:00",
         "endTime": "2019年03月01日 08:00"
@@ -369,6 +374,8 @@ $(function () {
             //渲染左侧echarts地图
             var dom = document.getElementById("mapChart");
             var myChart = echarts.init(dom);
+            var normalLableFont=18;
+            var strongLableFont=22;
             $.get('/data/map.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
@@ -403,19 +410,19 @@ $(function () {
                         type: 'map',
                         // top:100,
                         mapType: 'chaoyang',
-                        aspectScale: 0.75, //地图长度比
+                        aspectScale: 1, //地图长度比,默认0.75
                         label: { //图形上的文本标签---对应json数据上的多边形分区name值
                             normal: { //正常时的样式
                                 show: true,
                                 textStyle: {
-                                    color: '#fff',
-                                    fontSize: 18,
+                                    color: '#ef5400',
+                                    fontSize: normalLableFont,
                                 }
                             },
                             emphasis: { //高亮时的样式设置
                                 show: true,
                                 textStyle: {
-                                    color: '#333'
+                                    color: 'red'
                                 }
                             }
                         },
@@ -444,36 +451,62 @@ $(function () {
 
                         },
                         markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
-                            symbol: 'pin', //钉子形
-                            symbolSize: 150,
+                            symbol: 'path://m 0,0 h 48 v 20 h -30 l -6,10 l -6,-10 h -6 z',
+                            symbolSize: 20,
+                            // symbolSize:(rawValue, params) => {   //回调函数实现每个数据图形大小不一样
+                            //     params.symbolSize = rawValue*5;
+                            //     return params.symbolSize
+                            // },
                             itemStyle: {
-                                normal: {
-                                    color: '#4b96ff'
+                                // normal: {
+                                //     // color:'#70b218' //貌似标记的颜色只能统一设置一个。。。回调无效？？
+                                // },
+                                emphasis:{
+                                    color: '#f16d02',
+                                    borderColor: '#fff',
+                                    borderWidth: 1
                                 }
                             },
                             label: { //标注的文本。
                                 normal: {
                                     show: true,
-                                    formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
-                                        return d.name + "\t" + d.value + "起"
-                                    },
+                                    position: 'top',
+                                    distance:0,
+                                    offset:[0,5],
+                                    // formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
+                                    //     return d.name + "\n" + d.value + "起"
+                                    // },
+                                    formatter: '{styleA|{b}：}{styleB|{c}}'+'\t起',
                                     textStyle: {
-                                        fontSize: 18,
                                         fontFamily: '微软雅黑',
-                                        color: '#fff'
+                                        align:'center',
+                                        color:'#38a0ff',
+                                        // backgroundColor:"31b573",
+                                        padding:4,
                                     },
-                                    position: 'inside',
+                                    rich:{
+                                        styleA:{
+                                            fontSize:normalLableFont,
+                                            color:"#38a0ff",
+                                        },
+                                        styleB:{
+                                            fontSize:strongLableFont,
+                                            color:"#fff",
+                                            lineHeight:30,
+                                        },
+                                    }
                                 }
                             },
                             data: [{
                                     name: "火灾",
-                                    coord: [116.456937, 39.93331], //标注的坐标点
+                                    coord: [116.556937, 39.93331], //标注的坐标点
                                     value: 20
                                 },
-                                // {
-                                //     name: "通州区",
-                                //     coord: [116.552471, 39.761261],
-                                // }
+                                {
+                                    name: "CO中毒",
+                                    coord: [116.5625, 39.8823],
+                                    value:10
+                                }
                             ],
                         },
                     }]
@@ -500,7 +533,8 @@ $(function () {
                 "name": "特殊事件",
                 "totalNum": 10,
             }];
-            var eventData = [{
+            var eventData = [
+                {
                     "name": "A区",
                     "data": [{
                             "name": "火灾",
@@ -636,6 +670,7 @@ $(function () {
                 },
                 legend: {
                     left: '3%',
+                    top:10,
                     itemWidth: 15,
                     itemHeight: 15,
                     data: ['火灾', 'CO中毒', '溺水', '公共安全', '特殊事件'],
@@ -821,19 +856,19 @@ $(function () {
                         name: '朝阳120各分区突发事件统计',
                         type: 'map',
                         mapType: 'chaoyang',
-                        aspectScale: 0.75, //地图长宽比
+                        aspectScale: 1, //地图长宽比
                         label: { //图形上的文本标签---对应json数据上的多边形分区name值
                             normal: { //正常时的样式
                                 show: true,
                                 textStyle: {
-                                    color: '#fff',
+                                    color: '#ef5400',
                                     fontSize: 18,
                                 }
                             },
                             emphasis: { //高亮时的样式设置
                                 show: true,
                                 textStyle: {
-                                    color: '#333'
+                                    color: 'red'
                                 }
                             }
                         },
@@ -863,7 +898,7 @@ $(function () {
                         },
                         markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
                             symbol: 'pin', //钉子形
-                            symbolSize: 150,
+                            symbolSize: 100,
                             itemStyle: {
                                 normal: {
                                     color: '#4b96ff'
@@ -885,7 +920,7 @@ $(function () {
                             },
                             data: [{
                                     name: "无车",
-                                    coord: [116.456937, 39.93331], //标注的坐标点
+                                    coord: [116.556937, 39.93331], //标注的坐标点
                                     value: 20
                                 },
                                 // {
@@ -1078,7 +1113,7 @@ $(function () {
                         fontSize: 28,
                     },
                     left: 'center',
-                    bottom: 100,
+                    bottom: 50,
                 },
                 color: seriesColors,
                 tooltip: {
@@ -1095,7 +1130,7 @@ $(function () {
                 grid: { //直角坐标系 grid
                     // top: 100,
                     top:'15%',
-                    bottom: 250,
+                    bottom: 200,
                     left: '20%',
                     right: '25%'
                 },

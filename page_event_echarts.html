@@ -28,16 +28,18 @@
     <div class="page_main event_main">
         <!-- 左侧echarts地图 -->
         <div class="mapContainer" id="map_event" style="width:50%">
-            <h4 class="chartTitle">朝阳120各片区突发事件统计 <img src="images/e.t.bg.png" alt="" class="title_bg"/></h4>
-            <div class="mapChart" id="mapChart">
-
+            <div class="mapWrapper">
+                    <h4 class="chartTitle">朝阳120各片区突发事件统计 <img src="images/e.t.bg.png" alt="" class="title_bg"/></h4>
+                    <div class="mapChart" id="mapChart">
+        
+                    </div>
             </div>
         </div>
         <!-- 右侧数据统计 -->
         <div class="data_statistics" style="width:50%">
             <div class="data_list_container">
                 <div class="dl_wrapper">
-                        <p class="chart_title" style="background-image:url(images/panelTitle.png)">各分区突发事件数据统计</p>
+                        <p class="chart_title" style="background-image:url(images/panelTitle.png)">各类型突发事件数据统计</p>
                         <ul class="data_list">
                             <li class="data_item">
                                 <div class="event_info">
@@ -79,8 +81,11 @@
             </div>
             <!-- 右侧数据统计柱状图 -->
             <div class="barChartContainer">
-                <div class="barChart" id="eventBarChart">
+                <div class="dl_wrapper">
+                        <p class="chart_title" style="background-image:url(images/panelTitle.png)">各分区突发事件数据统计</p>
+                        <div class="barChart" id="eventBarChart">
 
+                        </div>
                 </div>
             </div>
 
