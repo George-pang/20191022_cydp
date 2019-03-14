@@ -42,6 +42,10 @@ body {
   height: 110px;
   padding: 35px 40px 0;
   background: -webkit-linear-gradient(top, rgba(11, 26, 111, 0) 20%, #0b1c74);
+  background: -o-linear-gradient(top, rgba(11, 26, 111, 0) 20%, #0b1c74);
+  background: -ms-linear-gradient(top, rgba(11, 26, 111, 0) 20%, #0b1c74);
+  background: -moz-linear-gradient(top, rgba(11, 26, 111, 0) 20%, #0b1c74);
+  filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#0b1a6f00, 0, endcolorstr=#0b1c74, gradientType=0);
 }
 .page_title .title {
   position: relative;
@@ -63,7 +67,7 @@ body {
 }
 /* 组织结构页 */
 .organization_main {
-  padding-top: 40px;
+  padding-top: 110px;
 }
 .organization_main .title {
   position: absolute;
