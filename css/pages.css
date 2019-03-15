@@ -71,11 +71,13 @@ body {
 }
 .organization_main .title {
   position: absolute;
-  top: 20px;
+  top: 110px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 36px;
   line-height: 60px;
+  color: #00c0ff;
+  margin: 0;
 }
 .organization_main .chartContainer {
   height: 100%;
@@ -260,6 +262,7 @@ body {
   padding: 0 40px;
   font-size: 22px;
   color: #119efa;
+  cursor: pointer;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item::after {
   content: "";
@@ -269,6 +272,9 @@ body {
   height: 1px;
   width: 100%;
   background-color: #163f88;
+}
+.event_main .data_statistics .data_list_container .data_list .data_item:hover {
+  background-color: #2c2667;
 }
 .event_main .data_statistics .data_list_container .data_list .data_item .event_info {
   position: absolute;

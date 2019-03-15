@@ -9,7 +9,7 @@ $(function () {
         "startTime": "2019年02月01日 08:00",
         "endTime": "2019年03月01日 08:00"
     };
-    setTimeRange(timeData);//设置标题栏时间范围
+    setTimeRange(timeData); //设置标题栏时间范围
 
     //标题栏时间范围---自定义
     function setTimeRange(data) {
@@ -40,16 +40,16 @@ $(function () {
                         orient: 'vertical', // vertical horizontal
                         rootLocation: {
                             x: 'center',
-                            y: 50
+                            y: 100
                         }, // 根节点位置  {x: 'center',y: 10}
                         layerPadding: 100, //父子节点间连接线的长度
                         nodePadding: 20, //同级节点间的间隔
                         symbol: 'emptyRectangle',
-                        symbolSize: [100, 50],
+                        symbolSize: [100, 50],//标记大小
                         itemStyle: { //图形样式
                             normal: {
                                 // color: '#258b09', //颜色，主色
-                                color: '#38a0ff',
+                                color: '#09508b',
                                 label: {
                                     show: true,
                                     position: 'inside',
@@ -65,12 +65,11 @@ $(function () {
                                 },
                                 lineStyle: {
                                     // color: '#258b09',//连接线的颜色
-                                    color: '#5989fc',
+                                    color: '#09508b',
                                     width: 1,
                                     type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
                                 }
                             },
-
                             emphasis: {
                                 label: {
                                     show: true,
@@ -1390,7 +1389,7 @@ $(function () {
                     }
                 },
             ];
-            var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"];//图例英文名
+            var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"]; //图例英文名
 
             // 系列颜色
             // var colors = ['#09508b', '#da7f1c', '#258b09', '#cd3213'];
@@ -1511,7 +1510,16 @@ $(function () {
                 }
             }, 3000);
 
-            /* function:获取x坐标轴数据项数据;参数：传入的data数据 */
+            /* function:获取图例数据 */
+            function getLegendData(seriesNamesArr) {
+                var arr = [];
+                for (var i = 0; i < seriesNamesArr.length; i++) {
+                    arr.push(getSeriesName(seriesNamesArr[i]));
+                }
+                return arr;
+            }
+
+            /* function:获取x坐标轴类目名数据;参数：传入的data数据 */
             function getxAxisData(data) {
                 var arr = [];
                 for (var i = 0; i < data.length; i++) {
@@ -1520,7 +1528,7 @@ $(function () {
                 return arr;
             }
 
-            /* function:系列名转换 */
+            /* function:系列名转换  英文--中文 */
             function getSeriesName(name) {
                 var str;
                 switch (name) {
@@ -1540,15 +1548,6 @@ $(function () {
                         break;
                 }
                 return str;
-            }
-
-            /* function:获取图例数据 */
-            function getLegendData(seriesNamesArr) {
-                var arr = [];
-                for (var i = 0; i < seriesNamesArr.length; i++) {
-                    arr.push(getSeriesName(seriesNamesArr[i]));
-                }
-                return arr;
             }
 
             /* function：获取对应的系列数据;参数1:预声明的变量data,参数2:系列名  */

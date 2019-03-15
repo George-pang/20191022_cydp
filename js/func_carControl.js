@@ -2,6 +2,7 @@
 /* 车组运行质控页代码-- */
 
 function renderPage(data) {
+    alert(data);
     var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"]; //图例英文名
     // 系列颜色
     // var colors = ['#09508b', '#da7f1c', '#258b09', '#cd3213'];

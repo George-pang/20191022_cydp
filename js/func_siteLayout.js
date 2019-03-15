@@ -3,7 +3,6 @@
 
 //function: 方法封装--方便后台调用
 function renderPage(data) {
-    alert("1:");
     //创建地图实例--在指定id的DOM容器内创建
     var map = new BMap.Map("mapContainer");
     //信息窗口通用配置项
@@ -14,9 +13,7 @@ function renderPage(data) {
         // title: data_info[i].title, // 信息窗口标题
         enableMessage: true //设置允许信息窗发送短息
     };
-    alert("2");
     var data=JSON.parse(data);
-    alert("3");
     mapInit(); //初始化地图
     // getBoundary(map,"北京市","北京市朝阳区","#fff",1); //显示朝阳区行政版块覆盖物
     getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#16a085", 0.1); //显示朝阳区行政版块覆盖物
