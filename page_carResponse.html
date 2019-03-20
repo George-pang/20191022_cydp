@@ -29,77 +29,302 @@
         <!-- 左侧echarts柱状图 -->
         <div class="chartContainer">
             <div class="chartWrapper">
-                    <div class="barChart" id="responseBarChart">
+                <div class="barChart" id="responseBarChart">
 
-                        </div>
+                </div>
             </div>
         </div>
         <!-- 右侧数据展示表格 -->
         <div class="tableContainer">
             <div class="tableWrapper">
-                    <p class="chart_title" style="background-image:url(images/panelTitle.png)">数据统计</p>
-                    <table class="data_table">
-                            <tr>
-                                <th>分中心</th>
-                                <th>朝阳</th>
-                                <th>垂杨柳</th>
-                                <th>东坝</th>
-                                <th>双桥</th>
-                                <th>亚运村</th>
-                            </tr>
-                            <tr>
-                                <td align="center">平均反应时间</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td align="center">最短反应时间</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td align="center">最长反应时间</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td align="center">平均反应半径</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td align="center">最短反应半径</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td align="center">最长反应半径</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                    </table>
+                <p class="chart_title" style="background-image:url(images/panelTitle.png)">数据统计</p>
+                <table class="data_table">
+                    <tr>
+                        <th>分中心</th>
+                        <th>朝阳</th>
+                        <th>垂杨柳</th>
+                        <th>东坝</th>
+                        <th>双桥</th>
+                        <th>亚运村</th>
+                    </tr>
+                    <tr>
+                        <td align="center">平均反应时间</td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                    </tr>
+                    <tr>
+                        <td align="center">最短反应时间</td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                    </tr>
+                    <tr>
+                        <td align="center">最长反应时间</td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                    </tr>
+                    <tr>
+                        <td align="center">平均反应半径</td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                    </tr>
+                    <tr>
+                        <td align="center">最短反应半径</td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                    </tr>
+                    <tr>
+                        <td align="center">最长反应半径</td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
-    
+
+    <script>
+        //浏览器窗口大小改变时重载页面
+        $(function () {
+            $(window).on("resize", function () {
+                location.reload();
+            });
+
+            window.external.webMapLoadComplete();
+        });
+
+
+        /* 渲染左侧柱状图 */
+        //本地模拟数据
+        // var data_info=[
+        //     {
+        //         name:"朝阳",
+        //         avgTime:150,
+        //         avgRadius:12
+        //     },
+        //     {
+        //         name:"垂杨柳",
+        //         avgTime:220,
+        //         avgRadius:14
+        //     },
+        //     {
+        //         name:"东坝",
+        //         avgTime:330,
+        //         avgRadius:18
+        //     },
+        //     {
+        //         name:"双桥",
+        //         avgTime:80,
+        //         avgRadius:10
+        //     },
+        //     {
+        //         name:"亚运村",
+        //         avgTime:360,
+        //         avgRadius:8
+        //     },
+        // ]
+        // renderLeftBarChart(data_info);
+        //function:渲染左侧柱状图。参数1：data
+        function renderLeftBarChart(data) {
+            var data=JSON.parse(data);
+            var dom = document.getElementById("responseBarChart");
+            var carChart = echarts.init(dom);
+            var seriesColors = ['#5793f3', '#d14a61']; //系列色
+            var barColors = ["#c23531", "#61a0a8", "#FFDE76", "#E43C59", "#37A2DA"]; //柱状图图柱色
+            var axisLabelFontSize = 22;
+            var option = {
+                title: {
+                    text: "朝阳120各中心救护车平均反应时间、半径统计",
+                    textStyle: {
+                        // color: '#fff',
+                        color: '#00c0ff',
+                        fontSize: 28,
+                    },
+                    left: 'center',
+                    bottom: 50,
+                },
+                color: seriesColors,
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { //坐标轴指示器配置项
+                        type: 'cross', //十字准星指示器
+                        label: { //坐标轴指示器的文本标签。
+                            fontSize: 18,
+                            padding: [5, 10],
+                            backgroundColor: '#d14a61'
+                        }
+                    }
+                },
+                grid: { //直角坐标系 grid
+                    // top: 100,
+                    top: '15%',
+                    bottom: 200,
+                    left: '20%',
+                    right: '25%'
+                },
+                // legend: {
+                //     data: ['平均反应时间', '平均反应半径']
+                // },
+                xAxis: [{
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    data: getData(data,"name"),
+                    axisLine: { //轴线
+                        lineStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    axisTick: { //刻度线
+                        show: false,
+                        alignWithLabel: true
+                    },
+                    axisLabel: { //刻度标签
+                        interval: 0, //标签的显示间隔(类目轴中有效),设置成 0 强制显示所有标签
+                        margin: 20, //标签与轴线的距离
+                        fontSize: axisLabelFontSize,
+                        rotate: 30,
+                    }
+                }],
+                yAxis: [{
+                        type: 'value',
+                        name: '平均反应时间',
+                        nameTextStyle: {
+                            // color: 'rgba(255,255,255,.6)',
+                            color: seriesColors[0],
+                            fontSize: axisLabelFontSize,
+                        },
+                        nameGap: 30, //坐标轴名称与轴线之间的距离
+                        min: 0,
+                        // max: 400,
+                        position: 'left',
+                        axisLine: {
+                            lineStyle: {
+                                color: seriesColors[0]
+                                // color: '#fff'
+
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} 秒',
+                            margin: 15, //标签与轴线的距离
+                            fontSize: axisLabelFontSize,
+                        },
+                        axisTick: { //刻度线
+                            length: 10,
+                            alignWithLabel: true
+                        },
+                        splitLine: {
+                            show: false
+                        }
+
+                    },
+                    {
+                        type: 'value',
+                        name: '平均反应半径',
+                        nameTextStyle: {
+                            // color: 'rgba(255,255,255,.6)',
+                            color: seriesColors[1],
+                            fontSize: axisLabelFontSize,
+                        },
+                        nameGap: 30,
+                        min: 0,
+                        // max: 20,
+                        position: 'right',
+                        offset: 80,
+                        axisLine: { //轴线
+                            lineStyle: {
+                                color: seriesColors[1]
+                                // color: '#fff'
+                            }
+                        },
+                        axisLabel: { //刻度标签文本
+                            formatter: '{value} km',
+                            margin: 15, //标签与轴线的距离
+                            fontSize: axisLabelFontSize,
+                        },
+                        axisTick: { //刻度线
+                            length: 10,
+                            alignWithLabel: true
+                        },
+                        splitLine: { //分割线
+                            show: false
+                        }
+                    },
+                ],
+                series: [{
+                        name: '平均反应时间',
+                        type: 'bar',
+                        data: getData(data,"avgTime"),
+                        barWidth: '50%', //柱条的宽度，不设时自适应。支持设置成相对于类目宽度的百分比。
+                        /* 每根柱子不同颜色设置 */
+                        itemStyle: {
+                            normal: {
+                                //params:Object;传入的是数据项 seriesIndex, dataIndex, data, value 等各个参数。
+                                color: function (params) {
+                                    let colorList = barColors;
+                                    return colorList[params.dataIndex];
+                                }
+                            }
+                        },
+                    },
+                    {
+                        name: '平均反应半径',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: getData(data,"avgRadius"),
+                        itemStyle: {
+                            normal: {
+                                color: seriesColors[1]
+                            }
+                        }
+                    }
+                ]
+            };
+            carChart.setOption(option);
+        }
+        
+        //function: 解析格式类似对象数组的数据，获取其中对象某个key名对应的数据数组
+        function getData(data,key){
+            var arr=[];
+            for(var i=0;i<data.length;i++){
+                arr.push(data[i][key]);
+            }
+            return arr;
+        }
+
+        /* 渲染右侧table */
+        function renderRightTable(data){
+            var data=JSON.parse(data);
+            for(var i=0;i<data.length;i++){
+                $(".data_table").find("tr").eq(0).find("th").eq(i+1).html(data[i].name);
+                $(".data_table").find("tr").eq(1).find("td").eq(i+1).html(data[i].avgTime==""?"无":data[i].avgTime+"秒");
+                $(".data_table").find("tr").eq(2).find("td").eq(i+1).html(data[i].minTime==""?"无":data[i].minTime+"秒");
+                $(".data_table").find("tr").eq(3).find("td").eq(i+1).html(data[i].maxTime==""?"无":data[i].maxTime+"秒");
+                $(".data_table").find("tr").eq(4).find("td").eq(i+1).html(data[i].avgRadius==""?"无":data[i].avgRadius+"公里");
+                $(".data_table").find("tr").eq(5).find("td").eq(i+1).html(data[i].minRadius==""?"无":data[i].minRadius+"公里");
+                $(".data_table").find("tr").eq(6).find("td").eq(i+1).html(data[i].maxRadius==""?"无":data[i].maxRadius+"公里");
+            }
+        }        
+    </script>
 </body>
 
 </html>

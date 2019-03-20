@@ -13,7 +13,7 @@
     <script src="/lib/vintage.js"></script>
     <!-- 引入百度地图api文件 -->
     <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
-    <script src="/js/pages.js"></script>
+    <!-- <script src="/js/pages.js"></script> -->
 </head>
 
 <body style="background-image:url(/images/e.bg.jpg);">
@@ -59,6 +59,9 @@
             $(window).on("resize",function(){
                 location.reload();
             });
+            
+            window.external.webMapLoadComplete();
+
         });
 
 
@@ -119,23 +122,27 @@
                                 }
                             }
                         },
-                        data: [{
-                                name: '朝阳区',
-                                value: 0
+                        data: [
+                            {
+                                name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                value: 50 //value值对应颜色映射的取值
                             },
                             {
-                                name: '上分区', //只有与json数据上的多边形分区name值对应才可以显示颜色
-                                value: 80 //value值对应颜色映射的取值
+                                name: '中北片',
+                                value: 100
                             },
                             {
-                                name: '下分区',
+                                name: '中南片',
                                 value: 180
                             },
                             {
-                                name: '右上分区',
-                                value: 250
+                                name: '南片',
+                                value: 220
                             },
-
+                            {
+                                name: '外区',
+                                value: 270
+                            },
                         ],
                         itemStyle: { //地图区域的多边形 图形样式。
                             borderColor: '#fff', //图形的描边颜色
@@ -187,6 +194,7 @@
         var timeId;
 
         function renderRightPieChart(data) {
+            var data=JSON.parse(data);
             var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53', // 系列颜色
                 '#eedd78', '#73a373', '#73b9bc', '#91ca8c', '#f49f42'
             ];

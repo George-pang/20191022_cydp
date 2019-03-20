@@ -12,7 +12,7 @@
     <script src="/lib/echarts.min.js"></script>
     <!-- 引入百度地图api文件 -->
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
-    <script src="/js/pages.js"></script>
+    <!-- <script src="/js/pages.js"></script> -->
 </head>
 
 <body style="background-image:url(/images/e.bg.jpg);">
@@ -48,28 +48,65 @@
         $(window).on("resize", function () {
             location.reload();
         });
+        
+        window.external.webMapLoadComplete();
     });
 
-    
+
     /* function封装js文件，供C#后台调用 */
     /* 站点布局页代码-- */
 
+    //创建地图实例--在指定id的DOM容器内创建
+    var map = new BMap.Map("mapContainer");
+    //信息窗口通用配置项
+    var opts = {
+        width: 0, // 信息窗口宽度
+        height: 0, // 信息窗口高度
+        offset: new BMap.Size(0, -10), //信息窗位置偏移值
+        // title: data_info[i].title, // 信息窗口标题
+        enableMessage: true //设置允许信息窗发送短息
+    };
+    // var data = [{
+    //         name: "朝阳中心",
+    //         stationList: [{
+    //             "x": 116.456937,
+    //             "y": 39.93331,
+    //             "name": "朝阳中心1分站",
+    //             "address": "这是朝阳中心第一分站",
+    //             "phone": 87789999,
+    //         }, {
+    //             "x": 116.4457321,
+    //             "y": 39.92469024,
+    //             "name": "朝阳中心2分站",
+    //             "address": "这是朝阳中心第二分站",
+    //             "phone": 87789999,
+    //         }]
+    //     },
+    //     {
+    //         name: "垂杨柳分中心",
+    //         stationList: [{
+    //             "x": 116.451992,
+    //             "y": 39.932234,
+    //             "name": "垂杨柳中心1分站",
+    //             "address": "这是垂杨柳中心第一分站",
+    //             "phone": 87789999,
+    //         }, {
+    //             "x": 116.481685,
+    //             "y": 39.938963,
+    //             "name": "垂杨柳中心2分站",
+    //             "address": "这是垂杨柳中心第二分站",
+    //             "phone": 87789999,
+    //         }]
+    //     }
+    // ];
+    // renderPage(data);
+
     //function: 方法封装--方便后台调用
     function renderPage(data) {
-        //创建地图实例--在指定id的DOM容器内创建
-        var map = new BMap.Map("mapContainer");
-        //信息窗口通用配置项
-        var opts = {
-            width: 0, // 信息窗口宽度
-            height: 0, // 信息窗口高度
-            offset: new BMap.Size(0, -10), //信息窗位置偏移值
-            // title: data_info[i].title, // 信息窗口标题
-            enableMessage: true //设置允许信息窗发送短息
-        };
         var data = JSON.parse(data);
         mapInit(); //初始化地图
         // getBoundary(map,"北京市","北京市朝阳区","#fff",1); //显示朝阳区行政版块覆盖物
-        getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#16a085", 0.1); //显示朝阳区行政版块覆盖物
+        getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#0c88e8", 0.3); //显示朝阳区行政版块覆盖物
         //创建多个标注点并点击时触发信息窗口
         renderPoint(data, "stationList");
         //渲染地图右侧信息块 内容（tab导航）
@@ -81,11 +118,11 @@
         //定时器定时主动触发事件
 
         //2018-02-02 增加站点计时切换触发点击事件效果
-        var timeId = setInterval(function () {
-            var count = getActiveClassIndex();
-            //站点定时轮换触发点击事件
-            $($(".stationItem")[count]).trigger("click");
-        }, 3000);
+        // var timeId = setInterval(function () {
+        //     var count = getActiveClassIndex();
+        //     //站点定时轮换触发点击事件
+        //     $($(".stationItem")[count]).trigger("click");
+        // }, 10000);
     }
 
     //function：初始化地图配置
@@ -155,7 +192,7 @@
                 // marker.setTop(true);//将标注置于其他标注之上
                 // marker.setZIndex(999);
                 map.addOverlay(marker); //向地图中添加标注点
-                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //给标注点添加跳动的动画
+                // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //给标注点添加跳动的动画
                 // 设置标注点信息窗口的内容
                 var content = setInfoWindowContent(data[i][stationDataName][j]);
                 //添加标注点点击事件处理函数
@@ -201,7 +238,7 @@
             var centerItemObj = $(centerItemStr); //new centerItemObj（li）---动态创建分中心列表项
             var stationListObj = $(stationListStr); //new stationListObj（ul）--创建分中心列表项下的分站列表
             //列表渲染分站列表项
-            renderStationList(data_info[i].stationList, stationListObj)
+            renderStationList(data[i].stationList, stationListObj)
             //插入到DOM中
             centerItemObj.append(stationListObj);
             $(".centerList").append(centerItemObj);
@@ -262,7 +299,7 @@
 
         //2018-02-02 当用户点击信息窗口的关闭按钮时，关闭站点计时的切换触发点击事件效果---清除计时器事件
         infoWindow.addEventListener("clickclose", function () {
-            clearInterval(timeId);
+            // clearInterval(timeId);
             //同时清除左侧对应站点突出显示的背景色 
             $(".stationItem").removeClass("active");
         });

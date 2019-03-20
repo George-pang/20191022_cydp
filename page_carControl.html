@@ -13,8 +13,7 @@
     <script src="/lib/vintage.js"></script>
     <!-- 引入百度地图api文件 -->
     <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
-    <script src="/js/pages.js"></script>
-    <!-- <script src="/js/func_carControl.js"></script> -->
+    <!-- <script src="/js/pages.js"></script> -->
 </head>
 
 <body style="background-image:url(/images/e.bg.jpg);">
@@ -39,8 +38,18 @@
             $(window).on("resize",function(){
                 location.reload();
             });
+
+            window.external.webMapLoadComplete();
         });
 
+
+        //标题栏时间范围
+        function setTimeRange(data) {
+            $(".start_time").html(data.startTime);
+            $(".end_time").html(data.endTime);
+        }
+
+        //页面元素渲染
         function renderPage(data) {
             var data = JSON.parse(data);
             var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"]; //图例英文名
@@ -51,7 +60,7 @@
             var labelFontSize = 18;
             var dom = document.getElementById("carBarChart");
             var carBarChart = echarts.init(dom, 'vintage');
-            var showValue = 5; //dataZoom数据窗口显示个数
+            var showValue = 8; //dataZoom数据窗口显示个数
 
             option = {
                 // title: {
@@ -117,7 +126,7 @@
                     },
                     axisLabel: { //刻度标签
                         margin: 10, //标签与轴线的距离
-                        fontSize: 24,
+                        fontSize: 18,
                     }
                 }],
                 yAxis: [{
@@ -161,7 +170,7 @@
                     option.dataZoom[0].startValue = 0 - 1;
                     option.dataZoom[0].endValue = showValue - 1 - 1;
                 }
-            }, 3000);
+            }, 10000);
         }
 
         /* function:获取图例数据 */

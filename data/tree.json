@@ -1,58 +1,58 @@
 {
-    "name": "董事会",
+    "name": "主 任",
     "children": [{
-        "name": "总经理",
+        "name": "科长",
         "children": [
             {
-                "name": "营销中心",
+                "name": "指挥部",
                 "children": [
                     {
-                        "name": "市场部"
+                        "name": "党办"
                     },
                     {
-                        "name": "销售部"
+                        "name": "院办"
                     },
                     {
-                        "name": "客服部"
+                        "name": "工会"
                     }
                 ]
             },
             {
-                "name": "项目中心",
+                "name": "急救部",
                 "children": [
                     {
-                        "name": "售前支持"
+                        "name": "应急办"
                     },
                     {
-                        "name": "项目一部"
+                        "name": "保卫科"
                     },
                     {
-                        "name": "项目二部"
+                        "name": "药械科"
                     },
                     {
-                        "name": "项目三部"
+                        "name": "审计科"
                     }
                 ]
             },
             {
-                "name": "技术中心",
+                "name": "运输部",
                 "children": [
                     {
-                        "name": "开发部"
+                        "name": "急救人员"
                     },
                     {
-                        "name": "设计部"
+                        "name": "司机"
                     },
                     {
-                        "name": "系统部"
+                        "name": "担架工"
                     }
                 ]
             },
             {
-                "name": "行政部"
+                "name": "财务科"
             },
             {
-                "name": "财务部"
+                "name": "总务科"
             }
         ]
     } ]

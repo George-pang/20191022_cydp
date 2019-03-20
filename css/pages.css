@@ -391,11 +391,11 @@ body {
   height: 14.28571429%;
 }
 .response_main .tableContainer .data_table th {
-  font-size: 22px;
+  font-size: 24px;
 }
 .response_main .tableContainer .data_table td {
   text-align: center;
-  font-size: 20px;
+  font-size: 22px;
 }
 /* 当日无车原因及区域展示页 */
 .noCar_main .mapContainer {

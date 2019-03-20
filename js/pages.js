@@ -40,16 +40,16 @@ $(function () {
                         orient: 'vertical', // vertical horizontal
                         rootLocation: {
                             x: 'center',
-                            y: 100
+                            y: 120
                         }, // 根节点位置  {x: 'center',y: 10}
                         layerPadding: 100, //父子节点间连接线的长度
                         nodePadding: 20, //同级节点间的间隔
                         symbol: 'emptyRectangle',
-                        symbolSize: [100, 50],//标记大小
+                        symbolSize: [100, 50], //标记大小
                         itemStyle: { //图形样式
                             normal: {
                                 // color: '#258b09', //颜色，主色
-                                color: '#09508b',
+                                color: '#5989fc',
                                 label: {
                                     show: true,
                                     position: 'inside',
@@ -65,7 +65,7 @@ $(function () {
                                 },
                                 lineStyle: {
                                     // color: '#258b09',//连接线的颜色
-                                    color: '#09508b',
+                                    color: '#5989fc',
                                     width: 1,
                                     type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
                                 }
@@ -147,7 +147,7 @@ $(function () {
             var map = new BMap.Map("mapContainer");
             mapInit(); //初始化地图
             // getBoundary(map,"北京市","北京市朝阳区","#fff",1); //显示朝阳区行政版块覆盖物
-            getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#16a085", 0.1); //显示朝阳区行政版块覆盖物
+            getBoundary(map, "北京市朝阳区", "北京市朝阳区", "#0c88e8", 0.3); //显示朝阳区行政版块覆盖物
             //创建多个标注点并点击时触发信息窗口
             renderPoint(data_info, "stationList");
             //渲染地图右侧信息块 内容（tab导航）
@@ -163,7 +163,7 @@ $(function () {
                 var count = getActiveClassIndex();
                 //站点定时轮换触发点击事件
                 $($(".stationItem")[count]).trigger("click");
-            }, 3000);
+            }, 10000);
 
 
             //function：初始化地图配置
@@ -375,7 +375,7 @@ $(function () {
             var dom = document.getElementById("mapChart");
             var myChart = echarts.init(dom);
             var normalLableFont = 18;
-            var strongLableFont = 22;
+            var strongLableFont = 20;
             $.get('/data/map.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
@@ -405,34 +405,39 @@ $(function () {
                             normal: { //正常时的样式
                                 show: true,
                                 textStyle: {
-                                    color: '#ef5400',
+                                    color: '#fff',
                                     fontSize: normalLableFont,
                                 }
                             },
                             emphasis: { //高亮时的样式设置
                                 show: true,
                                 textStyle: {
-                                    color: 'red'
+                                    color: 'red',
+                                    fontSize:strongLableFont,
                                 }
                             }
                         },
-                        data: [{
-                                name: '朝阳区',
-                                value: 0
+                        data: [
+                            {
+                                name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                value: 50 //value值对应颜色映射的取值
                             },
                             {
-                                name: '上分区', //只有与json数据上的多边形分区name值对应才可以显示颜色
-                                value: 80 //value值对应颜色映射的取值
+                                name: '中北片',
+                                value: 100
                             },
                             {
-                                name: '下分区',
+                                name: '中南片',
                                 value: 180
                             },
                             {
-                                name: '右上分区',
-                                value: 250
+                                name: '南片',
+                                value: 220
                             },
-
+                            {
+                                name: '外区',
+                                value: 270
+                            },
                         ],
                         itemStyle: { //地图区域的多边形 图形样式。
                             borderColor: '#fff', //图形的描边颜色
@@ -648,8 +653,7 @@ $(function () {
                     ]
                 }
             ];
-            // 系列颜色
-            var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53'];
+            var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53']; // 系列颜色
             var dom = document.getElementById("eventBarChart");
             var eventBarChart = echarts.init(dom, 'vintage');
 
@@ -854,34 +858,39 @@ $(function () {
                             normal: { //正常时的样式
                                 show: true,
                                 textStyle: {
-                                    color: '#ef5400',
+                                    color: '#fff',
                                     fontSize: 18,
                                 }
                             },
                             emphasis: { //高亮时的样式设置
                                 show: true,
                                 textStyle: {
-                                    color: 'red'
+                                    color: 'red',
+                                    fontSize: 20,
                                 }
                             }
                         },
-                        data: [{
-                                name: '朝阳区',
-                                value: 0
+                        data: [
+                            {
+                                name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                value: 50 //value值对应颜色映射的取值
                             },
                             {
-                                name: '上分区', //只有与json数据上的多边形分区name值对应才可以显示颜色
-                                value: 80 //value值对应颜色映射的取值
+                                name: '中北片',
+                                value: 100
                             },
                             {
-                                name: '下分区',
+                                name: '中南片',
                                 value: 180
                             },
                             {
-                                name: '右上分区',
-                                value: 250
+                                name: '南片',
+                                value: 220
                             },
-
+                            {
+                                name: '外区',
+                                value: 270
+                            },
                         ],
                         itemStyle: { //地图区域的多边形 图形样式。
                             borderColor: '#fff', //图形的描边颜色
@@ -1130,6 +1139,33 @@ $(function () {
         if ($(".response_main").length != 0) {
 
             /* 渲染左侧柱状图 */
+            //本地模拟数据
+            var data = [{
+                    name: "朝阳",
+                    avgTime: 150,
+                    avgRadius: 12
+                },
+                {
+                    name: "垂杨柳",
+                    avgTime: 220,
+                    avgRadius: 14
+                },
+                {
+                    name: "东坝",
+                    avgTime: 330,
+                    avgRadius: 18
+                },
+                {
+                    name: "双桥",
+                    avgTime: 80,
+                    avgRadius: 10
+                },
+                {
+                    name: "亚运村",
+                    avgTime: 360,
+                    avgRadius: 8
+                },
+            ]
             var dom = document.getElementById("responseBarChart");
             var carChart = echarts.init(dom);
             var seriesColors = ['#5793f3', '#d14a61']; //系列色
@@ -1173,7 +1209,7 @@ $(function () {
                     axisTick: {
                         alignWithLabel: true
                     },
-                    data: ['朝阳', '垂杨柳', '东坝', '双桥', '亚运村'],
+                    data: getData(data, "name"),
                     axisLine: { //轴线
                         lineStyle: {
                             color: '#fff',
@@ -1200,7 +1236,7 @@ $(function () {
                         },
                         nameGap: 30, //坐标轴名称与轴线之间的距离
                         min: 0,
-                        max: 400,
+                        // max: 400,
                         position: 'left',
                         axisLine: {
                             lineStyle: {
@@ -1233,7 +1269,7 @@ $(function () {
                         },
                         nameGap: 30,
                         min: 0,
-                        max: 20,
+                        // max: 20,
                         position: 'right',
                         offset: 80,
                         axisLine: { //轴线
@@ -1259,7 +1295,7 @@ $(function () {
                 series: [{
                         name: '平均反应时间',
                         type: 'bar',
-                        data: [150, 220, 330, 80, 360],
+                        data: getData(data, "avgTime"),
                         barWidth: '50%', //柱条的宽度，不设时自适应。支持设置成相对于类目宽度的百分比。
                         /* 每根柱子不同颜色设置 */
                         itemStyle: {
@@ -1276,7 +1312,7 @@ $(function () {
                         name: '平均反应半径',
                         type: 'line',
                         yAxisIndex: 1,
-                        data: [12, 14, 18, 10, 8],
+                        data: getData(data, "avgRadius"),
                         itemStyle: {
                             normal: {
                                 color: seriesColors[1]
@@ -1286,6 +1322,15 @@ $(function () {
                 ]
             };
             carChart.setOption(option);
+
+            //function: 解析格式类似对象数组的数据，获取其中对象某个key名对应的数据数组
+            function getData(data, key) {
+                var arr = [];
+                for (var i = 0; i < data.length; i++) {
+                    arr.push(data[i][key]);
+                }
+                return arr;
+            }
 
         }
 
@@ -1508,7 +1553,7 @@ $(function () {
                     option.dataZoom[0].startValue = 0 - 1;
                     option.dataZoom[0].endValue = showValue - 1 - 1;
                 }
-            }, 3000);
+            }, 10000);
 
             /* function:获取图例数据 */
             function getLegendData(seriesNamesArr) {
