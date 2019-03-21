@@ -115,38 +115,38 @@
         /* ****************************************************** */
         /* 渲染左侧柱状图 */
         //本地模拟数据
-        // var data_info=[
-        //     {
-        //         name:"朝阳",
-        //         avgTime:150,
-        //         avgRadius:12
-        //     },
-        //     {
-        //         name:"垂杨柳",
-        //         avgTime:220,
-        //         avgRadius:14
-        //     },
-        //     {
-        //         name:"东坝",
-        //         avgTime:330,
-        //         avgRadius:18
-        //     },
-        //     {
-        //         name:"双桥",
-        //         avgTime:80,
-        //         avgRadius:10
-        //     },
-        //     {
-        //         name:"亚运村",
-        //         avgTime:360,
-        //         avgRadius:8
-        //     },
-        // ]
-        // renderLeftBarChart(data_info);
+        var data_info=[
+            {
+                name:"朝阳",
+                avgTime:150,
+                avgRadius:12
+            },
+            {
+                name:"垂杨柳",
+                avgTime:220,
+                avgRadius:14
+            },
+            {
+                name:"东坝",
+                avgTime:330,
+                avgRadius:18
+            },
+            {
+                name:"双桥",
+                avgTime:80,
+                avgRadius:10
+            },
+            {
+                name:"亚运村",
+                avgTime:360,
+                avgRadius:8
+            },
+        ]
+        renderLeftBarChart(data_info);
 
         //function:渲染左侧柱状图。参数：data----后台调用
         function renderLeftBarChart(data) {
-            var data=JSON.parse(data);
+            // var data = JSON.parse(data);
             var dom = document.getElementById("responseBarChart");
             var carChart = echarts.init(dom);
             var seriesColors = ['#5793f3', '#d14a61']; //系列色
@@ -190,7 +190,7 @@
                     axisTick: {
                         alignWithLabel: true
                     },
-                    data: getData(data,"name"),
+                    data: getData(data, "name"),
                     axisLine: { //轴线
                         lineStyle: {
                             color: '#fff',
@@ -276,7 +276,7 @@
                 series: [{
                         name: '平均反应时间',
                         type: 'bar',
-                        data: getData(data,"avgTime"),
+                        data: getData(data, "avgTime"),
                         barWidth: '50%', //柱条的宽度，不设时自适应。支持设置成相对于类目宽度的百分比。
                         /* 每根柱子不同颜色设置 */
                         itemStyle: {
@@ -293,7 +293,7 @@
                         name: '平均反应半径',
                         type: 'line',
                         yAxisIndex: 1,
-                        data: getData(data,"avgRadius"),
+                        data: getData(data, "avgRadius"),
                         itemStyle: {
                             normal: {
                                 color: seriesColors[1]
@@ -304,11 +304,11 @@
             };
             carChart.setOption(option);
         }
-        
+
         //function: 解析格式类似对象数组的数据，获取其中对象某个key名对应的数据数组
-        function getData(data,key){
-            var arr=[];
-            for(var i=0;i<data.length;i++){
+        function getData(data, key) {
+            var arr = [];
+            for (var i = 0; i < data.length; i++) {
                 arr.push(data[i][key]);
             }
             return arr;
@@ -316,18 +316,50 @@
 
         /* ************************************************************* */
         /* function：渲染右侧table---后台调用 */
-        function renderRightTable(data){
-            var data=JSON.parse(data);
-            for(var i=0;i<data.length;i++){
-                $(".data_table").find("tr").eq(0).find("th").eq(i+1).html(data[i].name);
-                $(".data_table").find("tr").eq(1).find("td").eq(i+1).html(data[i].avgTime==""?"无":data[i].avgTime+"秒");
-                $(".data_table").find("tr").eq(2).find("td").eq(i+1).html(data[i].minTime==""?"无":data[i].minTime+"秒");
-                $(".data_table").find("tr").eq(3).find("td").eq(i+1).html(data[i].maxTime==""?"无":data[i].maxTime+"秒");
-                $(".data_table").find("tr").eq(4).find("td").eq(i+1).html(data[i].avgRadius==""?"无":data[i].avgRadius+"公里");
-                $(".data_table").find("tr").eq(5).find("td").eq(i+1).html(data[i].minRadius==""?"无":data[i].minRadius+"公里");
-                $(".data_table").find("tr").eq(6).find("td").eq(i+1).html(data[i].maxRadius==""?"无":data[i].maxRadius+"公里");
+        function renderRightTable(data) {
+            var data = JSON.parse(data);
+            for (var i = 0; i < data.length; i++) {
+                $(".data_table").find("tr").eq(0).find("th").eq(i + 1).html(data[i].name);
+                $(".data_table").find("tr").eq(1).find("td").eq(i + 1).html(data[i].avgTime == "" ? "无" : formatSeconds(data[i].avgTime));
+                $(".data_table").find("tr").eq(2).find("td").eq(i + 1).html(data[i].minTime == "" ? "无" : formatSeconds(data[i].minTime));
+                $(".data_table").find("tr").eq(3).find("td").eq(i + 1).html(data[i].maxTime == "" ? "无" : formatSeconds(data[i].maxTime));
+                $(".data_table").find("tr").eq(4).find("td").eq(i + 1).html(data[i].avgRadius == "" ? "无" : data[i]
+                    .avgRadius + "公里");
+                $(".data_table").find("tr").eq(5).find("td").eq(i + 1).html(data[i].minRadius == "" ? "无" : data[i]
+                    .minRadius + "公里");
+                $(".data_table").find("tr").eq(6).find("td").eq(i + 1).html(data[i].maxRadius == "" ? "无" : data[i]
+                    .maxRadius + "公里");
             }
-        }        
+        }
+
+        //function:秒数转化为时分秒
+        function formatSeconds(value) {
+            var secondTime = parseInt(value); // 秒
+            var minuteTime = 0; // 分
+            var hourTime = 0; // 小时
+            if (secondTime > 60) { //如果秒数大于60，将秒数转换成整数
+                //获取分钟，除以60取整数，得到整数分钟
+                minuteTime = parseInt(secondTime / 60);
+                //获取秒数，秒数取佘，得到整数秒数
+                secondTime = parseInt(secondTime % 60);
+                //如果分钟大于60，将分钟转换成小时
+                if (minuteTime > 60) {
+                    //获取小时，获取分钟除以60，得到整数小时
+                    hourTime = parseInt(minuteTime / 60);
+                    //获取小时后取佘的分，获取分钟除以60取佘的分
+                    minuteTime = parseInt(minuteTime % 60);
+                }
+            }
+            var result = "" + parseInt(secondTime) + "秒";
+
+            if (minuteTime > 0) {
+                result = "" + parseInt(minuteTime) + "分" + result;
+            }
+            if (hourTime > 0) {
+                result = "" + parseInt(hourTime) + "小时" + result;
+            }
+            return result;
+        }
     </script>
 </body>
 
