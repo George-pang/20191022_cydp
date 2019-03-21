@@ -11,8 +11,6 @@
     <script src="/lib/jquery.min.js"></script>
     <script src="/lib/echarts.min.js"></script>
     <script src="/lib/vintage.js"></script>
-    <!-- 引入百度地图api文件 -->
-    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script> -->
     <!-- <script src="/js/pages.js"></script> -->
 </head>
 
@@ -20,10 +18,10 @@
     <!-- 标题栏 -->
     <div class="page_title">
         <h3 class="title">当日无车原因及区域展示
-            <p class="time_range">
+            <!-- <p class="time_range">
                 <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p>
+            </p> -->
         </h3>
     </div>
     <!-- 内容区 -->
@@ -52,24 +50,30 @@
 
         </div>
     </div>
-    <!-- 显示时间范围 -->
+
     <script>
         //浏览器窗口大小改变时重载页面
-        $(function(){
-            $(window).on("resize",function(){
+        $(function () {
+            $(window).on("resize", function () {
                 location.reload();
             });
-            
-            window.external.webMapLoadComplete();
+
+            window.external.webMapLoadComplete(); //window.external 是外部对象,与C#后台代码交互
 
         });
 
+        /* ************************************************************************************************** */
+        /* js函数封装，供C#后台代码调用 */
 
-        /* function封装js文件，供C#后台调用 */
-        /* 无车原因页代码-- */
 
+        /* *********************************************************** */
         /*  渲染左侧echarts地图 */
+        // var data = [{ "name": "北片", "value": 0, "jindu": "116.519774", "weidu": "40.000145" }, { "name": "南片", "value": 0, "jindu": "116.527247", "weidu": "39.872791" }, { "name": "外区", "value": 0, "jindu": "116.314529", "weidu": "39.922389" }, { "name": "中北片", "value": 0, "jindu": "116.481829", "weidu": "39.945404" }, { "name": "中南片", "value": 0, "jindu": "116.496777", "weidu": "39.912649" }]
+        // renderLeftMapEchart(data);
+
+        //function：渲染左侧地图---后台调用
         function renderLeftMapEchart(data) {
+            var data = dataFormat(data);
             var dom = document.getElementById("carMapChart");
             var myChart = echarts.init(dom);
             $.get('/data/map.json', function (geoJson) {
@@ -88,19 +92,6 @@
                     tooltip: {
                         trigger: 'item',
                         formatter: '{b}<br/>'
-                    },
-                    // backgroundColor: '#8ba4d8b8',
-                    visualMap: { //自定义视觉映射
-                        show: false,
-                        min: 0,
-                        max: 300,
-                        text: ['High', 'Low'],
-                        left: 'left',
-                        realtime: false,
-                        calculable: true,
-                        inRange: {
-                            color: ['#d94e5d', '#eac736', '#50a3ba']
-                        }
                     },
                     series: [{
                         name: '朝阳120各分区突发事件统计',
@@ -122,26 +113,40 @@
                                 }
                             }
                         },
-                        data: [
-                            {
+                        data: [{
                                 name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
-                                value: 50 //value值对应颜色映射的取值
+                                value: 50, //value值对应颜色映射的取值
+                                itemStyle: {
+                                    areaColor: '#da7f1c' //区域颜色
+                                }
                             },
                             {
                                 name: '中北片',
-                                value: 100
+                                value: 100,
+                                itemStyle: {
+                                    areaColor: '#09508b'
+                                }
                             },
                             {
                                 name: '中南片',
-                                value: 180
+                                value: 180,
+                                itemStyle: {
+                                    areaColor: '#258b09'
+                                }
                             },
                             {
                                 name: '南片',
-                                value: 220
+                                value: 220,
+                                itemStyle: {
+                                    areaColor: '#cd3213'
+                                }
                             },
                             {
                                 name: '外区',
-                                value: 270
+                                value: 270,
+                                itemStyle: {
+                                    areaColor: '#e9992f'
+                                }
                             },
                         ],
                         itemStyle: { //地图区域的多边形 图形样式。
@@ -161,8 +166,9 @@
                             label: { //标注的文本。
                                 normal: {
                                     show: true,
-                                    formatter: function (d) { //文本 回调函数格式：(params: Object|Array) => string
-                                        return d.name + "\t" + d.value + "次"
+                                    formatter: function (
+                                    d) { //文本 回调函数格式：(params: Object|Array) => string
+                                        return d.name + "\t无车" + d.value + "次"
                                     },
                                     textStyle: {
                                         fontSize: 18,
@@ -172,16 +178,7 @@
                                     position: 'inside',
                                 }
                             },
-                            data: [{
-                                    name: "无车",
-                                    coord: [116.556937, 39.93331], //标注的坐标点
-                                    value: 20
-                                },
-                                // {
-                                //     name: "通州区",
-                                //     coord: [116.552471, 39.761261],
-                                // }
-                            ],
+                            data: data
                         },
                     }]
                 };
@@ -190,11 +187,29 @@
             });
         }
 
+        //function:对后台返回的数据格式化为echarts可解析的格式
+        function dataFormat(data) {
+            var arr = [];
+            var data = JSON.parse(data);
+            for (var i = 0; i < data.length; i++) {
+                var obj = {};
+                obj.name = data[i].name;
+                obj.value = data[i].value;
+                obj.coord = [data[i]["jindu"], data[i]["weidu"]];
+                arr.push(obj);
+            }
+            console.log(arr);
+            return arr;
+        }
+
+
+        /* *********************************************************** */
         /* 渲染右侧echarts饼图 */
         var timeId;
 
+        //function：渲染右侧饼图----后台调用
         function renderRightPieChart(data) {
-            var data=JSON.parse(data);
+            var data = JSON.parse(data);
             var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53', // 系列颜色
                 '#eedd78', '#73a373', '#73b9bc', '#91ca8c', '#f49f42'
             ];
@@ -299,7 +314,6 @@
             }
             return arr;
         }
-
         //function: 主动触发echarts实例高亮行为，实现扇区高亮自动切换。参数1：echarts实例；参数2：option配置对象
         function autoDispatchAction(myChart, option) {
             var app = {

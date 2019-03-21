@@ -10,18 +10,17 @@
     <link rel="stylesheet" href="/css/pages.css">
     <script src="/lib/jquery.min.js"></script>
     <script src="/lib/echarts.min.js"></script>
-    <!-- 引入百度地图api文件 -->
-    <script src="/js/pages.js"></script>
+    <!-- <script src="/js/pages.js"></script> -->
 </head>
 
 <body style="background-image:url(/images/e.bg.jpg);">
     <!-- 标题栏 -->
     <div class="page_title">
         <h3 class="title">车辆平均反应半径、时间统计
-            <p class="time_range">
+            <!-- <p class="time_range">
                 <span class="subtitle">时间范围:</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p>
+            </p> -->
         </h3>
     </div>
     <!-- 内容区 -->
@@ -110,7 +109,10 @@
             window.external.webMapLoadComplete();
         });
 
+        /* ************************************************************************************************** */
+        /* js函数封装，供C#后台代码调用 */
 
+        /* ****************************************************** */
         /* 渲染左侧柱状图 */
         //本地模拟数据
         // var data_info=[
@@ -141,7 +143,8 @@
         //     },
         // ]
         // renderLeftBarChart(data_info);
-        //function:渲染左侧柱状图。参数1：data
+
+        //function:渲染左侧柱状图。参数：data----后台调用
         function renderLeftBarChart(data) {
             var data=JSON.parse(data);
             var dom = document.getElementById("responseBarChart");
@@ -311,7 +314,8 @@
             return arr;
         }
 
-        /* 渲染右侧table */
+        /* ************************************************************* */
+        /* function：渲染右侧table---后台调用 */
         function renderRightTable(data){
             var data=JSON.parse(data);
             for(var i=0;i<data.length;i++){

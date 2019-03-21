@@ -420,7 +420,10 @@ $(function () {
                         data: [
                             {
                                 name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
-                                value: 50 //value值对应颜色映射的取值
+                                value: 50, //value值对应颜色映射的取值
+                                itemStyle:{ //该数据所在区域的多边形样式设置
+                                    areaColor:'yellow',
+                                }
                             },
                             {
                                 name: '中北片',
@@ -873,7 +876,10 @@ $(function () {
                         data: [
                             {
                                 name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
-                                value: 50 //value值对应颜色映射的取值
+                                value: 50, //value值对应颜色映射的取值
+                                itemStyle:{ //该数据所在区域的多边形样式设置
+                                    areaColor:'yellow',
+                                }
                             },
                             {
                                 name: '中北片',
