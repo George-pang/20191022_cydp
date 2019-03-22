@@ -18,17 +18,55 @@
     <!-- 标题栏 -->
     <div class="page_title">
         <h3 class="title">车辆力量和路况
-            <!-- <p class="time_range">
+            <p class="time_range">
                 <span class="subtitle">时间范围:</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p> -->
+            </p>
         </h3>
     </div>
     <!-- 内容区 -->
     <div class="page_main">
 
     </div>
-    
+    <script>
+        //浏览器窗口大小改变时重载页面
+        $(function () {
+            $(window).on("resize", function () {
+                location.reload();
+            });
+
+            window.external.webMapLoadComplete();
+        });
+
+        /* ********************************************************************** */
+        /* 设置时间范围 */
+        //标题栏时间范围---设置----后台调用
+        function setTimeRange(data) {
+            var data = JSON.parse(data);
+            $(".start_time").html(dateToTime2(data[0].startTime));
+            $(".end_time").html(dateToTime2(data[0].endTime));
+        }
+
+        //2019-03-05 plq function: 将Date对象获取的时间格式化为easyUI可解析的时间格式---带时分秒
+        function dateFormat2(time) {
+            var YY = time.getFullYear();
+            var MM = (time.getMonth() + 1) < 10 ? ("0" + (time.getMonth() + 1)) : (time.getMonth() + 1);
+            var DD = time.getDate() < 10 ? ("0" + time.getDate()) : time.getDate();
+            var hh = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var mm = time.getMinutes() < 10 ? ("0" + time.getMinutes()) : time.getMinutes();
+            var ss = time.getSeconds() < 10 ? ("0" + time.getSeconds()) : time.getSeconds();
+            return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+        }
+
+        //2019-03-05 plq function: 将后台返回的时间戳字符串（“/Date(1547082632000)/”）格式化为easyUI可解析的时间格式--带时分秒
+        function dateToTime2(data) {
+            var endIndex = data.indexOf(')');
+            var msec = parseInt(data.substring(6, endIndex));
+            //console.log(msec);
+            var time = new Date(msec);
+            return dateFormat2(time);
+        }
+    </script>
 </body>
 
 </html>

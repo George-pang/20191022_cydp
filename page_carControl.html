@@ -17,10 +17,10 @@
 <body style="background-image:url(/images/e.bg.jpg);">
     <div class="page_title">
         <h3 class="title">朝阳120车组运行质控
-            <!-- <p class="time_range">
+            <p class="time_range">
                 <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p> -->
+            </p>
         </h3>
     </div>
     <div class="page_main car_main">
@@ -34,7 +34,7 @@
         <div class="tableContainer">
             <div class="tableWrapper">
                 <p class="chart_title" style="background-image:url(images/panelTitle.png)">数据统计</p>
-                <table class="data_table">
+                <table class="data_table" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
                     <tr>
                         <th>车辆</th>
                         <th>2分钟超时数</th>
@@ -101,8 +101,41 @@
 
         /* ************************************************************************************************** */
         /* js函数封装，供C#后台代码调用 */
-        var showValue = 8; //dataZoom数据窗口显示个数
+        var showValue = 5; //dataZoom数据窗口显示个数
+        var setIntervalTime = 10000;
 
+
+        /* ********************************************************************** */
+        /* 设置时间范围 */
+        //标题栏时间范围---设置----后台调用
+        function setTimeRange(data) {
+            var data = JSON.parse(data);
+            $(".start_time").html(dateToTime2(data[0].startTime));
+            $(".end_time").html(dateToTime2(data[0].endTime));
+        }
+        
+        //2019-03-05 plq function: 将Date对象获取的时间格式化为easyUI可解析的时间格式---带时分秒
+        function dateFormat2(time) {
+            var YY = time.getFullYear();
+            var MM = (time.getMonth() + 1) < 10 ? ("0" + (time.getMonth() + 1)) : (time.getMonth() + 1);
+            var DD = time.getDate() < 10 ? ("0" + time.getDate()) : time.getDate();
+            var hh = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var mm = time.getMinutes() < 10 ? ("0" + time.getMinutes()) : time.getMinutes();
+            var ss = time.getSeconds() < 10 ? ("0" + time.getSeconds()) : time.getSeconds();
+            return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+        }
+
+        //2019-03-05 plq function: 将后台返回的时间戳字符串（“/Date(1547082632000)/”）格式化为easyUI可解析的时间格式--带时分秒
+        function dateToTime2(data) {
+            var endIndex = data.indexOf(')');
+            var msec = parseInt(data.substring(6, endIndex));
+            //console.log(msec);
+            var time = new Date(msec);
+            return dateFormat2(time);
+        }
+
+        /* ***************************************************************************/
+        /* 渲染页面 */
         // var data = [{
         //     "name": "0530",
         //     "value": {
@@ -172,7 +205,7 @@
         //function：页面元素渲染---后台调用
         function renderPage(data) {
             var data = JSON.parse(data);
-            var length=data.length;
+            var length = data.length;
             var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"]; //图例英文名
             // 系列颜色
             // var colors = ['#09508b', '#da7f1c', '#258b09', '#cd3213'];
@@ -183,16 +216,6 @@
             var carBarChart = echarts.init(dom, 'vintage');
 
             option = {
-                // title: {
-                //     text: '车组运行质控统计',
-                //     textStyle: {
-                //         fontSize: titleFontSize,
-                //         color: '#00c0ff',
-                //         fontWeight:'bold',
-                //     },
-                //     left: '5%',
-                //     top: 30,
-                // },
                 color: colors,
                 tooltip: {
                     trigger: 'axis',
@@ -213,8 +236,8 @@
                 },
                 grid: {
                     top: '25%',
-                    left: '10%',
-                    right: '10%',
+                    left: '5%',
+                    right: '5%',
                     bottom: '10%',
                     containLabel: true
                 },
@@ -279,6 +302,9 @@
             };
             carBarChart.setOption(option);
 
+            //2019-03-22 plq 循环高亮
+            autoDispatchAction(carBarChart, option);
+
             //自动切换平移数据窗口
             setInterval(function () {
                 var totalValue = getxAxisData(data).length - 1;
@@ -289,53 +315,58 @@
                     // console.log(option.dataZoom[0].endValue);
                     carBarChart.setOption(option);
 
-                    if (option.dataZoom[0].endValue == totalValue) {//展示到最后重新开始显示
+                    if (option.dataZoom[0].endValue == totalValue) { //展示到最后重新开始显示
                         option.dataZoom[0].startValue = 0 - 1;
                         option.dataZoom[0].endValue = showValue - 1 - 1;
                     }
                 } else {
                     return false;
                 }
-            }, 10000);
-  
-        /* 2019-03-21 plq 页面右侧添加列表 */
-        
-        var start=0;
-        var end=showValue;
-        renderRightTable(data.slice(start,end));
+            }, setIntervalTime);
 
-        function renderRightTable(data) {
-            var tableObj=$(".data_table");
-                tableObj.empty();//清空子节点
-                var thObj=$("<tr><th>车辆</th><th>2分钟超时数</th><th>90分钟超时数</th><th>任务数</th><th>救治人数</th></tr>");
+
+            /* 2019-03-21 plq 页面右侧添加列表 start */
+            var start = 0;
+            var end = showValue;
+            renderRightTable(data.slice(start, end));
+
+            function renderRightTable(data) {
+                var tableObj = $(".data_table");
+                tableObj.empty(); //清空子节点
+                var thObj = $("<tr><th>车辆</th><th>2分钟超时数</th><th>90分钟超时数</th><th>任务数</th><th>救治人数</th></tr>");
                 tableObj.append(thObj);
-            for(var i=0;i<data.length;i++){
-                var tdStr="<tr><td>"+data[i]["name"]+"</td><td>"+data[i]["value"]["overTime_2"]+"</td><td>"+data[i]["value"]["overTime_90"]+"</td><td>"+data[i]["value"]["taskNum"]+"</td><td>"+data[i]["value"]["peopleNum"]+"</td></tr>";
-                var tdObj=$(tdStr);
-                tableObj.append(tdObj);
+                for (var i = 0; i < data.length; i++) {
+                    var tdStr = "<tr><td>" + data[i]["name"] + "</td><td>" + data[i]["value"]["overTime_2"] +
+                        "</td><td>" + data[i]["value"]["overTime_90"] + "</td><td>" + data[i]["value"]["taskNum"] +
+                        "</td><td>" + data[i]["value"]["peopleNum"] + "</td></tr>";
+                    var tdObj = $(tdStr);
+                    tableObj.append(tdObj);
+                }
+                var height = 100 / (showValue + 1) + "%";
+                tableObj.find("th").attr("height", height);
+                tableObj.find("td").attr("height", height);
             }
-            var height=100/(showValue+1)+"%";
-            tableObj.find("th").attr("height",height);
-            tableObj.find("td").attr("height",height);
-        }
 
-        //function：页面列表展示定时刷新，与左侧柱状图当前显示窗口显示数据保持一致
-        setInterval(function () {
+            //function：页面列表展示定时刷新，与左侧柱状图当前显示窗口显示数据保持一致
+            setInterval(function () {
                 var totalValue = length;
-                if (totalValue > showValue) { 
+                if (totalValue > showValue) {
                     // console.log(totalValue);
                     start += 1;
                     end += 1;
                     // console.log(option.dataZoom[0].endValue);
-                    renderRightTable(data.slice(start,end));
-                    if (end == totalValue) {//展示到最后重新开始显示
-                        start= 0 - 1;
-                        end= showValue - 1 - 1;
+                    renderRightTable(data.slice(start, end));
+                    if (end == totalValue) { //展示到最后重新开始显示
+                        start = 0 - 1;
+                        end = showValue - 1 - 1;
                     }
                 } else {
                     return false;
                 }
-            }, 10000);
+            }, setIntervalTime);
+
+            /* 2019-03-21 plq 页面右侧添加列表 end */
+
 
         }
 
@@ -412,6 +443,36 @@
         }
 
 
+        //2019-03-22 plq 循环高亮
+        //function: 主动触发echarts实例高亮行为，实现高亮自动切换。参数1：echarts实例；参数2：option配置对象
+        function autoDispatchAction(myChart, option) {
+            var app = {
+                currentIndex: -1 //初始数据索引值---通过其指定高亮的某个数据
+            };
+
+            timeId = setInterval(function () {
+                var dataLen = option.series[0].data.length;
+                // 取消之前高亮的图形
+                myChart.dispatchAction({
+                    type: 'downplay', //取消高亮指定的数据图形。
+                    seriesIndex: 0, // 可选，系列 index
+                    dataIndex: app.currentIndex // 可选，数据的 index
+                });
+                app.currentIndex = (app.currentIndex + 1) % dataLen;
+                // 高亮当前图形---通过seriesName或者seriesIndex指定系列。通过指定dataIndex或者name再指定某个数据。
+                myChart.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+                // 显示 tooltip
+                myChart.dispatchAction({
+                    type: 'showTip',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+            }, (setIntervalTime - 2000) / showValue);
+        }
     </script>
 
 </body>

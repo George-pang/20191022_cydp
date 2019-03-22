@@ -17,10 +17,10 @@
 <body style="background-image:url(/images/e.bg.jpg);">
     <div class="page_title">
         <h3 class="title">朝阳120突发事件统计
-            <!-- <p class="time_range">
+            <p class="time_range">
                 <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p> -->
+            </p>
         </h3>
     </div>
     <div class="page_main event_main">
@@ -103,6 +103,37 @@
 
         /* ************************************************************************************************** */
         /* js函数封装，供C#后台代码调用 */
+        var setIntervalTime = 5000;
+
+
+        /* *********************************************************** */
+        /* 设置时间范围 */
+        //标题栏时间范围---设置----后台调用
+        function setTimeRange(data) {
+            var data = JSON.parse(data);
+            $(".start_time").html(dateToTime2(data[0].startTime));
+            $(".end_time").html(dateToTime2(data[0].endTime));
+        }
+        
+        //2019-03-05 plq function: 将Date对象获取的时间格式化为easyUI可解析的时间格式---带时分秒
+        function dateFormat2(time) {
+            var YY = time.getFullYear();
+            var MM = (time.getMonth() + 1) < 10 ? ("0" + (time.getMonth() + 1)) : (time.getMonth() + 1);
+            var DD = time.getDate() < 10 ? ("0" + time.getDate()) : time.getDate();
+            var hh = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var mm = time.getMinutes() < 10 ? ("0" + time.getMinutes()) : time.getMinutes();
+            var ss = time.getSeconds() < 10 ? ("0" + time.getSeconds()) : time.getSeconds();
+            return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+        }
+
+        //2019-03-05 plq function: 将后台返回的时间戳字符串（“/Date(1547082632000)/”）格式化为easyUI可解析的时间格式--带时分秒
+        function dateToTime2(data) {
+            var endIndex = data.indexOf(')');
+            var msec = parseInt(data.substring(6, endIndex));
+            //console.log(msec);
+            var time = new Date(msec);
+            return dateFormat2(time);
+        }
 
         /* *********************************************************** */
         /* 渲染左侧echarts地图 */
@@ -130,7 +161,7 @@
             ],
 
         };
-        var ponitSymbolColors = ['red','yellow']; //地图上标记点标记图形的颜色数组
+        var ponitSymbolColors = ['red', 'yellow']; //地图上标记点标记图形的颜色数组
 
         //本地模拟数据
         // var data=[{"name":"北片","info":[{"name":"其他类","value":"407"},{"name":"交通事故","value":"169"}]},{"name":"南片","info":[{"name":"交通事故","value":"230"},{"name":"其他类","value":"608"}]},{"name":"外区","info":[{"name":"其他类","value":"1"}]},{"name":"中北片","info":[{"name":"其他类","value":"674"},{"name":"交通事故","value":"223"}]},{"name":"中南片","info":[{"name":"交通事故","value":"141"},{"name":"其他类","value":"604"}]}]
@@ -175,39 +206,44 @@
                                 }
                             }
                         },
+                        emphasis: { //高亮状态下的样式---2019-03-22 plq 循环高亮效果添加
+                            itemStyle: { //多边形样式
+                                areaColor: "#00c0ff",
+                            }
+                        },
                         data: [{
                                 name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
                                 value: 50, //value值对应颜色映射的取值
-                                itemStyle:{
-                                    areaColor:'#da7f1c' //区域颜色
+                                itemStyle: {
+                                    areaColor: '#da7f1c' //区域颜色
                                 }
                             },
                             {
                                 name: '中北片',
                                 value: 100,
-                                itemStyle:{
-                                    areaColor:'#09508b'
+                                itemStyle: {
+                                    areaColor: '#09508b'
                                 }
                             },
                             {
                                 name: '中南片',
                                 value: 180,
-                                itemStyle:{
-                                    areaColor:'#258b09'
+                                itemStyle: {
+                                    areaColor: '#258b09'
                                 }
                             },
                             {
                                 name: '南片',
                                 value: 220,
-                                itemStyle:{
-                                    areaColor:'#cd3213'
+                                itemStyle: {
+                                    areaColor: '#cd3213'
                                 }
                             },
                             {
                                 name: '外区',
                                 value: 270,
-                                itemStyle:{
-                                    areaColor:'#e9992f'
+                                itemStyle: {
+                                    areaColor: '#e9992f'
                                 }
                             },
                         ],
@@ -255,7 +291,7 @@
                                         styleA: {
                                             fontSize: normalLableFont,
                                             // color: "#4b96ff",
-                                            color:'#fff'
+                                            color: '#fff'
                                         },
                                         styleB: {
                                             fontSize: strongLableFont,
@@ -271,6 +307,9 @@
                     }]
                 };
                 myChart.setOption(option);
+
+                //2019-03-22 plq 区域循环高亮
+                autoDispatchAction(myChart, option);
 
             });
         };
@@ -311,6 +350,9 @@
                     "<i class=\"unit\">（起）</i>");
                 $(".data_list").find(".data_item").eq(i).find(".event_num").html(data[i].totalNum);
             }
+
+            //2019-03-22 plq 
+            autoTriggerHover(); //循环触发hover效果
         }
 
         renderLevelColor(colors);
@@ -319,6 +361,17 @@
             for (var i = 0; i < $(".data_item").length; i++) {
                 $($(".data_item")[i]).find(".event_level").css("backgroundColor", colors[i]);
             }
+        }
+
+        //2019-03-22 plq 循环触发列表的hover事件（显示hover效果）
+        function autoTriggerHover() {
+            var curIndex = 0;
+            setInterval(function () {
+                var length = $(".data_item").length;
+                $(".data_item").eq(curIndex).addClass("active").siblings().removeClass("active");
+                curIndex = (curIndex + 1) % length;
+                console.log(length, curIndex);
+            }, setIntervalTime);
         }
 
 
@@ -518,6 +571,9 @@
             };
             eventBarChart.setOption(option);
 
+            //2019-03-22 plq 循环高亮
+            autoDispatchAction(eventBarChart, option);
+
         }
 
         //function：解析数据data,提取到x坐标轴类目数据数组
@@ -562,6 +618,37 @@
             }
             console.log(arr);
             return arr;
+        }
+
+        //2019-03-22 plq 循环高亮
+        //function: 主动触发echarts实例高亮行为，实现高亮自动切换。参数1：echarts实例；参数2：option配置对象
+        function autoDispatchAction(myChart, option) {
+            var app = {
+                currentIndex: -1 //初始数据索引值---通过其指定高亮的某个数据
+            };
+
+            timeId = setInterval(function () {
+                var dataLen = option.series[0].data.length;
+                // 取消之前高亮的图形
+                myChart.dispatchAction({
+                    type: 'downplay', //取消高亮指定的数据图形。
+                    seriesIndex: 0, // 可选，系列 index
+                    dataIndex: app.currentIndex // 可选，数据的 index
+                });
+                app.currentIndex = (app.currentIndex + 1) % dataLen;
+                // 高亮当前图形---通过seriesName或者seriesIndex指定系列。通过指定dataIndex或者name再指定某个数据。
+                myChart.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+                // 显示 tooltip
+                myChart.dispatchAction({
+                    type: 'showTip',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+            }, setIntervalTime);
         }
     </script>
 </body>

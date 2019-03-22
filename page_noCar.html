@@ -18,10 +18,10 @@
     <!-- 标题栏 -->
     <div class="page_title">
         <h3 class="title">当日无车原因及区域展示
-            <!-- <p class="time_range">
+            <p class="time_range">
                 <span class="subtitle">时间范围:&nbsp;&nbsp;</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p> -->
+            </p>
         </h3>
     </div>
     <!-- 内容区 -->
@@ -64,11 +64,41 @@
 
         /* ************************************************************************************************** */
         /* js函数封装，供C#后台代码调用 */
+        var setIntervalTime=5000;
 
+        
+        /* *********************************************************** */
+        /* 设置时间范围 */
+        //标题栏时间范围---设置----后台调用
+        function setTimeRange(data) {
+            var data = JSON.parse(data);
+            $(".start_time").html(dateToTime2(data[0].startTime));
+            $(".end_time").html(dateToTime2(data[0].endTime));
+        }
+        
+        //2019-03-05 plq function: 将Date对象获取的时间格式化为easyUI可解析的时间格式---带时分秒
+        function dateFormat2(time) {
+            var YY = time.getFullYear();
+            var MM = (time.getMonth() + 1) < 10 ? ("0" + (time.getMonth() + 1)) : (time.getMonth() + 1);
+            var DD = time.getDate() < 10 ? ("0" + time.getDate()) : time.getDate();
+            var hh = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var mm = time.getMinutes() < 10 ? ("0" + time.getMinutes()) : time.getMinutes();
+            var ss = time.getSeconds() < 10 ? ("0" + time.getSeconds()) : time.getSeconds();
+            return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+        }
 
+        //2019-03-05 plq function: 将后台返回的时间戳字符串（“/Date(1547082632000)/”）格式化为easyUI可解析的时间格式--带时分秒
+        function dateToTime2(data) {
+            var endIndex = data.indexOf(')');
+            var msec = parseInt(data.substring(6, endIndex));
+            //console.log(msec);
+            var time = new Date(msec);
+            return dateFormat2(time);
+        }
+        
         /* *********************************************************** */
         /*  渲染左侧echarts地图 */
-        // var data = [{ "name": "北片", "value": 0, "jindu": "116.519774", "weidu": "40.000145" }, { "name": "南片", "value": 0, "jindu": "116.527247", "weidu": "39.872791" }, { "name": "外区", "value": 0, "jindu": "116.314529", "weidu": "39.922389" }, { "name": "中北片", "value": 0, "jindu": "116.481829", "weidu": "39.945404" }, { "name": "中南片", "value": 0, "jindu": "116.496777", "weidu": "39.912649" }]
+        // var data = [{ "name": "北片", "value": 0, "jindu": "116.4750", "weidu": "40.0381" }, { "name": "南片", "value": 0, "jindu": "116.5231", "weidu": "39.8399" }, { "name": "外区", "value": 0, "jindu": "116.5986", "weidu": "40.0618" }, { "name": "中北片", "value": 0, "jindu": "116.4997", "weidu": "39.9761" }, { "name": "中南片", "value": 0, "jindu": "116.5193", "weidu": "39.9055" }]
         // renderLeftMapEchart(data);
 
         //function：渲染左侧地图---后台调用
@@ -79,16 +109,6 @@
             $.get('/data/map.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
-                    // title: {
-                    //     text: '当日无车区域展示',
-                    //     left: 'center',
-                    //     top: 40,
-                    //     textStyle: {
-                    //         fontSize: 24,
-                    //         color: '#fff',
-                    //         fontWeight: 400,
-                    //     }
-                    // },
                     tooltip: {
                         trigger: 'item',
                         formatter: '{b}<br/>'
@@ -111,6 +131,11 @@
                                 textStyle: {
                                     color: 'red'
                                 }
+                            }
+                        },
+                        emphasis:{ //高亮状态下的样式---2019-03-22 plq 循环高亮效果添加
+                            itemStyle:{//多边形样式
+                                areaColor:"#00c0ff",
                             }
                         },
                         data: [{
@@ -157,7 +182,7 @@
                         },
                         markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
                             symbol: 'pin', //钉子形
-                            symbolSize: 100,
+                            symbolSize: 60,
                             itemStyle: {
                                 normal: {
                                     color: '#4b96ff'
@@ -168,7 +193,8 @@
                                     show: true,
                                     formatter: function (
                                     d) { //文本 回调函数格式：(params: Object|Array) => string
-                                        return d.name + "\t无车" + d.value + "次"
+                                        // return d.name + "\t无车" + d.value + "次"
+                                        return "无车\t" + d.value + "次"
                                     },
                                     textStyle: {
                                         fontSize: 18,
@@ -183,6 +209,9 @@
                     }]
                 };
                 myChart.setOption(option);
+
+                //2019-03-22 plq 循环高亮
+                autoDispatchAction(myChart,option);
 
             });
         }
@@ -206,6 +235,11 @@
         /* *********************************************************** */
         /* 渲染右侧echarts饼图 */
         var timeId;
+
+        
+        //模拟数据
+        // var data_2=[{"name":"电话中断","value":973,"jindu":null,"weidu":null},{"name":"附近无车","value":70,"jindu":null,"weidu":null},{"name":"控制出车","value":3375,"jindu":null,"weidu":null},{"name":"其他原因","value":1923,"jindu":null,"weidu":null},{"name":"全网无车","value":0,"jindu":null,"weidu":null},{"name":"无合适车","value":136,"jindu":null,"weidu":null},{"name":"医学指导","value":1,"jindu":null,"weidu":null},{"name":"用户要求","value":91,"jindu":null,"weidu":null},{"name":"预约派车","value":12,"jindu":null,"weidu":null},{"name":"转999处理","value":340,"jindu":null,"weidu":null}];
+        // renderRightPieChart(data_2);
 
         //function：渲染右侧饼图----后台调用
         function renderRightPieChart(data) {
@@ -341,7 +375,7 @@
                     seriesIndex: 0,
                     dataIndex: app.currentIndex
                 });
-            }, 3000);
+            }, setIntervalTime);
         }
     </script>
 

@@ -17,10 +17,10 @@
     <!-- 标题栏 -->
     <div class="page_title">
         <h3 class="title">车辆平均反应半径、时间统计
-            <!-- <p class="time_range">
+            <p class="time_range">
                 <span class="subtitle">时间范围:</span>
                 <span class="start_time"></span>---<span class="end_time"></span>
-            </p> -->
+            </p>
         </h3>
     </div>
     <!-- 内容区 -->
@@ -111,42 +111,71 @@
 
         /* ************************************************************************************************** */
         /* js函数封装，供C#后台代码调用 */
+        var setInterValTime = 5000;
 
+        /* *********************************************************** */
+        /* 设置时间范围 */
+        //标题栏时间范围---设置----后台调用
+        function setTimeRange(data) {
+            var data = JSON.parse(data);
+            $(".start_time").html(dateToTime2(data[0].startTime));
+            $(".end_time").html(dateToTime2(data[0].endTime));
+        }
+        
+        //2019-03-05 plq function: 将Date对象获取的时间格式化为easyUI可解析的时间格式---带时分秒
+        function dateFormat2(time) {
+            var YY = time.getFullYear();
+            var MM = (time.getMonth() + 1) < 10 ? ("0" + (time.getMonth() + 1)) : (time.getMonth() + 1);
+            var DD = time.getDate() < 10 ? ("0" + time.getDate()) : time.getDate();
+            var hh = time.getHours() < 10 ? ("0" + time.getHours()) : time.getHours();
+            var mm = time.getMinutes() < 10 ? ("0" + time.getMinutes()) : time.getMinutes();
+            var ss = time.getSeconds() < 10 ? ("0" + time.getSeconds()) : time.getSeconds();
+            return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+        }
+
+        //2019-03-05 plq function: 将后台返回的时间戳字符串（“/Date(1547082632000)/”）格式化为easyUI可解析的时间格式--带时分秒
+        function dateToTime2(data) {
+            var endIndex = data.indexOf(')');
+            var msec = parseInt(data.substring(6, endIndex));
+            //console.log(msec);
+            var time = new Date(msec);
+            return dateFormat2(time);
+        }
+        
         /* ****************************************************** */
         /* 渲染左侧柱状图 */
         //本地模拟数据
-        var data_info=[
-            {
-                name:"朝阳",
-                avgTime:150,
-                avgRadius:12
-            },
-            {
-                name:"垂杨柳",
-                avgTime:220,
-                avgRadius:14
-            },
-            {
-                name:"东坝",
-                avgTime:330,
-                avgRadius:18
-            },
-            {
-                name:"双桥",
-                avgTime:80,
-                avgRadius:10
-            },
-            {
-                name:"亚运村",
-                avgTime:360,
-                avgRadius:8
-            },
-        ]
-        renderLeftBarChart(data_info);
+        // var data_info = [{
+        //         name: "朝阳",
+        //         avgTime: 150,
+        //         avgRadius: 12
+        //     },
+        //     {
+        //         name: "垂杨柳",
+        //         avgTime: 220,
+        //         avgRadius: 14
+        //     },
+        //     {
+        //         name: "东坝",
+        //         avgTime: 330,
+        //         avgRadius: 18
+        //     },
+        //     {
+        //         name: "双桥",
+        //         avgTime: 80,
+        //         avgRadius: 10
+        //     },
+        //     {
+        //         name: "亚运村",
+        //         avgTime: 360,
+        //         avgRadius: 8
+        //     },
+        // ]
+        // renderLeftBarChart(data_info);
 
         //function:渲染左侧柱状图。参数：data----后台调用
         function renderLeftBarChart(data) {
-            // var data = JSON.parse(data);
+            var data = JSON.parse(data);
             var dom = document.getElementById("responseBarChart");
             var carChart = echarts.init(dom);
             var seriesColors = ['#5793f3', '#d14a61']; //系列色
@@ -303,6 +332,7 @@
                 ]
             };
             carChart.setOption(option);
+            autoDispatchAction(carChart, option);
         }
 
         //function: 解析格式类似对象数组的数据，获取其中对象某个key名对应的数据数组
@@ -314,15 +344,49 @@
             return arr;
         }
 
+        //2019-03-22 plq 循环高亮
+        //function: 主动触发echarts实例高亮行为，实现高亮自动切换。参数1：echarts实例；参数2：option配置对象
+        function autoDispatchAction(myChart, option) {
+            var app = {
+                currentIndex: -1 //初始数据索引值---通过其指定高亮的某个数据
+            };
+
+            timeId = setInterval(function () {
+                var dataLen = option.series[0].data.length;
+                // 取消之前高亮的图形
+                myChart.dispatchAction({
+                    type: 'downplay', //取消高亮指定的数据图形。
+                    seriesIndex: 0, // 可选，系列 index
+                    dataIndex: app.currentIndex // 可选，数据的 index
+                });
+                app.currentIndex = (app.currentIndex + 1) % dataLen;
+                // 高亮当前图形---通过seriesName或者seriesIndex指定系列。通过指定dataIndex或者name再指定某个数据。
+                myChart.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+                // 显示 tooltip
+                myChart.dispatchAction({
+                    type: 'showTip',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+            }, setInterValTime);
+        }
+
         /* ************************************************************* */
         /* function：渲染右侧table---后台调用 */
         function renderRightTable(data) {
             var data = JSON.parse(data);
             for (var i = 0; i < data.length; i++) {
                 $(".data_table").find("tr").eq(0).find("th").eq(i + 1).html(data[i].name);
-                $(".data_table").find("tr").eq(1).find("td").eq(i + 1).html(data[i].avgTime == "" ? "无" : formatSeconds(data[i].avgTime));
-                $(".data_table").find("tr").eq(2).find("td").eq(i + 1).html(data[i].minTime == "" ? "无" : formatSeconds(data[i].minTime));
-                $(".data_table").find("tr").eq(3).find("td").eq(i + 1).html(data[i].maxTime == "" ? "无" : formatSeconds(data[i].maxTime));
+                $(".data_table").find("tr").eq(1).find("td").eq(i + 1).html(data[i].avgTime == "" ? "无" : formatSeconds(
+                    data[i].avgTime));
+                $(".data_table").find("tr").eq(2).find("td").eq(i + 1).html(data[i].minTime == "" ? "无" : formatSeconds(
+                    data[i].minTime));
+                $(".data_table").find("tr").eq(3).find("td").eq(i + 1).html(data[i].maxTime == "" ? "无" : formatSeconds(
+                    data[i].maxTime));
                 $(".data_table").find("tr").eq(4).find("td").eq(i + 1).html(data[i].avgRadius == "" ? "无" : data[i]
                     .avgRadius + "公里");
                 $(".data_table").find("tr").eq(5).find("td").eq(i + 1).html(data[i].minRadius == "" ? "无" : data[i]
