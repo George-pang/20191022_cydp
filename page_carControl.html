@@ -25,15 +25,74 @@
     </div>
     <div class="page_main car_main">
         <div class="barChartContainer">
-            <h4 class="chartTitle">车组运行质控统计 <img src="images/e.t.bg.png" alt="" class="title_bg" /></h4>
-            <div class="carBarChart" id="carBarChart"></div>
+            <div class="chartWrapper">
+                <h4 class="chartTitle">车组运行质控统计 <img src="images/e.t.bg.png" alt="" class="title_bg" /></h4>
+                <div class="carBarChart" id="carBarChart"></div>
+            </div>
+        </div>
+        <!-- 右侧数据展示表格 -->
+        <div class="tableContainer">
+            <div class="tableWrapper">
+                <p class="chart_title" style="background-image:url(images/panelTitle.png)">数据统计</p>
+                <table class="data_table">
+                    <tr>
+                        <th>车辆</th>
+                        <th>2分钟超时数</th>
+                        <th>90分钟超时数</th>
+                        <th>任务数</th>
+                        <th>救治人数</th>
+                    </tr>
+                    <tr>
+                        <td align="center"></td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                        <td>10秒</td>
+                    </tr>
+                    <tr>
+                        <td align="center"></td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                        <td>5秒</td>
+                    </tr>
+                    <tr>
+                        <td align="center"></td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                        <td>15秒</td>
+                    </tr>
+                    <tr>
+                        <td align="center"></td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                        <td>2公里</td>
+                    </tr>
+                    <tr>
+                        <td align="center"></td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                        <td>1公里</td>
+                    </tr>
+                    <tr>
+                        <td align="center"></td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                        <td>5公里</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
         //浏览器窗口大小改变时重载页面
-        $(function(){
-            $(window).on("resize",function(){
+        $(function () {
+            $(window).on("resize", function () {
                 location.reload();
             });
 
@@ -42,10 +101,78 @@
 
         /* ************************************************************************************************** */
         /* js函数封装，供C#后台代码调用 */
+        var showValue = 8; //dataZoom数据窗口显示个数
 
+        // var data = [{
+        //     "name": "0530",
+        //     "value": {
+        //         "overTime_2": 1,
+        //         "overTime_90": 0,
+        //         "taskNum": 272,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "朝阳Q-0570",
+        //     "value": {
+        //         "overTime_2": 1,
+        //         "overTime_90": 0,
+        //         "taskNum": 297,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "0580",
+        //     "value": {
+        //         "overTime_2": 1,
+        //         "overTime_90": 0,
+        //         "taskNum": 210,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "朝阳QNY588",
+        //     "value": {
+        //         "overTime_2": 3,
+        //         "overTime_90": 0,
+        //         "taskNum": 599,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "0590",
+        //     "value": {
+        //         "overTime_2": 0,
+        //         "overTime_90": 0,
+        //         "taskNum": 118,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "0760",
+        //     "value": {
+        //         "overTime_2": 2,
+        //         "overTime_90": 0,
+        //         "taskNum": 200,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "朝阳QNY775",
+        //     "value": {
+        //         "overTime_2": 2,
+        //         "overTime_90": 0,
+        //         "taskNum": 356,
+        //         "peopleNum": 0
+        //     }
+        // }, {
+        //     "name": "0785",
+        //     "value": {
+        //         "overTime_2": 0,
+        //         "overTime_90": 0,
+        //         "taskNum": 85,
+        //         "peopleNum": 0
+        //     }
+        // }];
+        // renderPage(data);
         //function：页面元素渲染---后台调用
         function renderPage(data) {
             var data = JSON.parse(data);
+            var length=data.length;
             var seriesNames_en = ["overTime_2", "overTime_90", "taskNum", "peopleNum"]; //图例英文名
             // 系列颜色
             // var colors = ['#09508b', '#da7f1c', '#258b09', '#cd3213'];
@@ -54,7 +181,6 @@
             var labelFontSize = 18;
             var dom = document.getElementById("carBarChart");
             var carBarChart = echarts.init(dom, 'vintage');
-            var showValue = 8; //dataZoom数据窗口显示个数
 
             option = {
                 // title: {
@@ -152,19 +278,65 @@
                 series: getSeries(data, seriesNames_en),
             };
             carBarChart.setOption(option);
+
             //自动切换平移数据窗口
             setInterval(function () {
                 var totalValue = getxAxisData(data).length - 1;
-                // console.log(totalValue);
-                option.dataZoom[0].startValue += 1;
-                option.dataZoom[0].endValue += 1;
-                // console.log(option.dataZoom[0].endValue);
-                carBarChart.setOption(option);
-                if (option.dataZoom[0].endValue == totalValue) {
-                    option.dataZoom[0].startValue = 0 - 1;
-                    option.dataZoom[0].endValue = showValue - 1 - 1;
+                if (totalValue > showValue - 1) { //如果x轴总类目数大于dataZoom数据窗口显示个数才开始切换数据窗口的数据
+                    // console.log(totalValue);
+                    option.dataZoom[0].startValue += 1;
+                    option.dataZoom[0].endValue += 1;
+                    // console.log(option.dataZoom[0].endValue);
+                    carBarChart.setOption(option);
+
+                    if (option.dataZoom[0].endValue == totalValue) {//展示到最后重新开始显示
+                        option.dataZoom[0].startValue = 0 - 1;
+                        option.dataZoom[0].endValue = showValue - 1 - 1;
+                    }
+                } else {
+                    return false;
                 }
             }, 10000);
+  
+        /* 2019-03-21 plq 页面右侧添加列表 */
+        
+        var start=0;
+        var end=showValue;
+        renderRightTable(data.slice(start,end));
+
+        function renderRightTable(data) {
+            var tableObj=$(".data_table");
+                tableObj.empty();//清空子节点
+                var thObj=$("<tr><th>车辆</th><th>2分钟超时数</th><th>90分钟超时数</th><th>任务数</th><th>救治人数</th></tr>");
+                tableObj.append(thObj);
+            for(var i=0;i<data.length;i++){
+                var tdStr="<tr><td>"+data[i]["name"]+"</td><td>"+data[i]["value"]["overTime_2"]+"</td><td>"+data[i]["value"]["overTime_90"]+"</td><td>"+data[i]["value"]["taskNum"]+"</td><td>"+data[i]["value"]["peopleNum"]+"</td></tr>";
+                var tdObj=$(tdStr);
+                tableObj.append(tdObj);
+            }
+            var height=100/(showValue+1)+"%";
+            tableObj.find("th").attr("height",height);
+            tableObj.find("td").attr("height",height);
+        }
+
+        //function：页面列表展示定时刷新，与左侧柱状图当前显示窗口显示数据保持一致
+        setInterval(function () {
+                var totalValue = length;
+                if (totalValue > showValue) { 
+                    // console.log(totalValue);
+                    start += 1;
+                    end += 1;
+                    // console.log(option.dataZoom[0].endValue);
+                    renderRightTable(data.slice(start,end));
+                    if (end == totalValue) {//展示到最后重新开始显示
+                        start= 0 - 1;
+                        end= showValue - 1 - 1;
+                    }
+                } else {
+                    return false;
+                }
+            }, 10000);
+
         }
 
         /* function:获取图例数据 */
@@ -238,6 +410,8 @@
             }
             return arr;
         }
+
+
     </script>
 
 </body>
