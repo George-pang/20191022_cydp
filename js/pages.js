@@ -1,5 +1,5 @@
 /* 本地页面调试js文件 */
-/* version 1.0.0本地调用外部js文件---version2.0.0js代码移植入了页面内，且添加了页面多次优化的代码 */
+/* version 1.0.0本地调用外部js文件---version2.0.0js代码移植入了每个单独的页面内，且添加了页面多次优化的代码 */
 $(function () {
     //页面窗口改变刷新页面
     $(window).on("resize", function () {

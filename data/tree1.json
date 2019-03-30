@@ -1,0 +1,36 @@
+{
+    "name": "北京市朝阳区紧急医疗救援中心",
+    "children": [{
+        "name": "三线",
+        "children": [{
+                "name": "机场高速",
+                "symbolSize": [100, 36]
+            },
+            {
+                "name": "朝阳北路",
+                "symbolSize": [100, 36]
+            },
+            {
+                "name": "京通快速路",
+                "symbolSize": [120, 36]
+            }
+        ]
+    }, {
+        "name": "四片",
+        "children": [{
+                "name": "北片"
+            },
+            {
+                "name": "中北片"     
+            },
+            {
+                "name": "中南片"
+            },
+            {
+                "name": "南片"
+            }
+
+        ]
+    }],
+    "symbolSize": [300, 36]
+}

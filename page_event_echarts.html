@@ -140,20 +140,20 @@
         //地图上2个/片区、固定10个标记点的经纬度坐标数组
         var coords = {
             "北片": [
-                [116.4338, 40.0334],
-                [116.4970, 40.0360]
+                [116.3864, 40.0018],
+                [116.4407, 40.0171]
             ],
             "中北片": [
-                [116.4462, 39.9792],
-                [116.5334, 39.9750]
+                [116.5169, 39.9819],
+                [116.5821, 39.9750]
             ],
             "中南片": [
-                [116.5079, 39.8892],
-                [116.5553, 39.8966]
+                [116.5100, 39.9250],
+                [116.5855, 39.9060]
             ],
             "南片": [
-                [116.4832, 39.8296],
-                [116.5402, 39.8375]
+                [116.5011, 39.8333],
+                [116.5402, 39.8660]
             ],
             "外区": [
                 [116.5965, 40.0565],
@@ -164,7 +164,7 @@
         var ponitSymbolColors = ['red', 'yellow']; //地图上标记点标记图形的颜色数组
 
         //本地模拟数据
-        // var data=[{"name":"北片","info":[{"name":"其他类","value":"407"},{"name":"交通事故","value":"169"}]},{"name":"南片","info":[{"name":"交通事故","value":"230"},{"name":"其他类","value":"608"}]},{"name":"外区","info":[{"name":"其他类","value":"1"}]},{"name":"中北片","info":[{"name":"其他类","value":"674"},{"name":"交通事故","value":"223"}]},{"name":"中南片","info":[{"name":"交通事故","value":"141"},{"name":"其他类","value":"604"}]}]
+        // var data=[{"name":"北片","info":[{"name":"其他类","value":"407"},{"name":"交通事故","value":"169"}]},{"name":"南片","info":[{"name":"交通事故","value":"230"},{"name":"其他类","value":"608"}]},{"name":"中北片","info":[{"name":"其他类","value":"674"},{"name":"交通事故","value":"223"}]},{"name":"中南片","info":[{"name":"交通事故","value":"141"},{"name":"其他类","value":"604"}]}]
 
         // renderLeftMapChart(data);
         //function：渲染左侧地图数据---后台调用
@@ -176,7 +176,7 @@
             var normalLableFont = 16;
             var strongLableFont = 18;
 
-            $.get('/data/map.json', function (geoJson) {
+            $.get('/data/area.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
                     tooltip: {
@@ -212,38 +212,31 @@
                             }
                         },
                         data: [{
-                                name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                name: '北部', //只有与json数据上的多边形分区name值对应才可以显示颜色
                                 value: 50, //value值对应颜色映射的取值
                                 itemStyle: {
-                                    areaColor: '#da7f1c' //区域颜色
+                                    areaColor: '#abb4b1' //区域颜色
                                 }
                             },
                             {
-                                name: '中北片',
+                                name: '中北',
                                 value: 100,
                                 itemStyle: {
-                                    areaColor: '#09508b'
+                                    areaColor: '#cdb4af '
                                 }
                             },
                             {
-                                name: '中南片',
+                                name: '中南',
                                 value: 180,
                                 itemStyle: {
-                                    areaColor: '#258b09'
+                                    areaColor: '#b0b298'
                                 }
                             },
                             {
-                                name: '南片',
+                                name: '南部',
                                 value: 220,
                                 itemStyle: {
-                                    areaColor: '#cd3213'
-                                }
-                            },
-                            {
-                                name: '外区',
-                                value: 270,
-                                itemStyle: {
-                                    areaColor: '#e9992f'
+                                    areaColor: '#bfa97f'
                                 }
                             },
                         ],

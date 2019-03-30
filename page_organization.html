@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> -->
+    <title>组织结构</title>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/pages.css">
+    <script src="/lib/jquery.min.js"></script>
+    <!-- 引入echarts2.2.7 树图连接线可设置折线及设置层间距 -->
+    <script src="/lib/echarts2.x/echarts-all.js"></script>
+    <!-- <script src="/js/pages.js"></script> -->
+    <style>
+        .treeContainer {
+            height: 40%;
+        }
+
+        .treeContainer #treeEchart {
+            height: 100%;
+        }
+
+        .subtreeContainer {
+            height: 60%;
+        }
+
+        .subtreeContainer .row1,
+        .subtreeContainer .row2 {
+            height: 50%;
+            clear: both;
+        }
+
+        .subtree {
+            width: 50%;
+            height: 100%;
+            float: left;
+            padding: 20px;
+        }
+
+        .subtreeEchart {
+            height: 100%;
+            border: 1px solid #4063bd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<!-- 组织结构 页面设计方式二 -->
+<body style="background-image:url(/images/e.bg.jpg);">
+    <div class="page_title">
+        <h3 class="title">组织结构图
+            <!-- <p class="time_range">
+                <span class="subtitle">时间范围:</span>
+                <span class="start_time"></span>---<span class="end_time"></span>
+            </p> -->
+        </h3>
+    </div>
+
+    <div class="page_main organization_main">
+        <h4 class="title">-北京市朝阳区紧急医疗救援中心-</h4>
+        <div class="chartContainer">
+            <div class="treeContainer">
+                <div id="treeEchart"></div>
+            </div>
+            <div class="subtreeContainer">
+                <div class="row1">
+                    <div class="subtree">
+                        <div id="subtreeEchart1" class="subtreeEchart"></div>
+                    </div>
+                    <div class="subtree">
+                        <div id="subtreeEchart2" class="subtreeEchart"></div>
+                    </div>
+                </div>
+                <div class="row2">
+                    <div class="subtree">
+                        <div id="subtreeEchart3" class="subtreeEchart"></div>
+                    </div>
+                    <div class="subtree">
+                        <div id="subtreeEchart4" class="subtreeEchart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var dom = document.getElementById("treeEchart");
+        var treeChart = echarts.init(dom);
+        var dom2 = document.getElementById("subtreeEchart1");
+        var subtreeChart1 = echarts.init(dom2);
+        var dom3 = document.getElementById("subtreeEchart2");
+        var subtreeChart2 = echarts.init(dom3);
+        var dom4 = document.getElementById("subtreeEchart3");
+        var subtreeChart3 = echarts.init(dom4);
+        var dom5 = document.getElementById("subtreeEchart4");
+        var subtreeChart4 = echarts.init(dom5);
+        renderTreeEchart(treeChart,"/data/tree1.json",50,100,"#5989fc",18);
+        renderTreeEchart(subtreeChart1,"/data/subtree1.json",80,30,"#e9992f",18);
+        renderTreeEchart(subtreeChart2,"/data/subtree2.json",80,30,"#e9992f",18);
+        renderTreeEchart(subtreeChart3,"/data/subtree3.json",80,30,"#e9992f",18);
+        renderTreeEchart(subtreeChart4,"/data/subtree4.json",80,30,"#e9992f",18);
+
+
+        /* function:渲染echart树图 
+            参数1：echartsInstanceObj---echarts实例对象
+            参数2：dataJson ---series-tree.data 的外部引入JSON数据文件
+            参数3：layerPadding父子节点间连接线的长度
+            参数4：rootLocationY 根节点的Y坐标
+            参数5：color 主色
+            参数6：fontSize 字体大小
+        */
+        function renderTreeEchart(echartsInstanceObj, dataJson,layerPadding,rootLocationY, color, fontSize) {
+            // myChart.showLoading(); //显示加载样式
+            $.get(dataJson, function (data) {
+                option = {
+                    // title: {
+                    //     text: '朝阳120组织结构图',
+                    // },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{b}"
+                    },
+                    calculable: false,
+                    series: [{
+                        name: '树图',
+                        type: 'tree',
+                        orient: 'vertical', // vertical horizontal
+                        rootLocation: {
+                            x: 'center',
+                            y: rootLocationY
+                        }, // 根节点位置  {x: 'center',y: 10}
+                        layerPadding: layerPadding, //父子节点间连接线的长度
+                        nodePadding: 15, //同级节点间的间隔
+                        symbol: 'emptyRectangle',
+                        symbolSize: [75, 36], //标记大小
+                        itemStyle: { //图形样式
+                            normal: {
+                                // color: '#258b09', //颜色，主色
+                                // color: '#5989fc',
+                                color:color,
+                                label: {
+                                    show: true,
+                                    position: 'inside',
+                                    textStyle: {
+                                        color: '#fff',
+                                        fontSize: fontSize,
+                                        fontWeight: 'bolder',
+                                        //e2版本里貌似给文字设置下列属性无效？？？
+                                        // padding: 10,
+                                        // borderRadius: 5,
+                                        // backgroundColor: '#258b09',
+                                    }
+                                },
+                                lineStyle: {
+                                    // color: '#258b09',//连接线的颜色
+                                    color: color,
+                                    width: 1,
+                                    type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+                                }
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    position: 'inside',
+                                    textStyle: {
+                                        color: '#fff',
+                                        fontSize: fontSize,
+                                        fontWeight: 'bolder',
+
+                                    }
+                                }
+                            }
+                        },
+                        data: [data],
+                    }]
+                };
+                echartsInstanceObj.setOption(option);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

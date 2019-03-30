@@ -11,7 +11,7 @@
     <script src="/lib/jquery.min.js"></script>
     <!-- 引入echarts2.2.7 树图连接线可设置折线及设置层间距 -->
     <script src="/lib/echarts2.x/echarts-all.js"></script>
-    <script src="/js/pages.js"></script>
+    <!-- <script src="/js/pages.js"></script> -->
 </head>
 
 <body style="background-image:url(/images/e.bg.jpg);">
@@ -25,10 +25,78 @@
     </div>
 
     <div class="page_main organization_main">
-        <h4 class="title">-朝阳120医疗急救中心-</h4>
+        <h4 class="title">-北京市朝阳区紧急医疗救援中心-</h4>
         <div class="chartContainer" id="treeContainer"></div>
     </div>
+    <script>
+        var dom = document.getElementById("treeContainer");
+        var myChart = echarts.init(dom);
+        // myChart.showLoading(); //显示加载样式
+        $.get("/data/tree.json", function (data) {
+            option = {
+                // title: {
+                //     text: '朝阳120组织结构图',
+                // },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b}"
+                },
+                calculable: false,
+                series: [{
+                    name: '树图',
+                    type: 'tree',
+                    orient: 'vertical', // vertical horizontal
+                    rootLocation: {
+                        x: 'center',
+                        y: 120
+                    }, // 根节点位置  {x: 'center',y: 10}
+                    layerPadding: 100, //父子节点间连接线的长度
+                    nodePadding: 15, //同级节点间的间隔
+                    symbol: 'emptyRectangle',
+                    symbolSize: [75, 40], //标记大小
+                    itemStyle: { //图形样式
+                        normal: {
+                            // color: '#258b09', //颜色，主色
+                            color: '#5989fc',
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                textStyle: {
+                                    color: '#fff',
+                                    fontSize: 18,
+                                    fontWeight: 'bolder',
+                                    //e2版本里貌似给文字设置下列属性无效？？？
+                                    // padding: 10,
+                                    // borderRadius: 5,
+                                    // backgroundColor: '#258b09',
+                                }
+                            },
+                            lineStyle: {
+                                // color: '#258b09',//连接线的颜色
+                                color: '#5989fc',
+                                width: 1,
+                                type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                position: 'inside',
+                                textStyle: {
+                                    color: '#fff',
+                                    fontSize: 20,
+                                    fontWeight: 'bolder',
 
+                                }
+                            }
+                        }
+                    },
+                    data: [data],
+                }]
+            };
+            myChart.setOption(option);
+        });
+    </script>
 </body>
 
 </html>

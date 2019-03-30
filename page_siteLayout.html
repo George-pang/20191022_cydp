@@ -11,7 +11,8 @@
     <script src="/lib/jquery.min.js"></script>
     <script src="/lib/echarts.min.js"></script>
     <!-- 引入百度地图api文件 -->
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=IRtuipZwpSnKGqnEYqXRLdlo247Vuzzr">
+    </script>
     <!-- <script src="/js/pages.js"></script> -->
 </head>
 
@@ -48,7 +49,7 @@
         $(window).on("resize", function () {
             location.reload();
         });
-        
+
         window.external.webMapLoadComplete();
     });
 
@@ -58,7 +59,9 @@
 
     //2019-03-22 plq 添加地图标记点自定义icon
     //全局变量---icon地址数组
-    var iconUrls=["/images/icon/marker_1.png","/images/icon/marker_2.png","/images/icon/marker_3.png","/images/icon/marker_4.png","/images/icon/marker_5.png"];
+    var iconUrls = ["/images/icon/marker_1.png", "/images/icon/marker_2.png", "/images/icon/marker_3.png",
+        "/images/icon/marker_4.png", "/images/icon/marker_5.png"
+    ];
 
     //创建地图实例--在指定id的DOM容器内创建
     var map = new BMap.Map("mapContainer");
@@ -90,7 +93,7 @@
     //     {
     //         name: "垂杨柳分中心",
     //         stationList: [{
-    //             "x": 116.451992,
+    //             "x": 0,
     //             "y": 39.932234,
     //             "name": "垂杨柳中心1分站",
     //             "address": "这是垂杨柳中心第一分站",
@@ -190,7 +193,7 @@
     function renderPoint(data, stationDataName) {
         for (let i = 0; i < data.length; i++) {
             //2019-03-22 plq 不同中心添加对应自定义标注点icon
-            var iconUrl=iconUrls[i];
+            var iconUrl = iconUrls[i];
             for (let j = 0; j < data[i][stationDataName].length; j++) {
                 var point = new BMap.Point(data[i][stationDataName][j].x, data[i][stationDataName][j].y); //创建标注点
                 // 自定义信息窗口标题
@@ -198,8 +201,10 @@
                 // var marker = new BMap.Marker(point); // 创建标注
 
                 //2019-03-22 plq 不同中心添加对应自定义标注点icon
-                var myIcon=new BMap.Icon(iconUrl, new BMap.Size(32,32));
-                var marker = new BMap.Marker(point,{icon:myIcon});
+                var myIcon = new BMap.Icon(iconUrl, new BMap.Size(32, 32));
+                var marker = new BMap.Marker(point, {
+                    icon: myIcon
+                });
 
                 // marker.setTop(true);//将标注置于其他标注之上
                 // marker.setZIndex(999);
@@ -251,8 +256,8 @@
             var stationListObj = $(stationListStr); //new stationListObj（ul）--创建分中心列表项下的分站列表
             //列表渲染分站列表项
             //2019-03-22 plq 不同中心对应不同定位icon
-            var iconUrl=iconUrls[i];
-            renderStationList(data[i].stationList, stationListObj,iconUrl);
+            var iconUrl = iconUrls[i];
+            renderStationList(data[i].stationList, stationListObj, iconUrl);
             //插入到DOM中
             centerItemObj.append(stationListObj);
             $(".centerList").append(centerItemObj);
@@ -261,10 +266,10 @@
 
     }
     // function:右侧地图信息块 列表渲染分站列表并给每一个分站注册点击事件。参数1：分站数据数组;参数2：分站列表项将插入的父节点;参数3：iconUrl
-    function renderStationList(data, obj,iconUrl) {
+    function renderStationList(data, obj, iconUrl) {
         for (var i = 0; i < data.length; i++) {
             var stationItemstr = '<li class="stationItem"> ' +
-                '<span class="icon" style="background-image:url('+iconUrl+')"></span>' +
+                '<span class="icon" style="background-image:url(' + iconUrl + ')"></span>' +
                 '<div class="txt">' +
                 '<a href="javascript:void(0)" title="' + data[i].name + '" class="aLink">' + data[i].name +
                 '</a><p class="info" data-x="' + data[i].x + '" data-y="' + data[i].y + '"data-address="' +
@@ -304,19 +309,22 @@
         var content = $(this).attr("data-content");
         var x = $(this).find("p").attr("data-x");
         var y = $(this).find("p").attr("data-y");
-        var point = new BMap.Point(x, y); //创建地理点坐标
-        // 将地图的中心点更改为给定的点。
-        map.panTo(point);
-        var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
-        //打开信息窗
-        map.openInfoWindow(infoWindow, point);
+        if (parseInt(x) != 0 && parseInt(y) != 0) {
+            var point = new BMap.Point(x, y); //创建地理点坐标
+            // 将地图的中心点更改为给定的点。
+            map.panTo(point);
+            var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+            //打开信息窗
+            map.openInfoWindow(infoWindow, point);
 
-        //2018-02-02 当用户点击信息窗口的关闭按钮时，关闭站点计时的切换触发点击事件效果---清除计时器事件
-        infoWindow.addEventListener("clickclose", function () {
-            // clearInterval(timeId);
-            //同时清除左侧对应站点突出显示的背景色 
-            $(".stationItem").removeClass("active");
-        });
+            //2018-02-02 当用户点击信息窗口的关闭按钮时，关闭站点计时的切换触发点击事件效果---清除计时器事件
+            infoWindow.addEventListener("clickclose", function () {
+                // clearInterval(timeId);
+                //同时清除左侧对应站点突出显示的背景色 
+                $(".stationItem").removeClass("active");
+            });
+        }
+
     }
 
     //2019-03-11 function：获取当前触发点击事件(.active类)的分站列表项在所有分站列表项中的索引
