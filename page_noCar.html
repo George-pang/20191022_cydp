@@ -52,6 +52,8 @@
     </div>
 
     <script>
+        /* 注意：引入geoJson 各个区域的名称改为中南、南部，之前的后台方法访问数据库也要对应修改，否则会报错 */
+
         //浏览器窗口大小改变时重载页面
         $(function () {
             $(window).on("resize", function () {
@@ -98,7 +100,27 @@
         
         /* *********************************************************** */
         /*  渲染左侧echarts地图 */
-        // var data = [{ "name": "北片", "value": 0, "jindu": "116.4750", "weidu": "40.0381" }, { "name": "南片", "value": 0, "jindu": "116.5231", "weidu": "39.8399" }, { "name": "外区", "value": 0, "jindu": "116.5986", "weidu": "40.0618" }, { "name": "中北片", "value": 0, "jindu": "116.4997", "weidu": "39.9761" }, { "name": "中南片", "value": 0, "jindu": "116.5193", "weidu": "39.9055" }]
+        // var data = [{
+        //     "name": "北部",
+        //     "value": 0,
+        //     "jindu": "116.4250",
+        //     "weidu": "40.0081"
+        // }, {
+        //     "name": "南部",
+        //     "value": 0,
+        //     "jindu": "116.5031",
+        //     "weidu": "39.8599"
+        // }, {
+        //     "name": "中北",
+        //     "value": 0,
+        //     "jindu": "116.5497",
+        //     "weidu": "39.9761"
+        // }, {
+        //     "name": "中南",
+        //     "value": 0,
+        //     "jindu": "116.5293",
+        //     "weidu": "39.9155"
+        // }]
         // renderLeftMapEchart(data);
 
         //function：渲染左侧地图---后台调用
@@ -106,7 +128,10 @@
             var data = dataFormat(data);
             var dom = document.getElementById("carMapChart");
             var myChart = echarts.init(dom);
-            $.get('/data/map.json', function (geoJson) {
+            var normalLableFont = 16;
+            var strongLableFont = 18;
+
+            $.get('/data/area.json', function (geoJson) {
                 echarts.registerMap('chaoyang', geoJson, {});
                 var option = {
                     tooltip: {
@@ -122,55 +147,50 @@
                             normal: { //正常时的样式
                                 show: true,
                                 textStyle: {
-                                    color: '#ef5400',
-                                    fontSize: 18,
+                                    // color: '#ef5400',
+                                    color: '#333',
+                                    fontSize: normalLableFont,
                                 }
                             },
                             emphasis: { //高亮时的样式设置
                                 show: true,
                                 textStyle: {
-                                    color: 'red'
+                                    color: 'red',
+                                    fontSize: strongLableFont,
                                 }
                             }
                         },
-                        emphasis:{ //高亮状态下的样式---2019-03-22 plq 循环高亮效果添加
-                            itemStyle:{//多边形样式
-                                areaColor:"#00c0ff",
+                        emphasis: { //高亮状态下的样式---2019-03-22 plq 循环高亮效果添加
+                            itemStyle: { //多边形样式
+                                areaColor: "#00c0ff",
                             }
                         },
                         data: [{
-                                name: '北片', //只有与json数据上的多边形分区name值对应才可以显示颜色
+                                name: '北部', //只有与json数据上的多边形分区name值对应才可以显示颜色
                                 value: 50, //value值对应颜色映射的取值
                                 itemStyle: {
-                                    areaColor: '#da7f1c' //区域颜色
+                                    areaColor: '#abb4b1' //区域颜色
                                 }
                             },
                             {
-                                name: '中北片',
+                                name: '中北',
                                 value: 100,
                                 itemStyle: {
-                                    areaColor: '#09508b'
+                                    areaColor: '#cdb4af '
                                 }
                             },
                             {
-                                name: '中南片',
+                                name: '中南',
                                 value: 180,
                                 itemStyle: {
-                                    areaColor: '#258b09'
+                                    areaColor: '#b0b298'
                                 }
                             },
                             {
-                                name: '南片',
+                                name: '南部',
                                 value: 220,
                                 itemStyle: {
-                                    areaColor: '#cd3213'
-                                }
-                            },
-                            {
-                                name: '外区',
-                                value: 270,
-                                itemStyle: {
-                                    areaColor: '#e9992f'
+                                    areaColor: '#bfa97f'
                                 }
                             },
                         ],

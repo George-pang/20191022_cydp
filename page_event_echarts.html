@@ -80,7 +80,7 @@
             <!-- 右侧数据统计柱状图 -->
             <div class="barChartContainer">
                 <div class="dl_wrapper">
-                    <p class="chart_title" style="background-image:url(images/panelTitle.png)">各分区突发事件数据统计</p>
+                    <p class="chart_title" style="background-image:url(images/panelTitle.png)">各分区突发事件区域数据统计</p>
                     <div class="barChart" id="eventBarChart">
 
                     </div>
@@ -92,6 +92,8 @@
         </div>
     </div>
     <script>
+        /* 注意：引入geoJson 各个区域的名称改为中南、南部，之前的后台方法访问数据库也要对应修改，否则会报错 */
+
         /* 浏览器窗口大小改变时重载页面 */
         $(function () {
             $(window).on("resize", function () {
@@ -138,35 +140,71 @@
         /* *********************************************************** */
         /* 渲染左侧echarts地图 */
         //地图上2个/片区、固定10个标记点的经纬度坐标数组
-        var coords = {
-            "北片": [
-                [116.3864, 40.0018],
-                [116.4407, 40.0171]
-            ],
-            "中北片": [
-                [116.5169, 39.9819],
-                [116.5821, 39.9750]
-            ],
-            "中南片": [
-                [116.5100, 39.9250],
-                [116.5855, 39.9060]
-            ],
-            "南片": [
-                [116.5011, 39.8333],
-                [116.5402, 39.8660]
-            ],
-            "外区": [
-                [116.5965, 40.0565],
-                [116.5903, 40.0807]
-            ],
-
-        };
+        // var coords = {
+        //     "北部": [
+        //         [116.3864, 40.0018],
+        //         [116.4407, 40.0171]
+        //     ],
+        //     "中北": [
+        //         [116.5169, 39.9819],
+        //         [116.5821, 39.9750]
+        //     ],
+        //     "中南": [
+        //         [116.5100, 39.9250],
+        //         [116.5855, 39.9060]
+        //     ],
+        //     "南部": [
+        //         [116.5011, 39.8333],
+        //         [116.5402, 39.8660]
+        //     ],
+        //     "外区": [
+        //         [116.5965, 40.0565],
+        //         [116.5903, 40.0807]
+        //     ],
+        // };
         var ponitSymbolColors = ['red', 'yellow']; //地图上标记点标记图形的颜色数组
 
         //本地模拟数据
-        // var data=[{"name":"北片","info":[{"name":"其他类","value":"407"},{"name":"交通事故","value":"169"}]},{"name":"南片","info":[{"name":"交通事故","value":"230"},{"name":"其他类","value":"608"}]},{"name":"中北片","info":[{"name":"其他类","value":"674"},{"name":"交通事故","value":"223"}]},{"name":"中南片","info":[{"name":"交通事故","value":"141"},{"name":"其他类","value":"604"}]}]
+        // var data = [{
+        //     "name": "北部",
+        //     "info": [{
+        //         "name": "其他类",
+        //         "value": "407"
+        //     }, {
+        //         "name": "交通事故",
+        //         "value": "169"
+        //     }]
+        // }, {
+        //     "name": "南部",
+        //     "info": [{
+        //         "name": "交通事故",
+        //         "value": "230"
+        //     }, {
+        //         "name": "其他类",
+        //         "value": "608"
+        //     }]
+        // }, {
+        //     "name": "中北",
+        //     "info": [{
+        //         "name": "其他类",
+        //         "value": "674"
+        //     }, {
+        //         "name": "交通事故",
+        //         "value": "223"
+        //     }]
+        // }, {
+        //     "name": "中南",
+        //     "info": [{
+        //         "name": "交通事故",
+        //         "value": "141"
+        //     }, {
+        //         "name": "其他类",
+        //         "value": "604"
+        //     }]
+        // }];
 
         // renderLeftMapChart(data);
+
         //function：渲染左侧地图数据---后台调用
         function renderLeftMapChart(data) {
             var data = JSON.parse(data);
@@ -181,17 +219,32 @@
                 var option = {
                     tooltip: {
                         trigger: 'item',
-                        formatter: '{b}<br/>'
+                        // formatter: '{b}<br/>'
+                        formatter: function (params, ticket, callback) {   //2019-04-15 回调函数方式动态返回提示框内容
+                            var areaName = params.name;
+                            // console.log(areaName);
+                            var content = "";
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i]["name"] == areaName) {
+                                    for (var j = 0; j < data[i]["info"].length; j++) {
+                                        content += data[i]["info"][j]["name"] + "：" + data[i]["info"][j]
+                                            ["value"] + "<br/>";
+                                    }
+                                    return content;
+                                }
+                            }
+                            return areaName;
+                        }
                     },
                     series: [{
                         name: '朝阳120各分区突发事件统计',
                         type: 'map',
                         // top:100,
-                        mapType: 'chaoyang',
+                        map: 'chaoyang',
                         aspectScale: 1, //地图长度比,默认0.75
                         label: { //图形上的文本标签---对应json数据上的多边形分区name值
                             normal: { //正常时的样式
-                                show: true,
+                                show: false,
                                 textStyle: {
                                     // color: '#ef5400',
                                     color: '#333',
@@ -208,35 +261,35 @@
                         },
                         emphasis: { //高亮状态下的样式---2019-03-22 plq 循环高亮效果添加
                             itemStyle: { //多边形样式
-                                areaColor: "#00c0ff",
+                                areaColor: "#36c5d8",
                             }
                         },
                         data: [{
                                 name: '北部', //只有与json数据上的多边形分区name值对应才可以显示颜色
                                 value: 50, //value值对应颜色映射的取值
                                 itemStyle: {
-                                    areaColor: '#abb4b1' //区域颜色
+                                    areaColor: '#0c254d' //区域颜色
                                 }
                             },
                             {
                                 name: '中北',
                                 value: 100,
                                 itemStyle: {
-                                    areaColor: '#cdb4af '
+                                    areaColor: '#0c254d '
                                 }
                             },
                             {
                                 name: '中南',
                                 value: 180,
                                 itemStyle: {
-                                    areaColor: '#b0b298'
+                                    areaColor: '#0c254d'
                                 }
                             },
                             {
                                 name: '南部',
                                 value: 220,
                                 itemStyle: {
-                                    areaColor: '#bfa97f'
+                                    areaColor: '#0c254d'
                                 }
                             },
                         ],
@@ -244,7 +297,6 @@
                             borderColor: '#fff', //图形的描边颜色
                             borderWidth: 1,
                             borderType: 'dashed',
-
                         },
                         markPoint: { //默认情况下，标记会居中置放在数据对应的位置，
                             symbol: 'path://m 0,0 h 48 v 20 h -30 l -6,10 l -6,-10 h -6 z',
@@ -302,7 +354,7 @@
                 myChart.setOption(option);
 
                 //2019-03-22 plq 区域循环高亮
-                autoDispatchAction(myChart, option);
+                autoDispatchMapAction(myChart, option);
 
             });
         };
@@ -325,14 +377,61 @@
             return arr;
         }
 
+        //2019-04-13 plq 循环选中地图区域
+        //function: 主动触发echarts实例高亮行为，实现高亮自动切换。参数1：echarts实例；参数2：option配置对象
+        function autoDispatchMapAction(myChart, option) {
+            var app = {
+                currentIndex: -1 //初始数据索引值---通过其指定高亮的某个数据
+            };
+
+            timeId = setInterval(function () {
+                var dataLen = option.series[0].data.length;
+                // 取消之前高亮的图形
+                myChart.dispatchAction({
+                    type: 'mapUnSelect', //取消高亮指定的数据图形。
+                    seriesIndex: 0, // 可选，系列 index，在 tooltip 的 trigger 为 axis 的时候可选。
+                    dataIndex: app.currentIndex // 可选，数据的 index
+                });
+                app.currentIndex = (app.currentIndex + 1) % dataLen;
+                // 高亮当前图形---通过seriesName或者seriesIndex指定系列。通过指定dataIndex或者name再指定某个数据。
+                myChart.dispatchAction({
+                    type: 'mapSelect',
+                    seriesIndex: 0,
+                    dataIndex: app.currentIndex
+                });
+                // 显示 tooltip
+                myChart.dispatchAction({
+                    type: 'showTip',
+                    seriesIndex: 0, //这行不能省
+                    dataIndex: app.currentIndex
+                    // name:"北部"
+                });
+
+            }, setIntervalTime);
+        }
 
 
         /* ********************************************************************** */
-        var colors = ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53']; // 全局变量、页面右侧元素的系列颜色
+        var colors = ['#249cf9', '#fecb1c', '#71e1e4', '#eb704a', '#ff4261']; // 全局变量、页面右侧元素的系列颜色
 
 
         //模拟数据，本地测试用
-        // var data_info=[{"name":"其他类","totalNum":"251"},{"name":"交通事故","totalNum":"93"},{"name":"事故类","totalNum":"80"},{"name":"事件类","totalNum":"26"},{"name":"一氧化碳中毒","totalNum":"3"}]
+        // var data_info = [{
+        //     "name": "其他类",
+        //     "totalNum": "251"
+        // }, {
+        //     "name": "交通事故",
+        //     "totalNum": "93"
+        // }, {
+        //     "name": "事故类",
+        //     "totalNum": "80"
+        // }, {
+        //     "name": "事件类",
+        //     "totalNum": "26"
+        // }, {
+        //     "name": "一氧化碳中毒",
+        //     "totalNum": "3"
+        // }]
         // renderRightTable(data_info);
 
         //function：渲染右侧表格----后台调用 
@@ -363,7 +462,7 @@
                 var length = $(".data_item").length;
                 $(".data_item").eq(curIndex).addClass("active").siblings().removeClass("active");
                 curIndex = (curIndex + 1) % length;
-                console.log(length, curIndex);
+                // console.log(length, curIndex);
             }, setIntervalTime);
         }
 
@@ -373,7 +472,7 @@
         // 模拟数据
         // var data = [{
         //     "name": "北片",
-        //     "type": ["事件类", "事故类", "交通事故", "其他类", "一氧化碳中毒"],
+        //     "type": ["其他类", "交通事故", "事故类", "事件类", "一氧化碳中毒"],
         //     "typeInfo": {
         //         "shijianleiCount": "4",
         //         "shiguleiCount": "35",
@@ -383,7 +482,7 @@
         //     }
         // }, {
         //     "name": "南片",
-        //     "type": ["事件类", "事故类", "交通事故", "其他类", "一氧化碳中毒"],
+        //     "type": ["其他类", "交通事故", "事故类", "事件类", "一氧化碳中毒"],
         //     "typeInfo": {
         //         "shijianleiCount": "5",
         //         "shiguleiCount": "8",
@@ -393,7 +492,7 @@
         //     }
         // }, {
         //     "name": "外区",
-        //     "type": ["事件类", "事故类", "交通事故", "其他类", "一氧化碳中毒"],
+        //     "type": ["其他类", "交通事故", "事故类", "事件类", "一氧化碳中毒"],
         //     "typeInfo": {
         //         "shijianleiCount": null,
         //         "shiguleiCount": null,
@@ -403,7 +502,7 @@
         //     }
         // }, {
         //     "name": "中北片",
-        //     "type": ["事件类", "事故类", "交通事故", "其他类", "一氧化碳中毒"],
+        //     "type": ["其他类", "交通事故", "事故类", "事件类", "一氧化碳中毒"],
         //     "typeInfo": {
         //         "shijianleiCount": "7",
         //         "shiguleiCount": "20",
@@ -413,7 +512,7 @@
         //     }
         // }, {
         //     "name": "中南片",
-        //     "type": ["事件类", "事故类", "交通事故", "其他类", "一氧化碳中毒"],
+        //     "type": ["其他类", "交通事故", "事故类", "事件类", "一氧化碳中毒"],
         //     "typeInfo": {
         //         "shijianleiCount": "8",
         //         "shiguleiCount": "17",
@@ -445,9 +544,9 @@
                     itemHeight: 15,
                     data: getLegendData(data),
                     textStyle: {
-                        fontSize: 20,
+                        fontSize: 18,
                         // color: 'rgba(0,0,0,.6)',
-                        color: '#fff',
+                        color: '#01b8da',
                         fontWeight: 'lighter',
                     },
                 },
@@ -463,7 +562,7 @@
                     data: getxAxisData(data),
                     axisLine: { //轴线
                         lineStyle: {
-                            color: '#fff',
+                            color: '#162b5f',
                         }
                     },
                     axisTick: { //刻度线
@@ -471,8 +570,9 @@
                         alignWithLabel: true
                     },
                     axisLabel: { //刻度标签
-                        margin: 10, //标签与轴线的距离
+                        margin: 20, //标签与轴线的距离
                         fontSize: 24,
+                        color: '#004d99'
                     }
                 }],
                 yAxis: [{
@@ -480,20 +580,28 @@
                     name: '事件/起',
                     nameTextStyle: {
                         color: 'rgba(255,255,255,.6)',
-                        fontSize: 24,
+                        fontSize: 18,
                     },
-                    axisLine: {
+                    axisLine: { //轴线
+                        show: false,
                         lineStyle: {
-                            color: '#fff',
+                            color: '#162b5f',
                         }
                     },
                     axisTick: { //刻度线
+                        show: false,
                         length: 10,
                         alignWithLabel: true
                     },
                     axisLabel: { //刻度标签
                         margin: 15, //标签与轴线的距离
                         fontSize: 24,
+                        color: '#004d99'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#162b5f'
+                        }
                     }
                 }],
                 backgroundColor: 'transparent',
@@ -606,7 +714,7 @@
             }
             var arr = [];
             for (var i = 0; i < data.length; i++) {
-                arr.push(data[i]["typeInfo"][typeName]);
+                arr.push(data[i]["typeInfo"][typeName] ? data[i]["typeInfo"][typeName] : 0);
 
             }
             console.log(arr);
